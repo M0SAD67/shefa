@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MedicalStaffScreen extends StatelessWidget {
+  static const String routeName = 'MedicalStaffScreen';
   const MedicalStaffScreen({super.key});
 
   @override

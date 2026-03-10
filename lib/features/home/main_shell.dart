@@ -6,6 +6,7 @@ import '../bookings/bookings_screen.dart';
 import '../profile/profile_screen.dart';
 
 class MainShell extends StatefulWidget {
+  static const String routeName = 'MainShell';
   const MainShell({super.key});
 
   @override

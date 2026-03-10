@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NurseriesScreen extends StatelessWidget {
+  static const String routeName = 'NurseriesScreen';
   const NurseriesScreen({super.key});
 
   @override

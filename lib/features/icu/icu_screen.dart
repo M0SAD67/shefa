@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class IcuScreen extends StatelessWidget {
+  static const String routeName = 'IcuScreen';
   const IcuScreen({super.key});
 
   @override

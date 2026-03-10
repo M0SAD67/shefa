@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../medical_staff/medical_staff_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const String routeName = 'HomeScreen';
   const HomeScreen({super.key});
 
   @override

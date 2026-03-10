@@ -4,13 +4,12 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1- اى ايقونه هتكون عاوزها هتستخدم الباكج ديه  CupertinoIcons
 
-A few resources to get you started if this is your first Flutter project:
+2- هنستعمل كل الالوان اللى فى الملف ده من غير اى  الوان ثابته فى التطبيق وده الباث بتاعه lib\core\theme\color_app.dart
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+3- اى مهمه هتاخدها هتعمل ليها برانش مخصوص وبعد ماتخلص تعمل pr 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+4- عاوز تبدا فى مهمه ومش موجود ليها فولدر مخصوص ارجع لليدر عشان يعدل الفولدرات عشان يحدد هتبقى فين اللى انت هتعمله 
+
+5- اى اسكرينه هتعملها لازم يكون ليها routename ويبقى بنفس اسم الكلاس اللى انت عامله

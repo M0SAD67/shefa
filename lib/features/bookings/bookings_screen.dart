@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BookingsScreen extends StatelessWidget {
+  static const String routeName = 'BookingsScreen';
   const BookingsScreen({super.key});
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shefa/core/constants/routes_app.dart';
 import 'features/auth/login_screen.dart';
 import 'features/auth/signup_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
@@ -18,12 +19,12 @@ class ShefaApp extends StatelessWidget {
       title: 'Shefa App',
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.blue),
       // Starting with Onboarding or Login for the flow
-      initialRoute: '/onboarding',
+      initialRoute: RoutesApp.onboarding,
       routes: {
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignupScreen(),
-        '/home': (context) => const MainShell(),
+        OnboardingScreen.routeName: (context) => const OnboardingScreen(),
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        SignupScreen.routeName: (context) => const SignupScreen(),
+        MainShell.routeName: (context) => const MainShell(),
       },
     );
   }
