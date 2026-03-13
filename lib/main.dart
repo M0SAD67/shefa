@@ -21,7 +21,7 @@ class ShefaApp extends StatelessWidget {
       // Starting with Onboarding or Login for the flow
       initialRoute: RoutesApp.onboarding,
       routes: {
-        OnboardingScreen.routeName: (context) => const OnboardingScreen(),
+        OnboardingScreen.routeName: (context) => OnboardingScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(),
         SignupScreen.routeName: (context) => const SignupScreen(),
         MainShell.routeName: (context) => const MainShell(),
