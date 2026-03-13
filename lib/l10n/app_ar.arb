@@ -1,0 +1,57 @@
+{
+  "login": "تسجيل دخول",
+  "email": "الايميل",
+  "phoneNumber": "رقم التليفون",
+  "emailAddress": "البريد الإلكتروني",
+  "sendCode": "ارسال الرمز",
+  "signIn": "تسجيل",
+  "forgotPassword": "هل نسيت كلمة المرور؟",
+  "dontHaveAccount": "ليس لديك حساب؟ ",
+  "createAccount": "إنشاء حساب",
+  "password": "الرقم السري",
+  "signUp": "إنشاء حساب",
+  "skip": "تخطي",
+  "previous": "السابق",
+  "next": "التالي",
+  "start": "ابدأ",
+  "onboardTitle1": "اعرف أماكن الحضانات المتاحة واحجز لطفلك بسهولة",
+  "onboardTitle2": "اعرف المستشفيات المتاح فيها عناية مركزة واحجز فورًا",
+  "onboardTitle3": "احجز أو اطلب طاقم طبي للمتابعة في المنزل أو أي مكان",
+  "otpVerification": "أدخل رمز التحقق المكوّن من 6 أرقام الذي تم إرساله إلى رقم هاتفك.",
+  "resendCode": "إعادة إرسال الرمز",
+  "phoneVerified": "تم التحقق من رقم الهاتف",
+  "redirectToHome": "سيتم تحويلك إلى الصفحة الرئيسية خلال لحظات",
+  "home": "الرئيسية",
+  "nurseries": "حضانات",
+  "icu": "عناية مركزة",
+  "medicalStaff": "طاقم طبي",
+  "bookings": "طلبات الحجز",
+  "myAccount": "حسابي",
+  "navHome": "الرئيسية",
+  "navNurseries": "حضانات",
+  "navIcu": "عناية",
+  "navBookings": "الحجوزات",
+  "navAccount": "حسابي",
+  "editProfile": "تعديل {field}",
+  "@editProfile": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChanges": "حفظ التعديلات",
+  "name": "الاسم",
+  "address": "العنوان",
+  "phoneLabel": "رقم التليفون :",
+  "emailLabel": "البريد الإلكتروني :",
+  "passwordLabel": "الرقم السري",
+  "navigatingTo": "الانتقال إلى {title}",
+  "@navigatingTo": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
+}

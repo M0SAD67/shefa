@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import 'home_screen.dart';
 import '../nurseries/nurseries_screen.dart';
 import '../icu/icu_screen.dart';
@@ -40,21 +41,27 @@ class _MainShellState extends State<MainShell> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: AppLocalizations.of(context)!.navHome,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.child_care),
-            label: 'حضانات',
+            label: AppLocalizations.of(context)!.navNurseries,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_hospital),
-            label: 'عناية',
+            label: AppLocalizations.of(context)!.navIcu,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_online),
-            label: 'الحجوزات',
+            icon: Icon(Icons.calendar_today),
+            label: AppLocalizations.of(context)!.navBookings,
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'حسابي'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: AppLocalizations.of(context)!.navAccount,
+          ),
         ],
       ),
     );

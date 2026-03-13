@@ -1,0 +1,57 @@
+{
+  "login": "Login",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "emailAddress": "Email Address",
+  "sendCode": "Send Code",
+  "signIn": "Sign In",
+  "forgotPassword": "Forgot Password?",
+  "dontHaveAccount": "Don't have an account? ",
+  "createAccount": "Create Account",
+  "password": "Password",
+  "signUp": "Sign Up",
+  "skip": "Skip",
+  "previous": "Previous",
+  "next": "Next",
+  "start": "Start",
+  "onboardTitle1": "Know the available nursery locations and book for your child easily",
+  "onboardTitle2": "Know the hospitals where intensive care is available and book immediately",
+  "onboardTitle3": "Book or request a medical staff for follow-up at home or anywhere",
+  "otpVerification": "Enter the 6-digit verification code sent to your phone number.",
+  "resendCode": "Resend Code",
+  "phoneVerified": "Phone number verified",
+  "redirectToHome": "You will be redirected to the home page in a moments",
+  "home": "Home",
+  "nurseries": "Nurseries",
+  "icu": "Intensive Care",
+  "medicalStaff": "Medical Staff",
+  "bookings": "Bookings",
+  "myAccount": "My Account",
+  "navHome": "Home",
+  "navNurseries": "Nurseries",
+  "navIcu": "ICU",
+  "navBookings": "Bookings",
+  "navAccount": "My Account",
+  "editProfile": "Edit {field}",
+  "@editProfile": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChanges": "Save Changes",
+  "name": "Name",
+  "address": "Address",
+  "phoneLabel": "Phone Number :",
+  "emailLabel": "Email Address :",
+  "passwordLabel": "Password",
+  "navigatingTo": "Navigating to {title}",
+  "@navigatingTo": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  }
+}

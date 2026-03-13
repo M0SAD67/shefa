@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/assets_app.dart';
 import '../../core/theme/color_app.dart';
+import '../../l10n/app_localizations.dart';
+import '../auth/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   static const String routeName = 'OnboardingScreen';
@@ -17,15 +19,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   Alignment _animationAlignment = Alignment.center;
 
+  final GlobalKey _startButtonKey = GlobalKey();
+  final GlobalKey _skipButtonKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final List<Widget> pages = [
     Center(child: Image.asset(AssetsApp.icOnboard1, fit: BoxFit.contain)),
     Center(child: Image.asset(AssetsApp.icOnboard2, fit: BoxFit.contain)),
     Center(child: Image.asset(AssetsApp.icOnboard3, fit: BoxFit.contain)),
   ];
-  final List<String> titles = [
-    AssetsApp.icOnboardTitle1,
-    AssetsApp.icOnboardTitle2,
-    AssetsApp.icOnboardTitle3,
+  List<String> get _titles => [
+    AppLocalizations.of(context)!.onboardTitle1,
+    AppLocalizations.of(context)!.onboardTitle2,
+    AppLocalizations.of(context)!.onboardTitle3,
   ];
 
   @override
@@ -43,6 +53,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         index,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  void _startExpansion(GlobalKey key) {
+    final RenderBox? renderBox =
+        key.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      final position = renderBox.localToGlobal(Offset.zero);
+      final size = renderBox.size;
+      final revealOffset = Offset(
+        position.dx + size.width / 2,
+        position.dy + size.height / 2,
+      );
+
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              LoginScreen(revealOffset: revealOffset),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return child; // The animation is handled inside LoginScreen
+          },
+          transitionDuration: const Duration(milliseconds: 1000),
+        ),
       );
     }
   }
@@ -94,7 +129,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     (Widget? currentChild, List<Widget> previousChildren) {
                       return Stack(
                         alignment: Alignment.center,
-                        children: <Widget>[...previousChildren, ?currentChild],
+                        children: <Widget>[
+                          ...previousChildren,
+                          if (currentChild != null) currentChild,
+                        ],
                       );
                     },
                 transitionBuilder: (Widget child, Animation<double> animation) {
@@ -108,7 +146,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   key: ValueKey<int>(_currentPage),
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
-                    titles[_currentPage],
+                    _titles[_currentPage],
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: ColorApp.primary,
@@ -128,10 +166,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     onTap: () {
                       if (_currentPage > 0) {
                         _navigateToPage(_currentPage - 1, Alignment.bottomLeft);
+                      } else {
+                        _startExpansion(_skipButtonKey);
                       }
                     },
                     child: PageViewOnboard(
-                      title: _currentPage == 0 ? "Skip" : "Previous",
+                      key: _currentPage == 0 ? _skipButtonKey : null,
+                      title: _currentPage == 0
+                          ? AppLocalizations.of(context)!.skip
+                          : AppLocalizations.of(context)!.previous,
                     ),
                   ),
                   InkWell(
@@ -143,11 +186,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Alignment.bottomRight,
                         );
                       } else {
-                        // Start logic
+                        _startExpansion(_startButtonKey);
                       }
                     },
                     child: PageViewOnboard(
-                      title: _currentPage < pages.length - 1 ? "Next" : "Start",
+                      key: _currentPage == pages.length - 1
+                          ? _startButtonKey
+                          : null,
+                      title: _currentPage < pages.length - 1
+                          ? AppLocalizations.of(context)!.next
+                          : AppLocalizations.of(context)!.start,
                     ),
                   ),
                 ],

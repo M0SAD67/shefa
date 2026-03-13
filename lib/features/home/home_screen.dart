@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../medical_staff/medical_staff_screen.dart';
+import 'package:shefa/features/bookings/bookings_screen.dart';
+import '../../l10n/app_localizations.dart';
+import '../medical_staff/medical_staff_screen.dart'; // Keep this import as MedicalStaffScreen is still used
 
 class HomeScreen extends StatelessWidget {
   static const String routeName = 'HomeScreen';
@@ -8,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('الرئيسية')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.home)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
@@ -18,20 +20,25 @@ class HomeScreen extends StatelessWidget {
           children: [
             _buildFeatureCard(
               context,
-              'حضانات',
+              AppLocalizations.of(context)!.nurseries,
               Icons.child_care,
               Colors.orange,
             ),
             _buildFeatureCard(
               context,
-              'عناية مركزة',
+              AppLocalizations.of(context)!.icu,
               Icons.local_hospital,
               Colors.red,
             ),
-            _buildFeatureCard(context, 'طاقم طبي', Icons.people, Colors.green),
             _buildFeatureCard(
               context,
-              'طلبات الحجز',
+              AppLocalizations.of(context)!.medicalStaff,
+              Icons.people,
+              Colors.green,
+            ),
+            _buildFeatureCard(
+              context,
+              AppLocalizations.of(context)!.bookings,
               Icons.book_online,
               Colors.blue,
             ),
@@ -60,9 +67,13 @@ class HomeScreen extends StatelessWidget {
             );
           } else {
             // Other logic or just placeholder
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('الانتقال إلى $title')));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context)!.navigatingTo(title),
+                ),
+              ),
+            );
           }
         },
         child: Column(

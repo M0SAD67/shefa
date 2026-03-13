@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/color_app.dart';
+import '../../l10n/app_localizations.dart';
+import '../../core/constants/assets_app.dart';
+
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'ProfileScreen';
   const ProfileScreen({super.key});
@@ -53,11 +57,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "تعديل $title",
+                  AppLocalizations.of(context)!.editProfile(title),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF083345),
+                    color: ColorApp.icons,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -73,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               obscureText
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: const Color(0xFF2D7FA3),
+                              color: ColorApp.primary,
                             ),
                             onPressed: () {
                               setModalState(() {
@@ -86,7 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Color(0xFF80B541)),
+                      borderSide: const BorderSide(
+                        color: ColorApp.textFieldHighlight,
+                      ),
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
@@ -96,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF80B541),
+                      backgroundColor: ColorApp.textFieldHighlight,
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -108,10 +114,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ); // تحديث الصفحة الأساسية بالبيانات الجديدة
                       Navigator.pop(context);
                     },
-                    child: const Text(
-                      "حفظ التعديلات",
+                    child: Text(
+                      AppLocalizations.of(context)!.saveChanges,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ColorApp.appLight,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -129,24 +135,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorApp.appLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Image.asset('assets/logo/logo.png'),
+          child: Image.asset(AssetsApp.logo),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFCDE2E9),
+                color: ColorApp.buttonDetails,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: IconButton(
-                icon: const Icon(Icons.arrow_forward, color: Color(0xFF083345)),
+                icon: const Icon(Icons.arrow_forward, color: ColorApp.icons),
                 onPressed: () => Navigator.pop(context),
               ),
             ),
@@ -163,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Opacity(
               opacity: 0.2,
               child: Image.asset(
-                'assets/images/background/background-reduce-opacity.png',
+                AssetsApp.bgOnboardOpacity,
                 fit: BoxFit.contain,
               ),
             ),
@@ -173,13 +179,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 const SizedBox(height: 20),
                 // الصورة الشخصية
-                const Center(
+                Center(
                   child: CircleAvatar(
                     radius: 80,
-                    backgroundColor: Color(0xFF083345),
-                    backgroundImage: AssetImage(
-                      'assets/images/user_avatar.png',
-                    ),
+                    backgroundColor: ColorApp.icons,
+                    backgroundImage: AssetImage(AssetsApp.userAvatar),
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -187,22 +191,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // تعديل الاسم
                 _buildEditableText(
                   _nameController.text,
-                  onEdit: () => _showEditBottomSheet("الاسم", _nameController),
+                  onEdit: () => _showEditBottomSheet(
+                    AppLocalizations.of(context)!.name,
+                    _nameController,
+                  ),
                   fontSize: 24,
                   isBold: true,
                 ),
                 // تعديل العنوان
                 _buildEditableText(
                   _addressController.text,
-                  onEdit: () =>
-                      _showEditBottomSheet("العنوان", _addressController),
+                  onEdit: () => _showEditBottomSheet(
+                    AppLocalizations.of(context)!.address,
+                    _addressController,
+                  ),
                   fontSize: 16,
                   color: Colors.grey,
                 ),
 
                 const SizedBox(height: 30),
                 const Divider(
-                  color: Color(0xFF2D7FA3),
+                  color: ColorApp.primary,
                   thickness: 1,
                   indent: 20,
                   endIndent: 20,
@@ -211,24 +220,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // كروت البيانات
                 _buildProfileCard(
-                  "رقم التليفون :",
+                  AppLocalizations.of(context)!.phoneLabel,
                   _phoneController.text,
-                  onTap: () =>
-                      _showEditBottomSheet("رقم التليفون", _phoneController),
+                  onTap: () => _showEditBottomSheet(
+                    AppLocalizations.of(context)!.phoneNumber,
+                    _phoneController,
+                  ),
                 ),
                 _buildProfileCard(
-                  "البريد الإلكتروني :",
+                  AppLocalizations.of(context)!.emailLabel,
                   _emailController.text,
                   onTap: () => _showEditBottomSheet(
-                    "البريد الإلكتروني",
+                    AppLocalizations.of(context)!.email,
                     _emailController,
                   ),
                 ),
                 _buildProfileCard(
-                  "الرقم السري",
+                  AppLocalizations.of(context)!.passwordLabel,
                   "************",
                   onTap: () => _showEditBottomSheet(
-                    "الرقم السري",
+                    AppLocalizations.of(context)!.password,
                     _passwordController,
                     isPassword: true,
                   ),
@@ -246,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String text, {
     required VoidCallback onEdit,
     double fontSize = 14,
-    Color color = const Color(0xFF083345),
+    Color color = ColorApp.icons,
     bool isBold = false,
   }) {
     return GestureDetector(
@@ -281,9 +292,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorApp.appLight,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFCDE2E9), width: 1.5),
+          border: Border.all(color: ColorApp.buttonDetails, width: 1.5),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
@@ -295,23 +306,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Icon(Icons.edit_outlined, color: Color(0xFF2D7FA3)),
+            const Icon(Icons.edit_outlined, color: ColorApp.primary),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFF083345),
+                    color: ColorApp.icons,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   value,
-                  style: const TextStyle(
-                    color: Color(0xFF2D7FA3),
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: ColorApp.primary, fontSize: 16),
                 ),
               ],
             ),

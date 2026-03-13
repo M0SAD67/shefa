@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/color_app.dart';
+import '../../l10n/app_localizations.dart';
+import '../../core/constants/assets_app.dart';
+
 class VerificationScreen extends StatelessWidget {
   static const String routeName = 'VerificationScreen';
   const VerificationScreen({super.key});
@@ -7,17 +11,14 @@ class VerificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorApp.appLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         title: const Text(
           'Phone Verification',
-          style: TextStyle(
-            color: Color(0xFF083345),
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: ColorApp.icons, fontWeight: FontWeight.bold),
         ),
         actions: [
           // السهم اللي في المربع الصغير جهة اليمين كما بالصورة
@@ -26,10 +27,10 @@ class VerificationScreen extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFFCDE2E9),
+                color: ColorApp.buttonDetails,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.arrow_forward, color: Color(0xFF083345)),
+              child: const Icon(Icons.arrow_forward, color: ColorApp.icons),
             ),
           ),
         ],
@@ -39,14 +40,14 @@ class VerificationScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 60),
             // النص العلوي
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                'أدخل رمز التحقق المكوّن من 6 أرقام الذي تم إرساله إلى رقم هاتفك.',
+                AppLocalizations.of(context)!.otpVerification,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
-                  color: Color(0xFF2D7FA3),
+                  color: ColorApp.primary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -67,10 +68,10 @@ class VerificationScreen extends StatelessWidget {
             // نص إعادة إرسال الرمز
             TextButton(
               onPressed: () {},
-              child: const Text(
-                'إعادة إرسال الرمز',
-                style: TextStyle(
-                  color: Color(0xFF70B44F),
+              child: Text(
+                AppLocalizations.of(context)!.phoneVerified,
+                style: const TextStyle(
+                  color: ColorApp.textFieldHighlight,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -80,7 +81,7 @@ class VerificationScreen extends StatelessWidget {
             const SizedBox(height: 40),
 
             Image.asset(
-              'assets/images/background/background-reduce-opacity.png',
+              AssetsApp.bgOnboardOpacity,
               width: MediaQuery.of(context).size.width * 0.9,
             ),
           ],
@@ -95,7 +96,7 @@ class VerificationScreen extends StatelessWidget {
       width: 45,
       height: 55,
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF083345), width: 1),
+        border: Border.all(color: ColorApp.icons, width: 1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(

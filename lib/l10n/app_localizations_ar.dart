@@ -1,0 +1,140 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Arabic (`ar`).
+class AppLocalizationsAr extends AppLocalizations {
+  AppLocalizationsAr([String locale = 'ar']) : super(locale);
+
+  @override
+  String get login => 'تسجيل دخول';
+
+  @override
+  String get email => 'الايميل';
+
+  @override
+  String get phoneNumber => 'رقم التليفون';
+
+  @override
+  String get emailAddress => 'البريد الإلكتروني';
+
+  @override
+  String get sendCode => 'ارسال الرمز';
+
+  @override
+  String get signIn => 'تسجيل';
+
+  @override
+  String get forgotPassword => 'هل نسيت كلمة المرور؟';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟ ';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get password => 'الرقم السري';
+
+  @override
+  String get signUp => 'إنشاء حساب';
+
+  @override
+  String get skip => 'تخطي';
+
+  @override
+  String get previous => 'السابق';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get start => 'ابدأ';
+
+  @override
+  String get onboardTitle1 => 'اعرف أماكن الحضانات المتاحة واحجز لطفلك بسهولة';
+
+  @override
+  String get onboardTitle2 =>
+      'اعرف المستشفيات المتاح فيها عناية مركزة واحجز فورًا';
+
+  @override
+  String get onboardTitle3 =>
+      'احجز أو اطلب طاقم طبي للمتابعة في المنزل أو أي مكان';
+
+  @override
+  String get otpVerification =>
+      'أدخل رمز التحقق المكوّن من 6 أرقام الذي تم إرساله إلى رقم هاتفك.';
+
+  @override
+  String get resendCode => 'إعادة إرسال الرمز';
+
+  @override
+  String get phoneVerified => 'تم التحقق من رقم الهاتف';
+
+  @override
+  String get redirectToHome => 'سيتم تحويلك إلى الصفحة الرئيسية خلال لحظات';
+
+  @override
+  String get home => 'الرئيسية';
+
+  @override
+  String get nurseries => 'حضانات';
+
+  @override
+  String get icu => 'عناية مركزة';
+
+  @override
+  String get medicalStaff => 'طاقم طبي';
+
+  @override
+  String get bookings => 'طلبات الحجز';
+
+  @override
+  String get myAccount => 'حسابي';
+
+  @override
+  String get navHome => 'الرئيسية';
+
+  @override
+  String get navNurseries => 'حضانات';
+
+  @override
+  String get navIcu => 'عناية';
+
+  @override
+  String get navBookings => 'الحجوزات';
+
+  @override
+  String get navAccount => 'حسابي';
+
+  @override
+  String editProfile(String field) {
+    return 'تعديل $field';
+  }
+
+  @override
+  String get saveChanges => 'حفظ التعديلات';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get phoneLabel => 'رقم التليفون :';
+
+  @override
+  String get emailLabel => 'البريد الإلكتروني :';
+
+  @override
+  String get passwordLabel => 'الرقم السري';
+
+  @override
+  String navigatingTo(String title) {
+    return 'الانتقال إلى $title';
+  }
+}
