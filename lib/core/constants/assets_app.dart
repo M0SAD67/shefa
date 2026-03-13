@@ -7,6 +7,13 @@ abstract class AssetsApp {
   static const String icOnboard2 = 'assets/images/onboard/onboard-2.png';
   static const String icOnboard3 = 'assets/images/onboard/onboard-3.png';
 
+  static const String icOnboardTitle1 =
+      "اعرف أماكن الحضانات المتاحة واحجز لطفلك بسهولة";
+  static const String icOnboardTitle2 =
+      "اعرف المستشفيات المتاح فيها عناية مركزة واحجز فورًا";
+  static const String icOnboardTitle3 =
+      "احجز أو اطلب طاقم طبي للمتابعة في المنزل أو أي مكان";
+
   // background
   static const String bgOnboard =
       'assets/images/background/background-full-opacity.png';
