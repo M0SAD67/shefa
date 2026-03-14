@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
 import '../../core/theme/color_app.dart';
 
@@ -67,13 +68,13 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   : ColorApp.appLight,
               border: Border(
                 bottom: BorderSide(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: ColorApp.locationText.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: ColorApp.appAmoled.withOpacity(0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 3),
                 ),
@@ -81,7 +82,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
             ),
             child: Row(
               children: [
-                // الأفاتار على الشمال
                 CircleAvatar(
                   radius: 26,
                   backgroundColor: ColorApp.primary.withOpacity(0.2),
@@ -92,8 +92,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-
-                // اسم المستخدم والعنوان
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,20 +119,18 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                           fontSize: 12,
                           color: appStateManager.isDarkMode
                               ? ColorApp.appLight.withOpacity(0.7)
-                              : ColorApp.appDark.withOpacity(0.6),
+                              : ColorApp.locationText,
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                // اللوجو على اليمين
-                Image.asset('assets/logo/Logo.png', height: 50),
+                Image.asset(AssetsApp.logo, height: 50),
               ],
             ),
           ),
 
-          // ===== صورة + طاقم طبي بدون سهم =====
+          // ===== صورة + طاقم طبي =====
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 15, 20, 5),
             child: Row(
@@ -142,7 +138,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 CircleAvatar(
                   radius: 28,
                   backgroundColor: Colors.transparent,
-                  backgroundImage: const AssetImage('assets/logo/حضانات.png'),
+                  backgroundImage: const AssetImage(AssetsApp.logoMedical),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -159,7 +155,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
             ),
           ),
 
-          // ===== الفورم داخل كونتينر بشادو =====
+          // ===== الفورم =====
           Padding(
             padding: const EdgeInsets.all(20),
             child: Container(
@@ -172,8 +168,8 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    blurRadius: 15,
+                    color: ColorApp.appAmoled.withOpacity(0.08),
+
                     spreadRadius: 1,
                     offset: const Offset(0, 5),
                   ),
@@ -199,7 +195,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
 
                   const SizedBox(height: 20),
 
-                  // الراديو باتونز من اليمين
                   ..._services.asMap().entries.map((entry) {
                     final index = entry.key;
                     final service = entry.value;
@@ -210,7 +205,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            // الدايرة أول
                             Container(
                               width: 22,
                               height: 22,
@@ -219,7 +213,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                                 border: Border.all(
                                   color: _selectedService == index
                                       ? ColorApp.textFieldHighlight
-                                      : Colors.grey.withOpacity(0.5),
+                                      : ColorApp.locationText.withOpacity(0.5),
                                   width: 2,
                                 ),
                                 color: _selectedService == index
@@ -235,7 +229,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                                   : null,
                             ),
                             const SizedBox(width: 10),
-                            // النص بعد الدايرة
                             Text(
                               _t(service['ar']!, service['en']!),
                               style: TextStyle(
@@ -278,7 +271,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
             ),
           ),
 
-          // ===== زرار تأكيد الحجز بالشكل الجديد =====
+          // ===== زرار تأكيد الحجز =====
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
             child: SizedBox(
@@ -286,7 +279,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
               child: OutlinedButton(
                 onPressed: () => setState(() => _isSubmitted = true),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: const Color(0xFFDDE8DC), // 👈 لون أخضر فاتح
+                  backgroundColor: ColorApp.secondary.withOpacity(0.15),
                   side: BorderSide(
                     color: ColorApp.textFieldHighlight.withOpacity(0.6),
                     width: 1.5,
@@ -303,7 +296,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: appStateManager.isDarkMode
-                        ? ColorApp.appDark
+                        ? ColorApp.appLight
                         : ColorApp.appDark,
                   ),
                 ),
@@ -332,7 +325,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: ColorApp.appAmoled.withOpacity(0.08),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -360,7 +353,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Divider(height: 25),
+                  const Divider(height: 25, color: ColorApp.locationText),
                   _buildDetailRow(
                     _t('اسم المريض', 'Patient Name'),
                     _nameController.text.isEmpty
@@ -477,7 +470,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
         hintStyle: TextStyle(
           color: appStateManager.isDarkMode
               ? ColorApp.appLight.withOpacity(0.4)
-              : ColorApp.appDark.withOpacity(0.3),
+              : ColorApp.locationText,
           fontSize: 14,
         ),
         contentPadding: const EdgeInsets.symmetric(
