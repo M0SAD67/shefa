@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
+import 'package:shefa/features/home/main_shell.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
-
 import '../../l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,9 +20,42 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   bool isPhoneSelected = true;
   bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
+  bool isSignupMode = false;
+
+  //  متغيرات اختيار الدولة
+  String _selectedCountryCode = '+20';
+  String _selectedCountryFlag = '🇪🇬';
+
+  //  قائمة الدول
+  final List<Map<String, String>> _countries = [
+    {'code': '+20', 'flag': '🇪🇬', 'name': 'Egypt'},
+    {'code': '+966', 'flag': '🇸🇦', 'name': 'Saudi Arabia'},
+    {'code': '+971', 'flag': '🇦🇪', 'name': 'UAE'},
+    {'code': '+965', 'flag': '🇰🇼', 'name': 'Kuwait'},
+    {'code': '+974', 'flag': '🇶🇦', 'name': 'Qatar'},
+    {'code': '+973', 'flag': '🇧🇭', 'name': 'Bahrain'},
+    {'code': '+968', 'flag': '🇴🇲', 'name': 'Oman'},
+    {'code': '+962', 'flag': '🇯🇴', 'name': 'Jordan'},
+    {'code': '+961', 'flag': '🇱🇧', 'name': 'Lebanon'},
+    {'code': '+249', 'flag': '🇸🇩', 'name': 'Sudan'},
+    {'code': '+218', 'flag': '🇱🇾', 'name': 'Libya'},
+    {'code': '+213', 'flag': '🇩🇿', 'name': 'Algeria'},
+    {'code': '+216', 'flag': '🇹🇳', 'name': 'Tunisia'},
+    {'code': '+212', 'flag': '🇲🇦', 'name': 'Morocco'},
+    {'code': '+1', 'flag': '🇺🇸', 'name': 'USA'},
+    {'code': '+44', 'flag': '🇬🇧', 'name': 'UK'},
+    {'code': '+49', 'flag': '🇩🇪', 'name': 'Germany'},
+    {'code': '+33', 'flag': '🇫🇷', 'name': 'France'},
+    {'code': '+90', 'flag': '🇹🇷', 'name': 'Turkey'},
+  ];
 
   late AnimationController _revealController;
   late Animation<double> _revealAnimation;
+
+  String _t(String ar, String en) {
+    return appStateManager.isArabic ? ar : en;
+  }
 
   @override
   void initState() {
@@ -44,6 +77,55 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
+  //  دالة عرض قائمة الدول
+  void _showCountryPicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: appStateManager.isDarkMode
+          ? ColorApp.appDark
+          : ColorApp.appLight,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return ListView.builder(
+          itemCount: _countries.length,
+          itemBuilder: (context, index) {
+            final country = _countries[index];
+            return ListTile(
+              leading: Text(
+                country['flag']!,
+                style: const TextStyle(fontSize: 24),
+              ),
+              title: Text(
+                country['name']!,
+                style: TextStyle(
+                  color: appStateManager.isDarkMode
+                      ? ColorApp.appLight
+                      : ColorApp.appDark,
+                ),
+              ),
+              trailing: Text(
+                country['code']!,
+                style: TextStyle(
+                  color: ColorApp.textFieldHighlight,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                setState(() {
+                  _selectedCountryCode = country['code']!;
+                  _selectedCountryFlag = country['flag']!;
+                });
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final body = AnimatedContainer(
@@ -58,22 +140,28 @@ class _LoginScreenState extends State<LoginScreen>
           child: Column(
             children: [
               const SizedBox(height: 80),
-              // اللوجو
               Center(child: Image.asset(AssetsApp.logo, height: 100)),
               const SizedBox(height: 40),
-              Text(
-                AppLocalizations.of(context)!.login,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: appStateManager.isDarkMode
-                      ? ColorApp.appLight
-                      : ColorApp.primary,
+
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Text(
+                  isSignupMode
+                      ? AppLocalizations.of(context)!.createAccount
+                      : AppLocalizations.of(context)!.login,
+                  key: ValueKey<bool>(isSignupMode),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: appStateManager.isDarkMode
+                        ? ColorApp.appLight
+                        : ColorApp.primary,
+                  ),
                 ),
               ),
+
               const SizedBox(height: 30),
 
-              // كارت تسجيل الدخول
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -84,7 +172,6 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
                 child: Column(
                   children: [
-                    // منطقة التبديل (Tabs) مع البوردر الخارجي المطلب
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
@@ -97,38 +184,49 @@ class _LoginScreenState extends State<LoginScreen>
                           _buildTabButton(
                             AppLocalizations.of(context)!.email,
                             !isPhoneSelected,
-                            () {
-                              setState(() => isPhoneSelected = false);
-                            },
+                            () => setState(() => isPhoneSelected = false),
                           ),
                           _buildTabButton(
                             AppLocalizations.of(context)!.phoneNumber,
                             isPhoneSelected,
-                            () {
-                              setState(() => isPhoneSelected = true);
-                            },
+                            () => setState(() => isPhoneSelected = true),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 25),
 
-                    // العرض الشرطي للحقول
                     if (isPhoneSelected) ...[
+                      if (isSignupMode) ...[
+                        _buildTextField(hint: _t('اسم المستخدم', 'Username')),
+                        const SizedBox(height: 15),
+                        _buildTextField(hint: _t('عنوان المستخدم', 'Address')),
+                        const SizedBox(height: 15),
+                      ],
                       _buildPhoneInput(),
                     ] else ...[
+                      if (isSignupMode) ...[
+                        _buildTextField(hint: _t('اسم المستخدم', 'Username')),
+                        const SizedBox(height: 15),
+                        _buildTextField(hint: _t('عنوان المستخدم', 'Address')),
+                        const SizedBox(height: 15),
+                      ],
                       _buildEmailInput(
                         AppLocalizations.of(context)!.emailAddress,
                       ),
                       const SizedBox(height: 15),
                       _buildPasswordInput(),
+                      if (isSignupMode) ...[
+                        const SizedBox(height: 15),
+                        _buildConfirmPasswordInput(),
+                      ],
                     ],
+
                     const SizedBox(height: 15),
 
-                    // هل نسيت كلمة المرور
-                    if (!isPhoneSelected)
+                    if (!isPhoneSelected && !isSignupMode)
                       Align(
-                        alignment: Alignment.centerRight, // يمين عشان الـ RTL
+                        alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {},
                           child: Text(
@@ -143,10 +241,11 @@ class _LoginScreenState extends State<LoginScreen>
 
                     const SizedBox(height: 15),
 
-                    // زرار الإرسال أو التسجيل
                     _buildMainButton(
                       isPhoneSelected
                           ? AppLocalizations.of(context)!.sendCode
+                          : isSignupMode
+                          ? AppLocalizations.of(context)!.createAccount
                           : AppLocalizations.of(context)!.signIn,
                       onTap: () {
                         if (isPhoneSelected) {
@@ -156,29 +255,59 @@ class _LoginScreenState extends State<LoginScreen>
                               builder: (context) => const VerificationScreen(),
                             ),
                           );
+                        } else if (!isSignupMode) {
+                          //  تسجيل الدخول بالإيميل ينقل لـ MainShell
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MainShell(),
+                            ),
+                            (route) => false,
+                          );
                         }
                       },
                     ),
 
-                    // النص السفلي لإنشاء الحساب
+                    const SizedBox(height: 5),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!.dontHaveAccount,
-                          style: TextStyle(
-                            color: appStateManager.isDarkMode
-                                ? ColorApp.appDark
-                                : ColorApp.appLight,
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          child: Text(
+                            isSignupMode
+                                ? _t(
+                                    'لدي حساب بالفعل؟ ',
+                                    'Already have an account? ',
+                                  )
+                                : AppLocalizations.of(context)!.dontHaveAccount,
+                            key: ValueKey<bool>(isSignupMode),
+                            style: TextStyle(
+                              color: appStateManager.isDarkMode
+                                  ? ColorApp.appDark
+                                  : ColorApp.appLight,
+                            ),
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            AppLocalizations.of(context)!.createAccount,
-                            style: TextStyle(
-                              color: ColorApp.textFieldHighlight,
-                              fontWeight: FontWeight.bold,
+                          onPressed: () {
+                            setState(() {
+                              isSignupMode = !isSignupMode;
+                              isPhoneSelected = isSignupMode ? false : true;
+                            });
+                          },
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            child: Text(
+                              isSignupMode
+                                  ? AppLocalizations.of(context)!.login
+                                  : AppLocalizations.of(context)!.createAccount,
+                              key: ValueKey<bool>(isSignupMode),
+                              style: const TextStyle(
+                                color: ColorApp.textFieldHighlight,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -190,7 +319,6 @@ class _LoginScreenState extends State<LoginScreen>
 
               const SizedBox(height: 25),
 
-              // أيقونات التواصل الاجتماعي
               if (!isPhoneSelected)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +355,6 @@ class _LoginScreenState extends State<LoginScreen>
                 )
               : body,
 
-          // Floating Switchers
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,
             left: 20,
@@ -236,7 +363,10 @@ class _LoginScreenState extends State<LoginScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildFloatingButton(
-                  onTap: () => appStateManager.toggleLanguage(),
+                  onTap: () {
+                    appStateManager.toggleLanguage();
+                    setState(() {});
+                  },
                   child: AnimatedSize(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOut,
@@ -314,7 +444,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // ويدجت زر التبديل (Tabs)
   Widget _buildTabButton(String title, bool isSelected, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
@@ -348,22 +477,43 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // حقل رقم التليفون
+  //  حقل التليفون مع اختيار الدولة
   Widget _buildPhoneInput() {
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          decoration: BoxDecoration(
-            border: Border.all(color: ColorApp.textFieldHighlight),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            '+20 ▼',
-            style: TextStyle(
-              color: appStateManager.isDarkMode
-                  ? ColorApp.icons
-                  : ColorApp.appLight,
+        GestureDetector(
+          onTap: _showCountryPicker,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            decoration: BoxDecoration(
+              border: Border.all(color: ColorApp.textFieldHighlight),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  _selectedCountryFlag,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  _selectedCountryCode,
+                  style: TextStyle(
+                    color: appStateManager.isDarkMode
+                        ? ColorApp.icons
+                        : ColorApp.appLight,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.arrow_drop_down,
+                  color: appStateManager.isDarkMode
+                      ? ColorApp.icons
+                      : ColorApp.appLight,
+                  size: 20,
+                ),
+              ],
             ),
           ),
         ),
@@ -377,12 +527,10 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // حقل البريد الإلكتروني
   Widget _buildEmailInput(String hint) {
     return _buildTextField(hint: hint);
   }
 
-  // حقل كلمة المرور
   Widget _buildPasswordInput() {
     return TextField(
       obscureText: !isPasswordVisible,
@@ -391,7 +539,6 @@ class _LoginScreenState extends State<LoginScreen>
         hintText: AppLocalizations.of(context)!.password,
         hintStyle: const TextStyle(color: ColorApp.locationText),
         suffixIcon: IconButton(
-          // تم تغييرها لـ suffix عشان الـ RTL
           icon: Icon(
             isPasswordVisible
                 ? Icons.visibility
@@ -413,7 +560,36 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // حقل إدخال عام
+  Widget _buildConfirmPasswordInput() {
+    return TextField(
+      obscureText: !isConfirmPasswordVisible,
+      style: const TextStyle(color: ColorApp.appLight),
+      decoration: InputDecoration(
+        hintText: _t('تأكيد الرقم السري', 'Confirm Password'),
+        hintStyle: const TextStyle(color: ColorApp.locationText),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isConfirmPasswordVisible
+                ? Icons.visibility
+                : Icons.visibility_off_outlined,
+            color: ColorApp.locationText,
+          ),
+          onPressed: () => setState(
+            () => isConfirmPasswordVisible = !isConfirmPasswordVisible,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTextField({required String hint}) {
     return TextField(
       style: TextStyle(
@@ -440,7 +616,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // زرار تسجيل الدخول الرئيسي
   Widget _buildMainButton(String title, {VoidCallback? onTap}) {
     return SizedBox(
       width: double.infinity,
@@ -467,7 +642,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // أيقونة سوشيال ميديا
   Widget _socialIcon(String path) {
     return CircleAvatar(
       radius: 16,

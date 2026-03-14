@@ -47,7 +47,7 @@ class ShefaApp extends StatelessWidget {
             SignupScreen.routeName: (context) => const SignupScreen(),
             MainShell.routeName: (context) => const MainShell(),
           },
-          home: const OnboardingScreen(),
+          home: const LoginScreen(),
         );
       },
     );
