@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/assets_app.dart';
 import '../../core/theme/color_app.dart';
+import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/login_screen.dart';
 
@@ -85,7 +86,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorApp.appLight,
+      backgroundColor: appStateManager.isDarkMode
+          ? ColorApp.appDark
+          : ColorApp.appLight,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -152,8 +155,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Text(
                     _titles[_currentPage],
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: ColorApp.primary,
+                    style: TextStyle(
+                      color: appStateManager.isDarkMode
+                          ? ColorApp.appLight
+                          : ColorApp.primary,
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       height: 1.4,

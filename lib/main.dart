@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'core/cache/cache_helper.dart';
 import 'core/manager/app_state_manager.dart';
 import 'core/theme/color_app.dart';
 import 'features/auth/login_screen.dart';
@@ -8,7 +9,10 @@ import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/main_shell.dart';
 import 'l10n/app_localizations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
+  appStateManager.init();
   runApp(const ShefaApp());
 }
 
