@@ -139,4 +139,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String navigatingTo(String title) {
     return 'Navigating to $title';
   }
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
+
+  @override
+  String get invalidPassword => 'Password must be at least 6 characters';
+
+  @override
+  String get invalidPhone => 'Please enter a valid phone number';
+
+  @override
+  String get emptyField => 'This field cannot be empty';
+
+  @override
+  String get validationSuccess => 'Validation Successful';
+
+  @override
+  String get validationError => 'Please correct the errors in the fields';
 }

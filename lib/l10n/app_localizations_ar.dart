@@ -137,4 +137,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String navigatingTo(String title) {
     return 'الانتقال إلى $title';
   }
+
+  @override
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صحيح';
+
+  @override
+  String get invalidPassword => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+
+  @override
+  String get invalidPhone => 'يرجى إدخال رقم هاتف صحيح';
+
+  @override
+  String get emptyField => 'هذا الحقل لا يمكن أن يكون فارغاً';
+
+  @override
+  String get validationSuccess => 'تم التحقق بنجاح';
+
+  @override
+  String get validationError => 'يرجى تصحيح الأخطاء الموضحة في الحقول';
 }

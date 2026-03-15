@@ -24,4 +24,8 @@ abstract class ColorApp {
 
   // button
   static const Color buttonDetails = Color(0xFFC0D9E4);
+
+  // feedback
+  static const Color error = Color(0xFFE57373);
+  static const Color success = Color(0xFF81C784);
 }
