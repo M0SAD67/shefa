@@ -343,6 +343,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Navigating to {title}'**
   String navigatingTo(String title);
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get invalidEmail;
+
+  /// No description provided for @invalidPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get invalidPassword;
+
+  /// No description provided for @invalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get invalidPhone;
+
+  /// No description provided for @emptyField.
+  ///
+  /// In en, this message translates to:
+  /// **'This field cannot be empty'**
+  String get emptyField;
+
+  /// No description provided for @validationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Successful'**
+  String get validationSuccess;
+
+  /// No description provided for @validationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please correct the errors in the fields'**
+  String get validationError;
 }
 
 class _AppLocalizationsDelegate

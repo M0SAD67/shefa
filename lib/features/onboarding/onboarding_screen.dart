@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/assets_app.dart';
 import '../../core/theme/color_app.dart';
+import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/login_screen.dart';
 
@@ -17,7 +18,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
   final PageController _pageController = PageController();
-  Alignment _animationAlignment = Alignment.center;
+  AlignmentGeometry _animationAlignment = Alignment.center;
 
   final GlobalKey _startButtonKey = GlobalKey();
   final GlobalKey _skipButtonKey = GlobalKey();
@@ -44,7 +45,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _navigateToPage(int index, Alignment alignment) {
+  void _navigateToPage(int index, AlignmentGeometry alignment) {
     if (index >= 0 && index < pages.length) {
       setState(() {
         _animationAlignment = alignment;
@@ -85,7 +86,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorApp.appLight,
+      backgroundColor: appStateManager.isDarkMode
+          ? ColorApp.appDark
+          : ColorApp.appLight,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -105,7 +108,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   transitionBuilder:
                       (Widget child, Animation<double> animation) {
                         return ScaleTransition(
-                          alignment: _animationAlignment,
+                          alignment: _animationAlignment.resolve(
+                            Directionality.of(context),
+                          ),
                           scale: animation,
                           child: FadeTransition(
                             opacity: animation,
@@ -137,7 +142,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                 transitionBuilder: (Widget child, Animation<double> animation) {
                   return ScaleTransition(
-                    alignment: _animationAlignment,
+                    alignment: _animationAlignment.resolve(
+                      Directionality.of(context),
+                    ),
                     scale: animation,
                     child: FadeTransition(opacity: animation, child: child),
                   );
@@ -148,8 +155,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Text(
                     _titles[_currentPage],
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: ColorApp.primary,
+                    style: TextStyle(
+                      color: appStateManager.isDarkMode
+                          ? ColorApp.appLight
+                          : ColorApp.primary,
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       height: 1.4,
@@ -164,26 +173,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      if (_currentPage > 0) {
-                        _navigateToPage(_currentPage - 1, Alignment.bottomLeft);
-                      } else {
-                        _startExpansion(_skipButtonKey);
-                      }
-                    },
-                    child: PageViewOnboard(
-                      key: _currentPage == 0 ? _skipButtonKey : null,
-                      title: _currentPage == 0
-                          ? AppLocalizations.of(context)!.skip
-                          : AppLocalizations.of(context)!.previous,
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {
                       if (_currentPage < pages.length - 1) {
                         _navigateToPage(
                           _currentPage + 1,
-                          Alignment.bottomRight,
+                          AlignmentDirectional.bottomStart,
                         );
                       } else {
                         _startExpansion(_startButtonKey);
@@ -196,6 +189,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       title: _currentPage < pages.length - 1
                           ? AppLocalizations.of(context)!.next
                           : AppLocalizations.of(context)!.start,
+                    ),
+                  ),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      if (_currentPage > 0) {
+                        _navigateToPage(
+                          _currentPage - 1,
+                          AlignmentDirectional.bottomEnd,
+                        );
+                      } else {
+                        _startExpansion(_skipButtonKey);
+                      }
+                    },
+                    child: PageViewOnboard(
+                      key: _currentPage == 0 ? _skipButtonKey : null,
+                      title: _currentPage == 0
+                          ? AppLocalizations.of(context)!.skip
+                          : AppLocalizations.of(context)!.previous,
                     ),
                   ),
                 ],

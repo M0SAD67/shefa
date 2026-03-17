@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
 import 'package:shefa/features/home/main_shell.dart';
+import 'package:shefa/core/utils/app_validator.dart';
+import 'package:shefa/core/widgets/custom_snackbar.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
 import '../../l10n/app_localizations.dart';
@@ -49,6 +51,11 @@ class _LoginScreenState extends State<LoginScreen>
     {'code': '+33', 'flag': '🇫🇷', 'name': 'France'},
     {'code': '+90', 'flag': '🇹🇷', 'name': 'Turkey'},
   ];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   late AnimationController _revealController;
   late Animation<double> _revealAnimation;
@@ -74,6 +81,9 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _revealController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -150,6 +160,15 @@ class _LoginScreenState extends State<LoginScreen>
                       ? AppLocalizations.of(context)!.createAccount
                       : AppLocalizations.of(context)!.login,
                   key: ValueKey<bool>(isSignupMode),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 80),
+                Center(child: Image.asset(AssetsApp.logo, height: 100)),
+                const SizedBox(height: 40),
+                Text(
+                  AppLocalizations.of(context)!.login,
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -213,7 +232,57 @@ class _LoginScreenState extends State<LoginScreen>
                       ],
                       _buildEmailInput(
                         AppLocalizations.of(context)!.emailAddress,
+                ),
+                const SizedBox(height: 30),
+
+                // كارت تسجيل الدخول
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: appStateManager.isDarkMode
+                        ? ColorApp.appLight
+                        : ColorApp.icons,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: ColorApp.primary,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: ColorApp.primary, width: 2),
+                        ),
+                        child: Row(
+                          children: [
+                            _buildTabButton(
+                              AppLocalizations.of(context)!.email,
+                              !isPhoneSelected,
+                              () {
+                                setState(() => isPhoneSelected = false);
+                              },
+                            ),
+                            _buildTabButton(
+                              AppLocalizations.of(context)!.phoneNumber,
+                              isPhoneSelected,
+                              () {
+                                setState(() => isPhoneSelected = true);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
+                      const SizedBox(height: 25),
+
+                      if (isPhoneSelected) ...[
+                        _buildPhoneInput(),
+                      ] else ...[
+                        _buildEmailInput(
+                          AppLocalizations.of(context)!.emailAddress,
+                        ),
+                        const SizedBox(height: 15),
+                        _buildPasswordInput(),
+                      ],
                       const SizedBox(height: 15),
                       _buildPasswordInput(),
                       if (isSignupMode) ...[
@@ -227,6 +296,9 @@ class _LoginScreenState extends State<LoginScreen>
                     if (!isPhoneSelected && !isSignupMode)
                       Align(
                         alignment: Alignment.centerRight,
+
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
                         child: TextButton(
                           onPressed: () {},
                           child: Text(
@@ -238,6 +310,7 @@ class _LoginScreenState extends State<LoginScreen>
                           ),
                         ),
                       ),
+                      const SizedBox(height: 15),
 
                     const SizedBox(height: 15),
 
@@ -283,6 +356,71 @@ class _LoginScreenState extends State<LoginScreen>
                                   )
                                 : AppLocalizations.of(context)!.dontHaveAccount,
                             key: ValueKey<bool>(isSignupMode),
+                      _buildMainButton(
+                        isPhoneSelected
+                            ? AppLocalizations.of(context)!.sendCode
+                            : AppLocalizations.of(context)!.signIn,
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            showCustomSnackBar(
+                              context,
+                              message: AppLocalizations.of(
+                                context,
+                              )!.validationSuccess,
+                              backgroundColor: ColorApp.success,
+                              top: true,
+                              icon: Icons.check_circle_outline,
+                            );
+                            if (isPhoneSelected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const VerificationScreen(),
+                                ),
+                              );
+                            } else {
+                              // TODO: Add email sign in logic
+                            }
+                          } else {
+                            // Find the first error to show in snackbar
+                            String? errorMsg;
+                            if (isPhoneSelected) {
+                              errorMsg = AppValidator.validatePhone(
+                                _phoneController.text,
+                                context,
+                              );
+                            } else {
+                              errorMsg =
+                                  AppValidator.validateEmail(
+                                    _emailController.text,
+                                    context,
+                                  ) ??
+                                  AppValidator.validatePassword(
+                                    _passwordController.text,
+                                    context,
+                                  );
+                            }
+
+                            showCustomSnackBar(
+                              context,
+                              message:
+                                  errorMsg ??
+                                  AppLocalizations.of(context)!.validationError,
+                              backgroundColor: ColorApp.error,
+                              top: true,
+                              icon: Icons.error_outline,
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 15),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.dontHaveAccount,
                             style: TextStyle(
                               color: appStateManager.isDarkMode
                                   ? ColorApp.appDark
@@ -329,8 +467,40 @@ class _LoginScreenState extends State<LoginScreen>
                     const SizedBox(width: 15),
                     _socialIcon(AssetsApp.icFacebook),
                   ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              AppLocalizations.of(context)!.createAccount,
+                              style: TextStyle(
+                                color: ColorApp.textFieldHighlight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-            ],
+
+                const SizedBox(height: 25),
+
+                // أيقونات التواصل الاجتماعي
+                if (!isPhoneSelected)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _socialIcon(AssetsApp.icGoogle),
+                      const SizedBox(width: 15),
+                      _socialIcon(AssetsApp.icApple),
+                      const SizedBox(width: 15),
+                      _socialIcon(AssetsApp.icFacebook),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -521,6 +691,8 @@ class _LoginScreenState extends State<LoginScreen>
         Expanded(
           child: _buildTextField(
             hint: AppLocalizations.of(context)!.phoneNumber,
+            controller: _phoneController,
+            validator: (value) => AppValidator.validatePhone(value, context),
           ),
         ),
       ],
@@ -528,16 +700,27 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildEmailInput(String hint) {
-    return _buildTextField(hint: hint);
+    return _buildTextField(
+      hint: hint,
+      controller: _emailController,
+      validator: (value) => AppValidator.validateEmail(value, context),
+    );
   }
 
   Widget _buildPasswordInput() {
-    return TextField(
+    return TextFormField(
+      controller: _passwordController,
       obscureText: !isPasswordVisible,
-      style: const TextStyle(color: ColorApp.appLight),
+      validator: (value) => AppValidator.validatePassword(value, context),
+      style: TextStyle(
+        color: appStateManager.isDarkMode
+            ? ColorApp.appDark
+            : ColorApp.appLight,
+      ),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)!.password,
-        hintStyle: const TextStyle(color: ColorApp.locationText),
+        labelText: AppLocalizations.of(context)!.password,
+        labelStyle: const TextStyle(color: ColorApp.locationText),
+        floatingLabelStyle: const TextStyle(color: ColorApp.textFieldHighlight),
         suffixIcon: IconButton(
           icon: Icon(
             isPasswordVisible
@@ -553,7 +736,18 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+          borderSide: const BorderSide(
+            color: ColorApp.textFieldHighlight,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
       ),
@@ -592,14 +786,24 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildTextField({required String hint}) {
     return TextField(
+  // حقل إدخال عام
+  Widget _buildTextField({
+    required String hint,
+    TextEditingController? controller,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
       style: TextStyle(
         color: appStateManager.isDarkMode
             ? ColorApp.appDark
             : ColorApp.appLight,
       ),
       decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(color: ColorApp.locationText),
+        labelText: hint,
+        labelStyle: const TextStyle(color: ColorApp.locationText),
+        floatingLabelStyle: const TextStyle(color: ColorApp.textFieldHighlight),
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18,
           horizontal: 15,
@@ -609,7 +813,18 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+          borderSide: const BorderSide(
+            color: ColorApp.textFieldHighlight,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
       ),

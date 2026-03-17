@@ -53,5 +53,11 @@
         "type": "String"
       }
     }
-  }
+  },
+  "invalidEmail": "Please enter a valid email address",
+  "invalidPassword": "Password must be at least 6 characters",
+  "invalidPhone": "Please enter a valid phone number",
+  "emptyField": "This field cannot be empty",
+  "validationSuccess": "Validation Successful",
+  "validationError": "Please correct the errors in the fields"
 }
