@@ -379,6 +379,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please correct the errors in the fields'**
   String get validationError;
+
+  /// No description provided for @searchCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Search country...'**
+  String get searchCountry;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @medicalStaffServiceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Home or anywhere patient\nand child care service'**
+  String get medicalStaffServiceDesc;
+
+  /// No description provided for @elderlyCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Elderly Care'**
+  String get elderlyCare;
+
+  /// No description provided for @postSurgeryCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Post-Surgery Care'**
+  String get postSurgeryCare;
+
+  /// No description provided for @newbornFollowUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Newborn Follow-up'**
+  String get newbornFollowUp;
+
+  /// No description provided for @patientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient Name'**
+  String get patientName;
+
+  /// No description provided for @addressOrLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Address or Location'**
+  String get addressOrLocation;
+
+  /// No description provided for @medicalCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Condition'**
+  String get medicalCondition;
+
+  /// No description provided for @confirmBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Booking'**
+  String get confirmBooking;
+
+  /// No description provided for @requestDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Details'**
+  String get requestDetails;
+
+  /// No description provided for @medicalStaffBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Staff Booking'**
+  String get medicalStaffBooking;
+
+  /// No description provided for @notSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// No description provided for @bookingRequestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Request Sent'**
+  String get bookingRequestSent;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @condition.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get condition;
+
+  /// No description provided for @serviceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Type'**
+  String get serviceType;
 }
 
 class _AppLocalizationsDelegate

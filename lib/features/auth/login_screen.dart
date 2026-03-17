@@ -8,6 +8,7 @@ import 'package:shefa/core/widgets/custom_snackbar.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
 import '../../l10n/app_localizations.dart';
+import 'package:country_flags/country_flags.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
@@ -27,29 +28,122 @@ class _LoginScreenState extends State<LoginScreen>
 
   //  متغيرات اختيار الدولة
   String _selectedCountryCode = '+20';
-  String _selectedCountryFlag = '🇪🇬';
+  String _selectedIsoCode = 'EG';
 
   //  قائمة الدول
   final List<Map<String, String>> _countries = [
-    {'code': '+20', 'flag': '🇪🇬', 'name': 'Egypt'},
-    {'code': '+966', 'flag': '🇸🇦', 'name': 'Saudi Arabia'},
-    {'code': '+971', 'flag': '🇦🇪', 'name': 'UAE'},
-    {'code': '+965', 'flag': '🇰🇼', 'name': 'Kuwait'},
-    {'code': '+974', 'flag': '🇶🇦', 'name': 'Qatar'},
-    {'code': '+973', 'flag': '🇧🇭', 'name': 'Bahrain'},
-    {'code': '+968', 'flag': '🇴🇲', 'name': 'Oman'},
-    {'code': '+962', 'flag': '🇯🇴', 'name': 'Jordan'},
-    {'code': '+961', 'flag': '🇱🇧', 'name': 'Lebanon'},
-    {'code': '+249', 'flag': '🇸🇩', 'name': 'Sudan'},
-    {'code': '+218', 'flag': '🇱🇾', 'name': 'Libya'},
-    {'code': '+213', 'flag': '🇩🇿', 'name': 'Algeria'},
-    {'code': '+216', 'flag': '🇹🇳', 'name': 'Tunisia'},
-    {'code': '+212', 'flag': '🇲🇦', 'name': 'Morocco'},
-    {'code': '+1', 'flag': '🇺🇸', 'name': 'USA'},
-    {'code': '+44', 'flag': '🇬🇧', 'name': 'UK'},
-    {'code': '+49', 'flag': '🇩🇪', 'name': 'Germany'},
-    {'code': '+33', 'flag': '🇫🇷', 'name': 'France'},
-    {'code': '+90', 'flag': '🇹🇷', 'name': 'Turkey'},
+    {'code': '+20', 'nameAr': 'مصر', 'nameEn': 'Egypt', 'isoCode': 'EG'},
+    {
+      'code': '+966',
+      'nameAr': 'السعودية',
+      'nameEn': 'Saudi Arabia',
+      'isoCode': 'SA',
+    },
+    {'code': '+971', 'nameAr': 'الإمارات', 'nameEn': 'UAE', 'isoCode': 'AE'},
+    {'code': '+965', 'nameAr': 'الكويت', 'nameEn': 'Kuwait', 'isoCode': 'KW'},
+    {'code': '+974', 'nameAr': 'قطر', 'nameEn': 'Qatar', 'isoCode': 'QA'},
+    {'code': '+973', 'nameAr': 'البحرين', 'nameEn': 'Bahrain', 'isoCode': 'BH'},
+    {'code': '+968', 'nameAr': 'عمان', 'nameEn': 'Oman', 'isoCode': 'OM'},
+    {'code': '+962', 'nameAr': 'الأردن', 'nameEn': 'Jordan', 'isoCode': 'JO'},
+    {
+      'code': '+970',
+      'nameAr': 'فلسطين',
+      'nameEn': 'Palestine',
+      'isoCode': 'PS',
+    },
+    {'code': '+961', 'nameAr': 'لبنان', 'nameEn': 'Lebanon', 'isoCode': 'LB'},
+    {'code': '+964', 'nameAr': 'العراق', 'nameEn': 'Iraq', 'isoCode': 'IQ'},
+    {'code': '+967', 'nameAr': 'اليمن', 'nameEn': 'Yemen', 'isoCode': 'YE'},
+    {'code': '+963', 'nameAr': 'سوريا', 'nameEn': 'Syria', 'isoCode': 'SY'},
+    {'code': '+249', 'nameAr': 'السودان', 'nameEn': 'Sudan', 'isoCode': 'SD'},
+    {'code': '+218', 'nameAr': 'ليبيا', 'nameEn': 'Libya', 'isoCode': 'LY'},
+    {'code': '+213', 'nameAr': 'الجزائر', 'nameEn': 'Algeria', 'isoCode': 'DZ'},
+    {'code': '+216', 'nameAr': 'تونس', 'nameEn': 'Tunisia', 'isoCode': 'TN'},
+    {'code': '+212', 'nameAr': 'المغرب', 'nameEn': 'Morocco', 'isoCode': 'MA'},
+    {
+      'code': '+222',
+      'nameAr': 'موريتانيا',
+      'nameEn': 'Mauritania',
+      'isoCode': 'MR',
+    },
+    {'code': '+253', 'nameAr': 'جيبوتي', 'nameEn': 'Djibouti', 'isoCode': 'DJ'},
+    {'code': '+252', 'nameAr': 'الصومال', 'nameEn': 'Somalia', 'isoCode': 'SO'},
+    {
+      'code': '+269',
+      'nameAr': 'جزر القمر',
+      'nameEn': 'Comoros',
+      'isoCode': 'KM',
+    },
+    {
+      'code': '+211',
+      'nameAr': 'جنوب السودان',
+      'nameEn': 'South Sudan',
+      'isoCode': 'SS',
+    },
+    {'code': '+90', 'nameAr': 'تركيا', 'nameEn': 'Turkey', 'isoCode': 'TR'},
+    {'code': '+1', 'nameAr': 'أمريكا', 'nameEn': 'USA', 'isoCode': 'US'},
+    {'code': '+1', 'nameAr': 'كندا', 'nameEn': 'Canada', 'isoCode': 'CA'},
+    {'code': '+44', 'nameAr': 'بريطانيا', 'nameEn': 'UK', 'isoCode': 'GB'},
+    {'code': '+49', 'nameAr': 'ألمانيا', 'nameEn': 'Germany', 'isoCode': 'DE'},
+    {'code': '+33', 'nameAr': 'فرنسا', 'nameEn': 'France', 'isoCode': 'FR'},
+    {'code': '+34', 'nameAr': 'إسبانيا', 'nameEn': 'Spain', 'isoCode': 'ES'},
+    {'code': '+39', 'nameAr': 'إيطاليا', 'nameEn': 'Italy', 'isoCode': 'IT'},
+    {
+      'code': '+61',
+      'nameAr': 'أستراليا',
+      'nameEn': 'Australia',
+      'isoCode': 'AU',
+    },
+    {'code': '+81', 'nameAr': 'اليابان', 'nameEn': 'Japan', 'isoCode': 'JP'},
+    {
+      'code': '+82',
+      'nameAr': 'كوريا الجنوبية',
+      'nameEn': 'South Korea',
+      'isoCode': 'KR',
+    },
+    {'code': '+86', 'nameAr': 'الصين', 'nameEn': 'China', 'isoCode': 'CN'},
+    {'code': '+91', 'nameAr': 'الهند', 'nameEn': 'India', 'isoCode': 'IN'},
+    {'code': '+7', 'nameAr': 'روسيا', 'nameEn': 'Russia', 'isoCode': 'RU'},
+    {'code': '+55', 'nameAr': 'البرازيل', 'nameEn': 'Brazil', 'isoCode': 'BR'},
+    {
+      'code': '+31',
+      'nameAr': 'هولندا',
+      'nameEn': 'Netherlands',
+      'isoCode': 'NL',
+    },
+    {'code': '+32', 'nameAr': 'بلجيكا', 'nameEn': 'Belgium', 'isoCode': 'BE'},
+    {
+      'code': '+41',
+      'nameAr': 'سويسرا',
+      'nameEn': 'Switzerland',
+      'isoCode': 'CH',
+    },
+    {'code': '+43', 'nameAr': 'النمسا', 'nameEn': 'Austria', 'isoCode': 'AT'},
+    {'code': '+46', 'nameAr': 'السويد', 'nameEn': 'Sweden', 'isoCode': 'SE'},
+    {'code': '+47', 'nameAr': 'النرويج', 'nameEn': 'Norway', 'isoCode': 'NO'},
+    {'code': '+45', 'nameAr': 'الدنمارك', 'nameEn': 'Denmark', 'isoCode': 'DK'},
+    {
+      'code': '+351',
+      'nameAr': 'البرتغال',
+      'nameEn': 'Portugal',
+      'isoCode': 'PT',
+    },
+    {'code': '+30', 'nameAr': 'اليونان', 'nameEn': 'Greece', 'isoCode': 'GR'},
+    {'code': '+60', 'nameAr': 'ماليزيا', 'nameEn': 'Malaysia', 'isoCode': 'MY'},
+    {
+      'code': '+62',
+      'nameAr': 'إندونيسيا',
+      'nameEn': 'Indonesia',
+      'isoCode': 'ID',
+    },
+    {'code': '+66', 'nameAr': 'تايلاند', 'nameEn': 'Thailand', 'isoCode': 'TH'},
+    {'code': '+234', 'nameAr': 'نيجيريا', 'nameEn': 'Nigeria', 'isoCode': 'NG'},
+    {
+      'code': '+27',
+      'nameAr': 'جنوب أفريقيا',
+      'nameEn': 'South Africa',
+      'isoCode': 'ZA',
+    },
   ];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -89,45 +183,132 @@ class _LoginScreenState extends State<LoginScreen>
 
   //  دالة عرض قائمة الدول
   void _showCountryPicker() {
+    String searchQuery = '';
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: appStateManager.isDarkMode
           ? ColorApp.appDark
           : ColorApp.appLight,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
       builder: (context) {
-        return ListView.builder(
-          itemCount: _countries.length,
-          itemBuilder: (context, index) {
-            final country = _countries[index];
-            return ListTile(
-              leading: Text(
-                country['flag']!,
-                style: const TextStyle(fontSize: 24),
-              ),
-              title: Text(
-                country['name']!,
-                style: TextStyle(
-                  color: appStateManager.isDarkMode
-                      ? ColorApp.appLight
-                      : ColorApp.appDark,
-                ),
-              ),
-              trailing: Text(
-                country['code']!,
-                style: TextStyle(
-                  color: ColorApp.textFieldHighlight,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                setState(() {
-                  _selectedCountryCode = country['code']!;
-                  _selectedCountryFlag = country['flag']!;
-                });
-                Navigator.pop(context);
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            final filteredCountries = _countries.where((country) {
+              final nameAr = (country['nameAr'] ?? '').toLowerCase();
+              final nameEn = (country['nameEn'] ?? '').toLowerCase();
+              final code = (country['code'] ?? '').toLowerCase();
+              final query = searchQuery.toLowerCase();
+              return nameAr.contains(query) ||
+                  nameEn.contains(query) ||
+                  code.contains(query);
+            }).toList();
+
+            return DraggableScrollableSheet(
+              initialChildSize: 0.7,
+              minChildSize: 0.5,
+              maxChildSize: 0.9,
+              expand: false,
+              builder: (context, scrollController) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      width: 40,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        onChanged: (value) {
+                          setModalState(() {
+                            searchQuery = value;
+                          });
+                        },
+                        style: TextStyle(
+                          color: appStateManager.isDarkMode
+                              ? ColorApp.appLight
+                              : ColorApp.appDark,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.searchCountry,
+                          hintStyle: const TextStyle(color: Colors.grey),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.grey,
+                          ),
+                          filled: true,
+                          fillColor: appStateManager.isDarkMode
+                              ? Colors.grey[850]
+                              : Colors.grey[200],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: filteredCountries.length,
+                        itemBuilder: (context, index) {
+                          final country = filteredCountries[index];
+                          return ListTile(
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: SizedBox(
+                                width: 36,
+                                height: 26,
+                                child: CountryFlag.fromCountryCode(
+                                  country['isoCode']!,
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              _t(
+                                country['nameAr'] ?? '',
+                                country['nameEn'] ?? '',
+                              ),
+                              style: TextStyle(
+                                color: appStateManager.isDarkMode
+                                    ? ColorApp.appLight
+                                    : ColorApp.appDark,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            trailing: Text(
+                              country['code'] ?? '',
+                              style: TextStyle(
+                                color: ColorApp.textFieldHighlight,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _selectedCountryCode = country['code'] ?? '+20';
+                                _selectedIsoCode = country['isoCode'] ?? 'EG';
+                              });
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
               },
             );
           },
@@ -147,19 +328,6 @@ class _LoginScreenState extends State<LoginScreen>
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 80),
-              Center(child: Image.asset(AssetsApp.logo, height: 100)),
-              const SizedBox(height: 40),
-
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: Text(
-                  isSignupMode
-                      ? AppLocalizations.of(context)!.createAccount
-                      : AppLocalizations.of(context)!.login,
-                  key: ValueKey<bool>(isSignupMode),
           child: Form(
             key: _formKey,
             child: Column(
@@ -167,75 +335,27 @@ class _LoginScreenState extends State<LoginScreen>
                 const SizedBox(height: 80),
                 Center(child: Image.asset(AssetsApp.logo, height: 100)),
                 const SizedBox(height: 40),
-                Text(
-                  AppLocalizations.of(context)!.login,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: appStateManager.isDarkMode
-                        ? ColorApp.appLight
-                        : ColorApp.primary,
+
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Text(
+                    isSignupMode
+                        ? AppLocalizations.of(context)!.createAccount
+                        : AppLocalizations.of(context)!.login,
+                    key: ValueKey<bool>(isSignupMode),
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: appStateManager.isDarkMode
+                          ? ColorApp.appLight
+                          : ColorApp.primary,
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 30),
-
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: appStateManager.isDarkMode
-                      ? ColorApp.appLight
-                      : ColorApp.icons,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: ColorApp.primary,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: ColorApp.primary, width: 2),
-                      ),
-                      child: Row(
-                        children: [
-                          _buildTabButton(
-                            AppLocalizations.of(context)!.email,
-                            !isPhoneSelected,
-                            () => setState(() => isPhoneSelected = false),
-                          ),
-                          _buildTabButton(
-                            AppLocalizations.of(context)!.phoneNumber,
-                            isPhoneSelected,
-                            () => setState(() => isPhoneSelected = true),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 25),
-
-                    if (isPhoneSelected) ...[
-                      if (isSignupMode) ...[
-                        _buildTextField(hint: _t('اسم المستخدم', 'Username')),
-                        const SizedBox(height: 15),
-                        _buildTextField(hint: _t('عنوان المستخدم', 'Address')),
-                        const SizedBox(height: 15),
-                      ],
-                      _buildPhoneInput(),
-                    ] else ...[
-                      if (isSignupMode) ...[
-                        _buildTextField(hint: _t('اسم المستخدم', 'Username')),
-                        const SizedBox(height: 15),
-                        _buildTextField(hint: _t('عنوان المستخدم', 'Address')),
-                        const SizedBox(height: 15),
-                      ],
-                      _buildEmailInput(
-                        AppLocalizations.of(context)!.emailAddress,
-                ),
                 const SizedBox(height: 30),
 
-                // كارت تسجيل الدخول
+                // Card Container
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -246,6 +366,7 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                   child: Column(
                     children: [
+                      // Tab Switcher
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
@@ -258,119 +379,70 @@ class _LoginScreenState extends State<LoginScreen>
                             _buildTabButton(
                               AppLocalizations.of(context)!.email,
                               !isPhoneSelected,
-                              () {
-                                setState(() => isPhoneSelected = false);
-                              },
+                              () => setState(() => isPhoneSelected = false),
                             ),
                             _buildTabButton(
                               AppLocalizations.of(context)!.phoneNumber,
                               isPhoneSelected,
-                              () {
-                                setState(() => isPhoneSelected = true);
-                              },
+                              () => setState(() => isPhoneSelected = true),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 25),
 
-                      if (isPhoneSelected) ...[
-                        _buildPhoneInput(),
-                      ] else ...[
+                      // Fields
+                      if (isSignupMode) ...[
+                        _buildTextField(
+                          hint: AppLocalizations.of(context)!.username,
+                        ),
+                        const SizedBox(height: 15),
+                        _buildTextField(
+                          hint: AppLocalizations.of(context)!.address,
+                        ),
+                        const SizedBox(height: 15),
+                      ],
+
+                      if (isPhoneSelected)
+                        _buildPhoneInput()
+                      else ...[
                         _buildEmailInput(
                           AppLocalizations.of(context)!.emailAddress,
                         ),
                         const SizedBox(height: 15),
                         _buildPasswordInput(),
                       ],
-                      const SizedBox(height: 15),
-                      _buildPasswordInput(),
-                      if (isSignupMode) ...[
+
+                      if (isSignupMode && !isPhoneSelected) ...[
                         const SizedBox(height: 15),
                         _buildConfirmPasswordInput(),
                       ],
-                    ],
 
-                    const SizedBox(height: 15),
-
-                    if (!isPhoneSelected && !isSignupMode)
-                      Align(
-                        alignment: Alignment.centerRight,
-
-                      Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            AppLocalizations.of(context)!.forgotPassword,
-                            style: const TextStyle(
-                              color: ColorApp.textFieldHighlight,
-                              fontSize: 12,
+                      if (!isPhoneSelected && !isSignupMode)
+                        Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              AppLocalizations.of(context)!.forgotPassword,
+                              style: const TextStyle(
+                                color: ColorApp.textFieldHighlight,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 15),
 
-                    const SizedBox(height: 15),
+                      const SizedBox(height: 25),
 
-                    _buildMainButton(
-                      isPhoneSelected
-                          ? AppLocalizations.of(context)!.sendCode
-                          : isSignupMode
-                          ? AppLocalizations.of(context)!.createAccount
-                          : AppLocalizations.of(context)!.signIn,
-                      onTap: () {
-                        if (isPhoneSelected) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VerificationScreen(),
-                            ),
-                          );
-                        } else if (!isSignupMode) {
-                          //  تسجيل الدخول بالإيميل ينقل لـ MainShell
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MainShell(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                      },
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: Text(
-                            isSignupMode
-                                ? _t(
-                                    'لدي حساب بالفعل؟ ',
-                                    'Already have an account? ',
-                                  )
-                                : AppLocalizations.of(context)!.dontHaveAccount,
-                            key: ValueKey<bool>(isSignupMode),
                       _buildMainButton(
                         isPhoneSelected
                             ? AppLocalizations.of(context)!.sendCode
+                            : isSignupMode
+                            ? AppLocalizations.of(context)!.createAccount
                             : AppLocalizations.of(context)!.signIn,
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            showCustomSnackBar(
-                              context,
-                              message: AppLocalizations.of(
-                                context,
-                              )!.validationSuccess,
-                              backgroundColor: ColorApp.success,
-                              top: true,
-                              icon: Icons.check_circle_outline,
-                            );
                             if (isPhoneSelected) {
                               Navigator.push(
                                 context,
@@ -379,11 +451,16 @@ class _LoginScreenState extends State<LoginScreen>
                                       const VerificationScreen(),
                                 ),
                               );
-                            } else {
-                              // TODO: Add email sign in logic
+                            } else if (!isSignupMode) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MainShell(),
+                                ),
+                                (route) => false,
+                              );
                             }
                           } else {
-                            // Find the first error to show in snackbar
                             String? errorMsg;
                             if (isPhoneSelected) {
                               errorMsg = AppValidator.validatePhone(
@@ -414,66 +491,36 @@ class _LoginScreenState extends State<LoginScreen>
                           }
                         },
                       ),
+
                       const SizedBox(height: 15),
 
+                      // Toggle Login/Signup
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.dontHaveAccount,
+                            isSignupMode
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.alreadyHaveAccount
+                                : AppLocalizations.of(context)!.dontHaveAccount,
                             style: TextStyle(
                               color: appStateManager.isDarkMode
                                   ? ColorApp.appDark
                                   : ColorApp.appLight,
                             ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              isSignupMode = !isSignupMode;
-                              isPhoneSelected = isSignupMode ? false : true;
-                            });
-                          },
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isSignupMode = !isSignupMode;
+                              });
+                            },
                             child: Text(
                               isSignupMode
                                   ? AppLocalizations.of(context)!.login
                                   : AppLocalizations.of(context)!.createAccount,
-                              key: ValueKey<bool>(isSignupMode),
                               style: const TextStyle(
-                                color: ColorApp.textFieldHighlight,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              if (!isPhoneSelected)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _socialIcon(AssetsApp.icGoogle),
-                    const SizedBox(width: 15),
-                    _socialIcon(AssetsApp.icApple),
-                    const SizedBox(width: 15),
-                    _socialIcon(AssetsApp.icFacebook),
-                  ],
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              AppLocalizations.of(context)!.createAccount,
-                              style: TextStyle(
                                 color: ColorApp.textFieldHighlight,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -487,8 +534,8 @@ class _LoginScreenState extends State<LoginScreen>
 
                 const SizedBox(height: 25),
 
-                // أيقونات التواصل الاجتماعي
-                if (!isPhoneSelected)
+                // Social Icons
+                if (!isPhoneSelected && !isSignupMode)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -499,6 +546,7 @@ class _LoginScreenState extends State<LoginScreen>
                       _socialIcon(AssetsApp.icFacebook),
                     ],
                   ),
+                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -661,9 +709,13 @@ class _LoginScreenState extends State<LoginScreen>
             ),
             child: Row(
               children: [
-                Text(
-                  _selectedCountryFlag,
-                  style: const TextStyle(fontSize: 20),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: SizedBox(
+                    width: 28,
+                    height: 20,
+                    child: CountryFlag.fromCountryCode(_selectedIsoCode),
+                  ),
                 ),
                 const SizedBox(width: 5),
                 Text(
@@ -755,12 +807,17 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildConfirmPasswordInput() {
-    return TextField(
+    return TextFormField(
       obscureText: !isConfirmPasswordVisible,
-      style: const TextStyle(color: ColorApp.appLight),
+      style: TextStyle(
+        color: appStateManager.isDarkMode
+            ? ColorApp.appDark
+            : ColorApp.appLight,
+      ),
       decoration: InputDecoration(
-        hintText: _t('تأكيد الرقم السري', 'Confirm Password'),
-        hintStyle: const TextStyle(color: ColorApp.locationText),
+        labelText: AppLocalizations.of(context)!.confirmPassword,
+        labelStyle: const TextStyle(color: ColorApp.locationText),
+        floatingLabelStyle: const TextStyle(color: ColorApp.textFieldHighlight),
         suffixIcon: IconButton(
           icon: Icon(
             isConfirmPasswordVisible
@@ -777,15 +834,24 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+          borderSide: const BorderSide(
+            color: ColorApp.textFieldHighlight,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
   }
 
-  Widget _buildTextField({required String hint}) {
-    return TextField(
   // حقل إدخال عام
   Widget _buildTextField({
     required String hint,

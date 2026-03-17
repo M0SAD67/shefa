@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
 import '../../core/theme/color_app.dart';
+import '../../l10n/app_localizations.dart';
 
 class MedicalStaffScreen extends StatefulWidget {
   static const String routeName = 'MedicalStaffScreen';
@@ -15,16 +16,23 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
   int _selectedService = 0;
   bool _isSubmitted = false;
 
-  final List<Map<String, String>> _services = [
-    {'ar': 'رعاية كبار السن', 'en': 'Elderly Care'},
-    {'ar': 'رعاية بعد العمليات', 'en': 'Post-Surgery Care'},
-    {'ar': 'متابعة الأطفال حديثي الولادة', 'en': 'Newborn Follow-up'},
-  ];
-
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
   final _conditionController = TextEditingController();
+
+  String _getServiceTitle(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        return AppLocalizations.of(context)!.elderlyCare;
+      case 1:
+        return AppLocalizations.of(context)!.postSurgeryCare;
+      case 2:
+        return AppLocalizations.of(context)!.newbornFollowUp;
+      default:
+        return '';
+    }
+  }
 
   String _t(String ar, String en) {
     return appStateManager.isArabic ? ar : en;
@@ -142,7 +150,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  _t('طاقم طبي', 'Medical Staff'),
+                  AppLocalizations.of(context)!.medicalStaff,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -179,10 +187,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    _t(
-                      'خدمة متابعة ورعاية المرضى\nأو الأطفال في المنزل أو أي مكان',
-                      'Home or anywhere patient\nand child care service',
-                    ),
+                    AppLocalizations.of(context)!.medicalStaffServiceDesc,
                     style: TextStyle(
                       color: appStateManager.isDarkMode
                           ? ColorApp.appLight
@@ -195,9 +200,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
 
                   const SizedBox(height: 20),
 
-                  ..._services.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final service = entry.value;
+                  ...List.generate(3, (index) {
                     return GestureDetector(
                       onTap: () => setState(() => _selectedService = index),
                       child: Padding(
@@ -230,7 +233,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              _t(service['ar']!, service['en']!),
+                              _getServiceTitle(index, context),
                               style: TextStyle(
                                 color: appStateManager.isDarkMode
                                     ? ColorApp.appLight
@@ -248,23 +251,23 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
 
                   _buildInputField(
                     controller: _nameController,
-                    hint: _t('اسم المريض', 'Patient Name'),
+                    hint: AppLocalizations.of(context)!.patientName,
                   ),
                   const SizedBox(height: 10),
                   _buildInputField(
                     controller: _phoneController,
-                    hint: _t('رقم تليفون', 'Phone Number'),
+                    hint: AppLocalizations.of(context)!.phoneNumber,
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 10),
                   _buildInputField(
                     controller: _addressController,
-                    hint: _t('العنوان او المكان', 'Address or Location'),
+                    hint: AppLocalizations.of(context)!.addressOrLocation,
                   ),
                   const SizedBox(height: 10),
                   _buildInputField(
                     controller: _conditionController,
-                    hint: _t('الحالة الطبيه', 'Medical Condition'),
+                    hint: AppLocalizations.of(context)!.medicalCondition,
                   ),
                 ],
               ),
@@ -291,7 +294,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   elevation: 0,
                 ),
                 child: Text(
-                  _t('تأكيد الحجز', 'Confirm Booking'),
+                  AppLocalizations.of(context)!.confirmBooking,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -335,7 +338,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    _t('بيانات الطلب', 'Request Details'),
+                    AppLocalizations.of(context)!.requestDetails,
                     style: const TextStyle(
                       color: ColorApp.primary,
                       fontSize: 14,
@@ -344,7 +347,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    _t('حجز طاقم طبي', 'Medical Staff Booking'),
+                    AppLocalizations.of(context)!.medicalStaffBooking,
                     style: TextStyle(
                       color: appStateManager.isDarkMode
                           ? ColorApp.appLight
@@ -355,35 +358,32 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   ),
                   const Divider(height: 25, color: ColorApp.locationText),
                   _buildDetailRow(
-                    _t('اسم المريض', 'Patient Name'),
+                    AppLocalizations.of(context)!.patientName,
                     _nameController.text.isEmpty
-                        ? _t('غير محدد', 'Not specified')
+                        ? AppLocalizations.of(context)!.notSpecified
                         : _nameController.text,
                   ),
                   _buildDetailRow(
-                    _t('رقم التليفون', 'Phone'),
+                    AppLocalizations.of(context)!.phoneNumber,
                     _phoneController.text.isEmpty
-                        ? _t('غير محدد', 'Not specified')
+                        ? AppLocalizations.of(context)!.notSpecified
                         : _phoneController.text,
                   ),
                   _buildDetailRow(
-                    _t('العنوان', 'Address'),
+                    AppLocalizations.of(context)!.address,
                     _addressController.text.isEmpty
-                        ? _t('غير محدد', 'Not specified')
+                        ? AppLocalizations.of(context)!.notSpecified
                         : _addressController.text,
                   ),
                   _buildDetailRow(
-                    _t('الحالة', 'Condition'),
+                    AppLocalizations.of(context)!.condition,
                     _conditionController.text.isEmpty
-                        ? _t('غير محدد', 'Not specified')
+                        ? AppLocalizations.of(context)!.notSpecified
                         : _conditionController.text,
                   ),
                   _buildDetailRow(
-                    _t('نوع الخدمة', 'Service Type'),
-                    _t(
-                      _services[_selectedService]['ar']!,
-                      _services[_selectedService]['en']!,
-                    ),
+                    AppLocalizations.of(context)!.serviceType,
+                    _getServiceTitle(_selectedService, context),
                   ),
                 ],
               ),
@@ -415,16 +415,14 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
             const SizedBox(height: 20),
 
             Text(
-              _t('تم إرسال طلب الحجز', 'Booking Request Sent'),
+              AppLocalizations.of(context)!.bookingRequestSent,
               style: const TextStyle(
                 color: ColorApp.textFieldHighlight,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 30),
-
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
@@ -437,7 +435,7 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
                   ),
                 ),
                 child: Text(
-                  _t('العودة للرئيسية', 'Back to Home'),
+                  AppLocalizations.of(context)!.backToHome,
                   style: const TextStyle(
                     color: ColorApp.primary,
                     fontSize: 16,

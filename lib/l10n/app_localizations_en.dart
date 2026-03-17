@@ -157,4 +157,62 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validationError => 'Please correct the errors in the fields';
+
+  @override
+  String get searchCountry => 'Search country...';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get medicalStaffServiceDesc =>
+      'Home or anywhere patient\nand child care service';
+
+  @override
+  String get elderlyCare => 'Elderly Care';
+
+  @override
+  String get postSurgeryCare => 'Post-Surgery Care';
+
+  @override
+  String get newbornFollowUp => 'Newborn Follow-up';
+
+  @override
+  String get patientName => 'Patient Name';
+
+  @override
+  String get addressOrLocation => 'Address or Location';
+
+  @override
+  String get medicalCondition => 'Medical Condition';
+
+  @override
+  String get confirmBooking => 'Confirm Booking';
+
+  @override
+  String get requestDetails => 'Request Details';
+
+  @override
+  String get medicalStaffBooking => 'Medical Staff Booking';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String get bookingRequestSent => 'Booking Request Sent';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get condition => 'Condition';
+
+  @override
+  String get serviceType => 'Service Type';
 }

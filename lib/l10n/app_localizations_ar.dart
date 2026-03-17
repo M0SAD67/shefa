@@ -155,4 +155,62 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get validationError => 'يرجى تصحيح الأخطاء الموضحة في الحقول';
+
+  @override
+  String get searchCountry => 'بحث عن دولة...';
+
+  @override
+  String get username => 'اسم المستخدم';
+
+  @override
+  String get confirmPassword => 'تأكيد الرقم السري';
+
+  @override
+  String get alreadyHaveAccount => 'لدي حساب بالفعل؟ ';
+
+  @override
+  String get medicalStaffServiceDesc =>
+      'خدمة متابعة ورعاية المرضى\nأو الأطفال في المنزل أو أي مكان';
+
+  @override
+  String get elderlyCare => 'رعاية كبار السن';
+
+  @override
+  String get postSurgeryCare => 'رعاية بعد العمليات';
+
+  @override
+  String get newbornFollowUp => 'متابعة الأطفال حديثي الولادة';
+
+  @override
+  String get patientName => 'اسم المريض';
+
+  @override
+  String get addressOrLocation => 'العنوان او المكان';
+
+  @override
+  String get medicalCondition => 'الحالة الطبيه';
+
+  @override
+  String get confirmBooking => 'تأكيد الحجز';
+
+  @override
+  String get requestDetails => 'بيانات الطلب';
+
+  @override
+  String get medicalStaffBooking => 'حجز طاقم طبي';
+
+  @override
+  String get notSpecified => 'غير محدد';
+
+  @override
+  String get bookingRequestSent => 'تم إرسال طلب الحجز';
+
+  @override
+  String get backToHome => 'العودة للرئيسية';
+
+  @override
+  String get condition => 'الحالة';
+
+  @override
+  String get serviceType => 'نوع الخدمة';
 }
