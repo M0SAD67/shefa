@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async'; // عشان نستخدم الـ Timer للتحويل التلقائي
-import 'package:shefa/features/home/main_shell.dart';
+
 import '../../core/constants/assets_app.dart';
 
 import '../../core/theme/color_app.dart';
