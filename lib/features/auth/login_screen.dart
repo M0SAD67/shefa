@@ -4,6 +4,7 @@ import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
 import 'package:shefa/features/home/main_shell.dart';
 import 'package:shefa/core/utils/app_validator.dart';
+import 'package:shefa/core/utils/auth_error_ui_message.dart';
 import 'package:shefa/core/widgets/custom_snackbar.dart';
 import 'package:shefa/core/cache/cache_helper.dart';
 import 'package:shefa/features/auth/auth_repository.dart';
@@ -477,22 +478,23 @@ class _LoginScreenState extends State<LoginScreen>
                                         username: _usernameController.text,
                                         address: _addressController.text,
                                       );
-                                      if (mounted) {
-                                        showCustomSnackBar(
-                                          context,
-                                          message:
-                                              "Account created successfully",
-                                          backgroundColor: Colors.green,
-                                        );
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OtpScreen(
-                                              email: _emailController.text,
-                                            ),
+                                      if (!context.mounted) return;
+                                      final l10nSignup =
+                                          AppLocalizations.of(context)!;
+                                      showCustomSnackBar(
+                                        context,
+                                        message:
+                                            l10nSignup.accountCreatedSuccess,
+                                        backgroundColor: Colors.green,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => OtpScreen(
+                                            email: _emailController.text,
                                           ),
-                                        );
-                                      }
+                                        ),
+                                      );
                                     } else {
                                       // Login logic
                                       final result = await authRepository.login(
@@ -508,28 +510,33 @@ class _LoginScreenState extends State<LoginScreen>
                                           key: 'token',
                                           value: token,
                                         );
-                                        if (mounted) {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MainShell(),
-                                            ),
-                                            (route) => false,
-                                          );
-                                        }
+                                        if (!context.mounted) return;
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MainShell(),
+                                          ),
+                                          (route) => false,
+                                        );
                                       }
                                     }
                                   } catch (e) {
-                                    if (mounted) {
-                                      showCustomSnackBar(
-                                        context,
-                                        message: e.toString(),
-                                        backgroundColor: ColorApp.error,
-                                        top: true,
-                                        icon: Icons.error_outline,
-                                      );
-                                    }
+                                    if (!context.mounted) return;
+                                    final l10n =
+                                        AppLocalizations.of(context)!;
+                                    showCustomSnackBar(
+                                      context,
+                                      message: authErrorSnackMessage(
+                                        e,
+                                        l10n,
+                                      ),
+                                      backgroundColor: ColorApp.error,
+                                      top: true,
+                                      icon: Icons.error_outline,
+                                      maxMessageLines: 8,
+                                      duration: const Duration(seconds: 5),
+                                    );
                                   } finally {
                                     if (mounted) {
                                       setState(() => _isLoading = false);
@@ -859,7 +866,7 @@ class _LoginScreenState extends State<LoginScreen>
       obscureText: !isConfirmPasswordVisible,
       validator: (value) {
         if (value != _passwordController.text) {
-          return "Passwords do not match";
+          return AppLocalizations.of(context)!.passwordsDoNotMatch;
         }
         return null;
       },

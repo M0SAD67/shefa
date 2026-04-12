@@ -54,7 +54,10 @@
       }
     }
   },
-  "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+  "invalidEmail": "أدخل بريداً صالحاً ينتهي بـ com أو net أو edu",
+  "networkError": "لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.",
+  "networkTimeout": "انتهت مهلة الاتصال بالخادم. حاول مرة أخرى بعد قليل.",
+  "unexpectedError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
   "invalidPassword": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
   "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
   "emptyField": "هذا الحقل لا يمكن أن يكون فارغاً",
@@ -93,5 +96,17 @@
   "status": "الحالة",
   "active": "نشط",
   "arabic": "العربية",
-  "english": "الإنجليزية"
+  "english": "الإنجليزية",
+  "accountCreatedSuccess": "تم إنشاء الحساب بنجاح",
+  "otpIncompleteCode": "يرجى إدخال رمز التحقق المكوّن من 6 أرقام",
+  "verify": "تحقق",
+  "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+  "otpEnterCodeForEmail": "أدخل رمز التحقق المكوّن من 6 أرقام المرسل إلى البريد:\n{email}",
+  "@otpEnterCodeForEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

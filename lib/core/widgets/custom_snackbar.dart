@@ -10,6 +10,8 @@ void showCustomSnackBar(
   bool top = false,
   Duration duration = const Duration(seconds: 3),
   Color? backgroundColor,
+  /// How many lines of text before ellipsis (validation errors can be long).
+  int maxMessageLines = 6,
 }) {
   if (top) {
     _showTopOverlay(
@@ -18,6 +20,7 @@ void showCustomSnackBar(
       icon,
       duration: duration,
       backgroundColor: backgroundColor,
+      maxMessageLines: maxMessageLines,
     );
     return;
   }
@@ -31,6 +34,7 @@ void showCustomSnackBar(
         icon,
         actionLabel,
         onAction,
+        maxMessageLines: maxMessageLines,
       ),
       duration: duration,
       behavior: SnackBarBehavior.floating,
@@ -48,6 +52,7 @@ void _showTopOverlay(
   IconData? icon, {
   Duration duration = const Duration(seconds: 3),
   Color? backgroundColor,
+  int maxMessageLines = 6,
 }) {
   final overlay = Overlay.of(context);
   late OverlayEntry entry;
@@ -67,6 +72,7 @@ void _showTopOverlay(
             null,
             null,
             bgColor: backgroundColor,
+            maxMessageLines: maxMessageLines,
           ),
           onDismiss: () => entry.remove(),
           duration: duration,
@@ -85,11 +91,12 @@ Widget _buildSnackBarContent(
   String? actionLabel,
   VoidCallback? onAction, {
   Color? bgColor,
+  int maxMessageLines = 6,
 }) {
   return Center(
     child: Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.9, // Prevent full width
+        maxWidth: MediaQuery.of(context).size.width * 0.95,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -121,9 +128,10 @@ Widget _buildSnackBarContent(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
+                height: 1.35,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
+              textAlign: TextAlign.start,
+              maxLines: maxMessageLines,
               overflow: TextOverflow.ellipsis,
             ),
           ),

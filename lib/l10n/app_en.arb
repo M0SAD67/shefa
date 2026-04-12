@@ -54,7 +54,10 @@
       }
     }
   },
-  "invalidEmail": "Please enter a valid email address",
+  "invalidEmail": "Use a valid email that ends with .com, .net, or .edu",
+  "networkError": "No internet connection. Check your network and try again.",
+  "networkTimeout": "The server took too long to respond. Try again in a moment.",
+  "unexpectedError": "Something went wrong. Please try again.",
   "invalidPassword": "Password must be at least 6 characters",
   "invalidPhone": "Please enter a valid phone number",
   "emptyField": "This field cannot be empty",
@@ -93,5 +96,17 @@
   "status": "Status",
   "active": "Active",
   "arabic": "Arabic",
-  "english": "English"
+  "english": "English",
+  "accountCreatedSuccess": "Account created successfully",
+  "otpIncompleteCode": "Please enter the complete 6-digit code",
+  "verify": "Verify",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "otpEnterCodeForEmail": "Enter the 6-digit verification code sent to {email}.",
+  "@otpEnterCodeForEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }
