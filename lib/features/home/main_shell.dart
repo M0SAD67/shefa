@@ -1,4 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import '../../core/theme/color_app.dart';
 import '../../l10n/app_localizations.dart';
 import 'home_screen.dart';
 import '../nurseries/nurseries_screen.dart';
@@ -20,8 +23,8 @@ class _MainShellState extends State<MainShell> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const NurseriesScreen(),
-    const IcuScreen(),
-    const BookingsScreen(),
+    // const IcuScreen(),
+    // const BookingsScreen(),
     const ProfileScreen(),
   ];
 
@@ -35,32 +38,25 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _selectedIndex,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.transparent,
+        color: ColorApp.appDark,
+        buttonBackgroundColor: ColorApp.appDark,
+        height: 60,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: AppLocalizations.of(context)!.navHome,
+          Icon(
+            Iconsax.safe_home4,
+            color: _selectedIndex == 0 ? ColorApp.secondary : Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.child_care),
-            label: AppLocalizations.of(context)!.navNurseries,
+          Icon(
+            Iconsax.hospital,
+            color: _selectedIndex == 1 ? ColorApp.secondary : Colors.white,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_hospital),
-            label: AppLocalizations.of(context)!.navIcu,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: AppLocalizations.of(context)!.navBookings,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: AppLocalizations.of(context)!.navAccount,
+          Icon(
+            Iconsax.personalcard,
+            color: _selectedIndex == 2 ? ColorApp.secondary : Colors.white,
           ),
         ],
       ),

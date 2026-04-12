@@ -3,6 +3,7 @@ import 'dart:async'; // عشان نستخدم الـ Timer للتحويل الت
 
 import '../../core/constants/assets_app.dart';
 
+import '../../core/constants/routes_app.dart';
 import '../../core/theme/color_app.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -21,7 +22,13 @@ class _SuccessVerificationScreenState extends State<SuccessVerificationScreen> {
     super.initState();
     // تحويل تلقائي للصفحة الرئيسية بعد 3 ثواني مثلاً
     Timer(const Duration(seconds: 3), () {
-      // Navigator.pushReplacementNamed(context, 'HomeScreen');
+      if (mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesApp.login,
+          (route) => false,
+        );
+      }
     });
   }
 

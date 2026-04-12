@@ -1,12 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:shefa/core/widgets/custom_snackbar.dart';
+import 'package:shefa/features/auth/auth_repository.dart';
+import 'package:shefa/features/auth/success_verification_screen.dart';
 
 import '../../core/theme/color_app.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/constants/assets_app.dart';
 
-class VerificationScreen extends StatelessWidget {
-  static const String routeName = 'VerificationScreen';
-  const VerificationScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  static const String routeName = 'OtpScreen';
+  final String email;
+  const OtpScreen({super.key, required this.email});
+
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
+  final List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _verifyOtp() async {
+    String otp = _controllers.map((e) => e.text).join();
+    if (otp.length < 6) {
+      showCustomSnackBar(context, message: "Please enter complete code");
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await authRepository.confirmEmail(email: widget.email, otp: otp);
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SuccessVerificationScreen(),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        showCustomSnackBar(
+          context,
+          message: e.toString(),
+          backgroundColor: ColorApp.error,
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,34 +70,19 @@ class VerificationScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Phone Verification',
-          style: TextStyle(color: ColorApp.icons, fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context)!.otpVerification,
+          style: const TextStyle(color: ColorApp.icons, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          // السهم اللي في المربع الصغير جهة اليمين كما بالصورة
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: ColorApp.buttonDetails,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(Icons.arrow_forward, color: ColorApp.icons),
-            ),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 60),
-            // النص العلوي
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                AppLocalizations.of(context)!.otpVerification,
+                "${AppLocalizations.of(context)!.otpVerification} for ${widget.email}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
@@ -53,33 +92,38 @@ class VerificationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-
-            // مربعات الـ OTP الستة
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(6, (index) => _buildOTPBox(context)),
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            // نص إعادة إرسال الرمز
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                AppLocalizations.of(context)!.phoneVerified,
-                style: const TextStyle(
-                  color: ColorApp.textFieldHighlight,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                children: List.generate(
+                  6,
+                  (index) => _buildOTPBox(context, _controllers[index], index),
                 ),
               ),
             ),
-
             const SizedBox(height: 40),
-
+            if (_isLoading)
+              const CircularProgressIndicator()
+            else
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: ElevatedButton(
+                  onPressed: _verifyOtp,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorApp.primary,
+                    minimumSize: const Size(double.infinity, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    "Verify",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            const SizedBox(height: 40),
             Image.asset(
               AssetsApp.bgOnboardOpacity,
               width: MediaQuery.of(context).size.width * 0.9,
@@ -90,8 +134,8 @@ class VerificationScreen extends StatelessWidget {
     );
   }
 
-  // ويدجت المربع الواحد للكود
-  Widget _buildOTPBox(BuildContext context) {
+  Widget _buildOTPBox(
+      BuildContext context, TextEditingController controller, int index) {
     return Container(
       width: 45,
       height: 55,
@@ -100,8 +144,13 @@ class VerificationScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
+        controller: controller,
         onChanged: (value) {
-          if (value.length == 1) FocusScope.of(context).nextFocus();
+          if (value.length == 1) {
+            FocusScope.of(context).nextFocus();
+          } else if (value.isEmpty && index > 0) {
+            FocusScope.of(context).previousFocus();
+          }
         },
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,

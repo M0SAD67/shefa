@@ -5,6 +5,8 @@ import 'package:shefa/core/manager/app_state_manager.dart';
 import 'package:shefa/features/home/main_shell.dart';
 import 'package:shefa/core/utils/app_validator.dart';
 import 'package:shefa/core/widgets/custom_snackbar.dart';
+import 'package:shefa/core/cache/cache_helper.dart';
+import 'package:shefa/features/auth/auth_repository.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
 import '../../l10n/app_localizations.dart';
@@ -25,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen>
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   bool isSignupMode = false;
+  bool _isLoading = false;
 
   //  متغيرات اختيار الدولة
   String _selectedCountryCode = '+20';
@@ -150,6 +153,10 @@ class _LoginScreenState extends State<LoginScreen>
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   late AnimationController _revealController;
   late Animation<double> _revealAnimation;
@@ -178,6 +185,9 @@ class _LoginScreenState extends State<LoginScreen>
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernameController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -395,10 +405,18 @@ class _LoginScreenState extends State<LoginScreen>
                       if (isSignupMode) ...[
                         _buildTextField(
                           hint: AppLocalizations.of(context)!.username,
+                          controller: _usernameController,
+                          validator: (value) => value == null || value.isEmpty
+                              ? AppLocalizations.of(context)!.validationError
+                              : null,
                         ),
                         const SizedBox(height: 15),
                         _buildTextField(
                           hint: AppLocalizations.of(context)!.address,
+                          controller: _addressController,
+                          validator: (value) => value == null || value.isEmpty
+                              ? AppLocalizations.of(context)!.validationError
+                              : null,
                         ),
                         const SizedBox(height: 15),
                       ],
@@ -413,7 +431,7 @@ class _LoginScreenState extends State<LoginScreen>
                         _buildPasswordInput(),
                       ],
 
-                      if (isSignupMode && !isPhoneSelected) ...[
+                      if (isSignupMode) ...[
                         const SizedBox(height: 15),
                         _buildConfirmPasswordInput(),
                       ],
@@ -441,55 +459,84 @@ class _LoginScreenState extends State<LoginScreen>
                             : isSignupMode
                             ? AppLocalizations.of(context)!.createAccount
                             : AppLocalizations.of(context)!.signIn,
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            if (isPhoneSelected) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const VerificationScreen(),
-                                ),
-                              );
-                            } else if (!isSignupMode) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const MainShell(),
-                                ),
-                                (route) => false,
-                              );
-                            }
-                          } else {
-                            String? errorMsg;
-                            if (isPhoneSelected) {
-                              errorMsg = AppValidator.validatePhone(
-                                _phoneController.text,
-                                context,
-                              );
-                            } else {
-                              errorMsg =
-                                  AppValidator.validateEmail(
-                                    _emailController.text,
-                                    context,
-                                  ) ??
-                                  AppValidator.validatePassword(
-                                    _passwordController.text,
-                                    context,
-                                  );
-                            }
+                        onTap: _isLoading
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() => _isLoading = true);
+                                  try {
+                                    if (isSignupMode) {
+                                      await authRepository.signup(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        confirmPassword:
+                                            _confirmPasswordController.text,
+                                        phone:
+                                            _selectedCountryCode +
+                                            _phoneController.text,
+                                        username: _usernameController.text,
+                                        address: _addressController.text,
+                                      );
+                                      if (mounted) {
+                                        showCustomSnackBar(
+                                          context,
+                                          message:
+                                              "Account created successfully",
+                                          backgroundColor: Colors.green,
+                                        );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => OtpScreen(
+                                              email: _emailController.text,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      // Login logic
+                                      final result = await authRepository.login(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                      );
+                                      final token = result['data'] != null
+                                          ? result['data']['access_token']
+                                          : result['access_token'];
 
-                            showCustomSnackBar(
-                              context,
-                              message:
-                                  errorMsg ??
-                                  AppLocalizations.of(context)!.validationError,
-                              backgroundColor: ColorApp.error,
-                              top: true,
-                              icon: Icons.error_outline,
-                            );
-                          }
-                        },
+                                      if (token != null) {
+                                        await CacheHelper.saveData(
+                                          key: 'token',
+                                          value: token,
+                                        );
+                                        if (mounted) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MainShell(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        }
+                                      }
+                                    }
+                                  } catch (e) {
+                                    if (mounted) {
+                                      showCustomSnackBar(
+                                        context,
+                                        message: e.toString(),
+                                        backgroundColor: ColorApp.error,
+                                        top: true,
+                                        icon: Icons.error_outline,
+                                      );
+                                    }
+                                  } finally {
+                                    if (mounted) {
+                                      setState(() => _isLoading = false);
+                                    }
+                                  }
+                                }
+                              },
                       ),
 
                       const SizedBox(height: 15),
@@ -808,7 +855,14 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildConfirmPasswordInput() {
     return TextFormField(
+      controller: _confirmPasswordController,
       obscureText: !isConfirmPasswordVisible,
+      validator: (value) {
+        if (value != _passwordController.text) {
+          return "Passwords do not match";
+        }
+        return null;
+      },
       style: TextStyle(
         color: appStateManager.isDarkMode
             ? ColorApp.appDark
