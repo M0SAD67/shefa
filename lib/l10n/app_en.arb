@@ -78,5 +78,20 @@
   "bookingRequestSent": "Booking Request Sent",
   "backToHome": "Back to Home",
   "condition": "Condition",
-  "serviceType": "Service Type"
+  "serviceType": "Service Type",
+  "personalInformation": "Personal Information",
+  "editProfileInformation": "Edit Profile Information",
+  "phoneEmailPassword": "Phone, Email, and Password",
+  "appSettings": "App Settings",
+  "language": "Language",
+  "support": "Support",
+  "aboutShefa": "About Shefa",
+  "logout": "Logout",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "reviews": "Reviews",
+  "status": "Status",
+  "active": "Active",
+  "arabic": "Arabic",
+  "english": "English"
 }

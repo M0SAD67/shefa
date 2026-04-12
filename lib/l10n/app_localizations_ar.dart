@@ -213,4 +213,49 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get serviceType => 'نوع الخدمة';
+
+  @override
+  String get personalInformation => 'البيانات الشخصية';
+
+  @override
+  String get editProfileInformation => 'تعديل بيانات الحساب';
+
+  @override
+  String get phoneEmailPassword => 'الهاتف، البريد، وكلمة السر';
+
+  @override
+  String get appSettings => 'إعدادات التطبيق';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get support => 'الدعم الفني';
+
+  @override
+  String get aboutShefa => 'حول شفا';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get darkMode => 'الوضع الليلي';
+
+  @override
+  String get lightMode => 'الوضع النهاري';
+
+  @override
+  String get reviews => 'تقييمات';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get english => 'الإنجليزية';
 }

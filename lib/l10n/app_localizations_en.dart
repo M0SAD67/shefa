@@ -215,4 +215,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serviceType => 'Service Type';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get editProfileInformation => 'Edit Profile Information';
+
+  @override
+  String get phoneEmailPassword => 'Phone, Email, and Password';
+
+  @override
+  String get appSettings => 'App Settings';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get aboutShefa => 'About Shefa';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get english => 'English';
 }

@@ -78,5 +78,20 @@
   "bookingRequestSent": "تم إرسال طلب الحجز",
   "backToHome": "العودة للرئيسية",
   "condition": "الحالة",
-  "serviceType": "نوع الخدمة"
+  "serviceType": "نوع الخدمة",
+  "personalInformation": "البيانات الشخصية",
+  "editProfileInformation": "تعديل بيانات الحساب",
+  "phoneEmailPassword": "الهاتف، البريد، وكلمة السر",
+  "appSettings": "إعدادات التطبيق",
+  "language": "اللغة",
+  "support": "الدعم الفني",
+  "aboutShefa": "حول شفا",
+  "logout": "تسجيل الخروج",
+  "darkMode": "الوضع الليلي",
+  "lightMode": "الوضع النهاري",
+  "reviews": "تقييمات",
+  "status": "الحالة",
+  "active": "نشط",
+  "arabic": "العربية",
+  "english": "الإنجليزية"
 }
