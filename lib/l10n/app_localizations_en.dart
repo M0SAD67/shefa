@@ -141,7 +141,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get invalidEmail => 'Please enter a valid email address';
+  String get invalidEmail =>
+      'Use a valid email that ends with .com, .net, or .edu';
+
+  @override
+  String get networkError =>
+      'No internet connection. Check your network and try again.';
+
+  @override
+  String get networkTimeout =>
+      'The server took too long to respond. Try again in a moment.';
+
+  @override
+  String get unexpectedError => 'Something went wrong. Please try again.';
 
   @override
   String get invalidPassword => 'Password must be at least 6 characters';
@@ -260,4 +272,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get english => 'English';
+
+  @override
+  String get accountCreatedSuccess => 'Account created successfully';
+
+  @override
+  String get otpIncompleteCode => 'Please enter the complete 6-digit code';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String otpEnterCodeForEmail(String email) {
+    return 'Enter the 6-digit verification code sent to $email.';
+  }
 }

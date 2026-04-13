@@ -347,8 +347,26 @@ abstract class AppLocalizations {
   /// No description provided for @invalidEmail.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
+  /// **'Use a valid email that ends with .com, .net, or .edu'**
   String get invalidEmail;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your network and try again.'**
+  String get networkError;
+
+  /// No description provided for @networkTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The server took too long to respond. Try again in a moment.'**
+  String get networkTimeout;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get unexpectedError;
 
   /// No description provided for @invalidPassword.
   ///
@@ -583,6 +601,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get english;
+
+  /// No description provided for @accountCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully'**
+  String get accountCreatedSuccess;
+
+  /// No description provided for @otpIncompleteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the complete 6-digit code'**
+  String get otpIncompleteCode;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @otpEnterCodeForEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit verification code sent to {email}.'**
+  String otpEnterCodeForEmail(String email);
 }
 
 class _AppLocalizationsDelegate
