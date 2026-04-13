@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccount;
 
+  /// No description provided for @createAccountFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account for '**
+  String get createAccountFor;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -253,6 +259,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Medical Staff'**
   String get medicalStaff;
+
+  /// No description provided for @patient.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient'**
+  String get patient;
 
   /// No description provided for @bookings.
   ///
@@ -601,6 +613,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get english;
+
+  /// No description provided for @loadingRingPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ring'**
+  String get loadingRingPreviewTitle;
+
+  /// No description provided for @loadingRingPreviewMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ring (design)'**
+  String get loadingRingPreviewMenu;
+
+  /// No description provided for @loadingRingPreviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand shimmer uses your palette; pass different words or sizes from code where you show loading.'**
+  String get loadingRingPreviewHint;
+
+  /// No description provided for @loadingRingPreviewBrandedCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Name shimmer (default)'**
+  String get loadingRingPreviewBrandedCaption;
+
+  /// No description provided for @loadingRingPreviewClassicCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring variant (compact UI)'**
+  String get loadingRingPreviewClassicCaption;
 
   /// No description provided for @accountCreatedSuccess.
   ///

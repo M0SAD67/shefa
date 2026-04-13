@@ -5,6 +5,7 @@ import 'package:shefa/core/manager/app_state_manager.dart';
 import 'package:shefa/core/theme/color_app.dart';
 import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/core/constants/assets_app.dart';
+import 'package:shefa/features/profile/loading_ring_preview_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'ProfileScreen';
@@ -384,6 +385,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         textColor: textColor,
                         onTap: () {
                           appStateManager.toggleLanguage();
+                        },
+                      ),
+                      _buildMenuItem(
+                        icon: Icons.timelapse_rounded,
+                        title: AppLocalizations.of(context)!.loadingRingPreviewMenu,
+                        subtitle: AppLocalizations.of(context)!.loadingRingPreviewTitle,
+                        color: cardColor,
+                        textColor: textColor,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (context) =>
+                                  const LoadingRingPreviewScreen(),
+                            ),
+                          );
                         },
                       ),
                       const SizedBox(height: 20),

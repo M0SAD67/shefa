@@ -36,6 +36,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createAccount => 'إنشاء حساب';
 
   @override
+  String get createAccountFor => 'إنشاء حساب لـ ';
+
+  @override
   String get password => 'الرقم السري';
 
   @override
@@ -81,13 +84,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get home => 'الرئيسية';
 
   @override
-  String get nurseries => 'حضانات';
+  String get nurseries => 'حضانات أطفال';
 
   @override
   String get icu => 'عناية مركزة';
 
   @override
   String get medicalStaff => 'طاقم طبي';
+
+  @override
+  String get patient => 'مستفيد';
 
   @override
   String get bookings => 'طلبات الحجز';
@@ -269,6 +275,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get english => 'الإنجليزية';
+
+  @override
+  String get loadingRingPreviewTitle => 'دائرة التحميل';
+
+  @override
+  String get loadingRingPreviewMenu => 'تصميم دائرة التحميل';
+
+  @override
+  String get loadingRingPreviewHint =>
+      'لمعة الاسم تستخدم ألوان الهوية؛ يمكنك تغيير النص أو الحجم من الكود حيث تعرض التحميل.';
+
+  @override
+  String get loadingRingPreviewBrandedCaption => 'لمعة الاسم (الافتراضي)';
+
+  @override
+  String get loadingRingPreviewClassicCaption => 'نسخة الدائرة (واجهات مدمجة)';
 
   @override
   String get accountCreatedSuccess => 'تم إنشاء الحساب بنجاح';

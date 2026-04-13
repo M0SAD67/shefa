@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
+  String get createAccountFor => 'Create Account for ';
+
+  @override
   String get password => 'Password';
 
   @override
@@ -90,6 +93,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get medicalStaff => 'Medical Staff';
+
+  @override
+  String get patient => 'Patient';
 
   @override
   String get bookings => 'Bookings';
@@ -272,6 +278,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get english => 'English';
+
+  @override
+  String get loadingRingPreviewTitle => 'Loading ring';
+
+  @override
+  String get loadingRingPreviewMenu => 'Loading ring (design)';
+
+  @override
+  String get loadingRingPreviewHint =>
+      'Brand shimmer uses your palette; pass different words or sizes from code where you show loading.';
+
+  @override
+  String get loadingRingPreviewBrandedCaption => 'Name shimmer (default)';
+
+  @override
+  String get loadingRingPreviewClassicCaption => 'Ring variant (compact UI)';
 
   @override
   String get accountCreatedSuccess => 'Account created successfully';
