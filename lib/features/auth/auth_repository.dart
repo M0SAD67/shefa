@@ -23,9 +23,9 @@ class AuthRepository {
     required String email,
     required String password,
     required String confirmPassword,
-    required String phone,
     required String username,
     required String address,
+    required String userType,
   }) async {
     try {
       final response = await apiService.post(
@@ -34,9 +34,9 @@ class AuthRepository {
           'email': email,
           'password': password,
           'confirmPassword': confirmPassword,
-          'phone': phone,
           'username': username,
           'address': address,
+          'userType': userType,
         },
       );
       return response.data;

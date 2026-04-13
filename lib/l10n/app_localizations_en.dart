@@ -36,6 +36,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
+  String get createAccountFor => 'Create Account for ';
+
+  @override
   String get password => 'Password';
 
   @override
@@ -92,6 +95,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get medicalStaff => 'Medical Staff';
 
   @override
+  String get patient => 'Patient';
+
+  @override
   String get bookings => 'Bookings';
 
   @override
@@ -141,7 +147,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get invalidEmail => 'Please enter a valid email address';
+  String get invalidEmail =>
+      'Use a valid email that ends with .com, .net, or .edu';
+
+  @override
+  String get networkError =>
+      'No internet connection. Check your network and try again.';
+
+  @override
+  String get networkTimeout =>
+      'The server took too long to respond. Try again in a moment.';
+
+  @override
+  String get unexpectedError => 'Something went wrong. Please try again.';
 
   @override
   String get invalidPassword => 'Password must be at least 6 characters';
@@ -260,4 +278,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get english => 'English';
+
+  @override
+  String get loadingRingPreviewTitle => 'Loading ring';
+
+  @override
+  String get loadingRingPreviewMenu => 'Loading ring (design)';
+
+  @override
+  String get loadingRingPreviewHint =>
+      'Brand shimmer uses your palette; pass different words or sizes from code where you show loading.';
+
+  @override
+  String get loadingRingPreviewBrandedCaption => 'Name shimmer (default)';
+
+  @override
+  String get loadingRingPreviewClassicCaption => 'Ring variant (compact UI)';
+
+  @override
+  String get accountCreatedSuccess => 'Account created successfully';
+
+  @override
+  String get otpIncompleteCode => 'Please enter the complete 6-digit code';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String otpEnterCodeForEmail(String email) {
+    return 'Enter the 6-digit verification code sent to $email.';
+  }
 }
