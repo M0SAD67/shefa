@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../core/errors/app_http_exception.dart';
 import '../../core/utils/api.dart';
 import '../../core/utils/api_service.dart';
 
@@ -14,7 +15,7 @@ class AuthRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      throw _handleError(e);
+      throw AppHttpException.fromDio(e);
     }
   }
 
@@ -22,9 +23,9 @@ class AuthRepository {
     required String email,
     required String password,
     required String confirmPassword,
-    required String phone,
     required String username,
     required String address,
+    required String userType,
   }) async {
     try {
       final response = await apiService.post(
@@ -33,14 +34,14 @@ class AuthRepository {
           'email': email,
           'password': password,
           'confirmPassword': confirmPassword,
-          'phone': phone,
           'username': username,
           'address': address,
+          'userType': userType,
         },
       );
       return response.data;
     } on DioException catch (e) {
-      throw _handleError(e);
+      throw AppHttpException.fromDio(e);
     }
   }
 
@@ -55,17 +56,8 @@ class AuthRepository {
       );
       return response.data;
     } on DioException catch (e) {
-      throw _handleError(e);
+      throw AppHttpException.fromDio(e);
     }
-  }
-
-  String _handleError(DioException e) {
-    if (e.response != null && e.response!.data != null) {
-      if (e.response!.data is Map && e.response!.data['message'] != null) {
-        return e.response!.data['message'];
-      }
-    }
-    return "Something went wrong. Please try again.";
   }
 }
 

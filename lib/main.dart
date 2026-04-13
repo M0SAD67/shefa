@@ -7,6 +7,9 @@ import 'features/auth/login_screen.dart';
 import 'features/auth/signup_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/main_shell.dart';
+import 'features/nurseries/nurseries_screen.dart';
+import 'features/icu/icu_screen.dart';
+import 'features/medical_staff/medical_staff_screen.dart';
 import 'l10n/app_localizations.dart';
 
 void main() async {
@@ -50,6 +53,9 @@ class ShefaApp extends StatelessWidget {
             LoginScreen.routeName: (context) => const LoginScreen(),
             SignupScreen.routeName: (context) => const SignupScreen(),
             MainShell.routeName: (context) => const MainShell(),
+            NurseriesScreen.routeName: (context) => const NurseriesScreen(),
+            IcuScreen.routeName: (context) => const IcuScreen(),
+            MedicalStaffScreen.routeName: (context) => const MedicalStaffScreen(),
           },
           home: const MainShell(),
         );

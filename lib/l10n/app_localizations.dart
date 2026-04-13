@@ -152,6 +152,12 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccount;
 
+  /// No description provided for @createAccountFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account for '**
+  String get createAccountFor;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
@@ -254,6 +260,12 @@ abstract class AppLocalizations {
   /// **'Medical Staff'**
   String get medicalStaff;
 
+  /// No description provided for @patient.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient'**
+  String get patient;
+
   /// No description provided for @bookings.
   ///
   /// In en, this message translates to:
@@ -347,8 +359,26 @@ abstract class AppLocalizations {
   /// No description provided for @invalidEmail.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a valid email address'**
+  /// **'Use a valid email that ends with .com, .net, or .edu'**
   String get invalidEmail;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection. Check your network and try again.'**
+  String get networkError;
+
+  /// No description provided for @networkTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'The server took too long to respond. Try again in a moment.'**
+  String get networkTimeout;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get unexpectedError;
 
   /// No description provided for @invalidPassword.
   ///
@@ -583,6 +613,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'English'**
   String get english;
+
+  /// No description provided for @loadingRingPreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ring'**
+  String get loadingRingPreviewTitle;
+
+  /// No description provided for @loadingRingPreviewMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ring (design)'**
+  String get loadingRingPreviewMenu;
+
+  /// No description provided for @loadingRingPreviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand shimmer uses your palette; pass different words or sizes from code where you show loading.'**
+  String get loadingRingPreviewHint;
+
+  /// No description provided for @loadingRingPreviewBrandedCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Name shimmer (default)'**
+  String get loadingRingPreviewBrandedCaption;
+
+  /// No description provided for @loadingRingPreviewClassicCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring variant (compact UI)'**
+  String get loadingRingPreviewClassicCaption;
+
+  /// No description provided for @accountCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully'**
+  String get accountCreatedSuccess;
+
+  /// No description provided for @otpIncompleteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the complete 6-digit code'**
+  String get otpIncompleteCode;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @otpEnterCodeForEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit verification code sent to {email}.'**
+  String otpEnterCodeForEmail(String email);
 }
 
 class _AppLocalizationsDelegate

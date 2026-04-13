@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shefa/core/utils/auth_error_ui_message.dart';
 import 'package:shefa/core/widgets/custom_snackbar.dart';
 import 'package:shefa/features/auth/auth_repository.dart';
 import 'package:shefa/features/auth/success_verification_screen.dart';
@@ -32,29 +33,35 @@ class _OtpScreenState extends State<OtpScreen> {
   Future<void> _verifyOtp() async {
     String otp = _controllers.map((e) => e.text).join();
     if (otp.length < 6) {
-      showCustomSnackBar(context, message: "Please enter complete code");
+      showCustomSnackBar(
+        context,
+        message: AppLocalizations.of(context)!.otpIncompleteCode,
+      );
       return;
     }
 
+    final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
     try {
       await authRepository.confirmEmail(email: widget.email, otp: otp);
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SuccessVerificationScreen(),
-          ),
-        );
-      }
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SuccessVerificationScreen(),
+        ),
+      );
     } catch (e) {
-      if (mounted) {
-        showCustomSnackBar(
-          context,
-          message: e.toString(),
-          backgroundColor: ColorApp.error,
-        );
-      }
+      if (!mounted) return;
+      showCustomSnackBar(
+        context,
+        message: authErrorSnackMessage(e, l10n),
+        backgroundColor: ColorApp.error,
+        top: true,
+        icon: Icons.error_outline,
+        maxMessageLines: 8,
+        duration: const Duration(seconds: 5),
+      );
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -82,7 +89,9 @@ class _OtpScreenState extends State<OtpScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
-                "${AppLocalizations.of(context)!.otpVerification} for ${widget.email}",
+                AppLocalizations.of(
+                  context,
+                )!.otpEnterCodeForEmail(widget.email),
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
@@ -117,9 +126,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    "Verify",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  child: Text(
+                    AppLocalizations.of(context)!.verify,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               ),

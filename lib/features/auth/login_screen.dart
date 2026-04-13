@@ -2,15 +2,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
-import 'package:shefa/features/home/main_shell.dart';
 import 'package:shefa/core/utils/app_validator.dart';
+import 'package:shefa/core/utils/auth_error_ui_message.dart';
 import 'package:shefa/core/widgets/custom_snackbar.dart';
 import 'package:shefa/core/cache/cache_helper.dart';
+import 'package:shefa/core/navigation/main_shell_route.dart';
 import 'package:shefa/features/auth/auth_repository.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
+import 'package:shefa/core/widgets/shefa_branded_text_loader.dart';
 import '../../l10n/app_localizations.dart';
-import 'package:country_flags/country_flags.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';
@@ -23,134 +24,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
-  bool isPhoneSelected = true;
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   bool isSignupMode = false;
   bool _isLoading = false;
+  bool isMedicalStaffSelected = false;
 
-  //  متغيرات اختيار الدولة
-  String _selectedCountryCode = '+20';
-  String _selectedIsoCode = 'EG';
-
-  //  قائمة الدول
-  final List<Map<String, String>> _countries = [
-    {'code': '+20', 'nameAr': 'مصر', 'nameEn': 'Egypt', 'isoCode': 'EG'},
-    {
-      'code': '+966',
-      'nameAr': 'السعودية',
-      'nameEn': 'Saudi Arabia',
-      'isoCode': 'SA',
-    },
-    {'code': '+971', 'nameAr': 'الإمارات', 'nameEn': 'UAE', 'isoCode': 'AE'},
-    {'code': '+965', 'nameAr': 'الكويت', 'nameEn': 'Kuwait', 'isoCode': 'KW'},
-    {'code': '+974', 'nameAr': 'قطر', 'nameEn': 'Qatar', 'isoCode': 'QA'},
-    {'code': '+973', 'nameAr': 'البحرين', 'nameEn': 'Bahrain', 'isoCode': 'BH'},
-    {'code': '+968', 'nameAr': 'عمان', 'nameEn': 'Oman', 'isoCode': 'OM'},
-    {'code': '+962', 'nameAr': 'الأردن', 'nameEn': 'Jordan', 'isoCode': 'JO'},
-    {
-      'code': '+970',
-      'nameAr': 'فلسطين',
-      'nameEn': 'Palestine',
-      'isoCode': 'PS',
-    },
-    {'code': '+961', 'nameAr': 'لبنان', 'nameEn': 'Lebanon', 'isoCode': 'LB'},
-    {'code': '+964', 'nameAr': 'العراق', 'nameEn': 'Iraq', 'isoCode': 'IQ'},
-    {'code': '+967', 'nameAr': 'اليمن', 'nameEn': 'Yemen', 'isoCode': 'YE'},
-    {'code': '+963', 'nameAr': 'سوريا', 'nameEn': 'Syria', 'isoCode': 'SY'},
-    {'code': '+249', 'nameAr': 'السودان', 'nameEn': 'Sudan', 'isoCode': 'SD'},
-    {'code': '+218', 'nameAr': 'ليبيا', 'nameEn': 'Libya', 'isoCode': 'LY'},
-    {'code': '+213', 'nameAr': 'الجزائر', 'nameEn': 'Algeria', 'isoCode': 'DZ'},
-    {'code': '+216', 'nameAr': 'تونس', 'nameEn': 'Tunisia', 'isoCode': 'TN'},
-    {'code': '+212', 'nameAr': 'المغرب', 'nameEn': 'Morocco', 'isoCode': 'MA'},
-    {
-      'code': '+222',
-      'nameAr': 'موريتانيا',
-      'nameEn': 'Mauritania',
-      'isoCode': 'MR',
-    },
-    {'code': '+253', 'nameAr': 'جيبوتي', 'nameEn': 'Djibouti', 'isoCode': 'DJ'},
-    {'code': '+252', 'nameAr': 'الصومال', 'nameEn': 'Somalia', 'isoCode': 'SO'},
-    {
-      'code': '+269',
-      'nameAr': 'جزر القمر',
-      'nameEn': 'Comoros',
-      'isoCode': 'KM',
-    },
-    {
-      'code': '+211',
-      'nameAr': 'جنوب السودان',
-      'nameEn': 'South Sudan',
-      'isoCode': 'SS',
-    },
-    {'code': '+90', 'nameAr': 'تركيا', 'nameEn': 'Turkey', 'isoCode': 'TR'},
-    {'code': '+1', 'nameAr': 'أمريكا', 'nameEn': 'USA', 'isoCode': 'US'},
-    {'code': '+1', 'nameAr': 'كندا', 'nameEn': 'Canada', 'isoCode': 'CA'},
-    {'code': '+44', 'nameAr': 'بريطانيا', 'nameEn': 'UK', 'isoCode': 'GB'},
-    {'code': '+49', 'nameAr': 'ألمانيا', 'nameEn': 'Germany', 'isoCode': 'DE'},
-    {'code': '+33', 'nameAr': 'فرنسا', 'nameEn': 'France', 'isoCode': 'FR'},
-    {'code': '+34', 'nameAr': 'إسبانيا', 'nameEn': 'Spain', 'isoCode': 'ES'},
-    {'code': '+39', 'nameAr': 'إيطاليا', 'nameEn': 'Italy', 'isoCode': 'IT'},
-    {
-      'code': '+61',
-      'nameAr': 'أستراليا',
-      'nameEn': 'Australia',
-      'isoCode': 'AU',
-    },
-    {'code': '+81', 'nameAr': 'اليابان', 'nameEn': 'Japan', 'isoCode': 'JP'},
-    {
-      'code': '+82',
-      'nameAr': 'كوريا الجنوبية',
-      'nameEn': 'South Korea',
-      'isoCode': 'KR',
-    },
-    {'code': '+86', 'nameAr': 'الصين', 'nameEn': 'China', 'isoCode': 'CN'},
-    {'code': '+91', 'nameAr': 'الهند', 'nameEn': 'India', 'isoCode': 'IN'},
-    {'code': '+7', 'nameAr': 'روسيا', 'nameEn': 'Russia', 'isoCode': 'RU'},
-    {'code': '+55', 'nameAr': 'البرازيل', 'nameEn': 'Brazil', 'isoCode': 'BR'},
-    {
-      'code': '+31',
-      'nameAr': 'هولندا',
-      'nameEn': 'Netherlands',
-      'isoCode': 'NL',
-    },
-    {'code': '+32', 'nameAr': 'بلجيكا', 'nameEn': 'Belgium', 'isoCode': 'BE'},
-    {
-      'code': '+41',
-      'nameAr': 'سويسرا',
-      'nameEn': 'Switzerland',
-      'isoCode': 'CH',
-    },
-    {'code': '+43', 'nameAr': 'النمسا', 'nameEn': 'Austria', 'isoCode': 'AT'},
-    {'code': '+46', 'nameAr': 'السويد', 'nameEn': 'Sweden', 'isoCode': 'SE'},
-    {'code': '+47', 'nameAr': 'النرويج', 'nameEn': 'Norway', 'isoCode': 'NO'},
-    {'code': '+45', 'nameAr': 'الدنمارك', 'nameEn': 'Denmark', 'isoCode': 'DK'},
-    {
-      'code': '+351',
-      'nameAr': 'البرتغال',
-      'nameEn': 'Portugal',
-      'isoCode': 'PT',
-    },
-    {'code': '+30', 'nameAr': 'اليونان', 'nameEn': 'Greece', 'isoCode': 'GR'},
-    {'code': '+60', 'nameAr': 'ماليزيا', 'nameEn': 'Malaysia', 'isoCode': 'MY'},
-    {
-      'code': '+62',
-      'nameAr': 'إندونيسيا',
-      'nameEn': 'Indonesia',
-      'isoCode': 'ID',
-    },
-    {'code': '+66', 'nameAr': 'تايلاند', 'nameEn': 'Thailand', 'isoCode': 'TH'},
-    {'code': '+234', 'nameAr': 'نيجيريا', 'nameEn': 'Nigeria', 'isoCode': 'NG'},
-    {
-      'code': '+27',
-      'nameAr': 'جنوب أفريقيا',
-      'nameEn': 'South Africa',
-      'isoCode': 'ZA',
-    },
-  ];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -160,10 +41,6 @@ class _LoginScreenState extends State<LoginScreen>
 
   late AnimationController _revealController;
   late Animation<double> _revealAnimation;
-
-  String _t(String ar, String en) {
-    return appStateManager.isArabic ? ar : en;
-  }
 
   @override
   void initState() {
@@ -182,149 +59,12 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _revealController.dispose();
-    _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _usernameController.dispose();
     _addressController.dispose();
     super.dispose();
-  }
-
-  //  دالة عرض قائمة الدول
-  void _showCountryPicker() {
-    String searchQuery = '';
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: appStateManager.isDarkMode
-          ? ColorApp.appDark
-          : ColorApp.appLight,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            final filteredCountries = _countries.where((country) {
-              final nameAr = (country['nameAr'] ?? '').toLowerCase();
-              final nameEn = (country['nameEn'] ?? '').toLowerCase();
-              final code = (country['code'] ?? '').toLowerCase();
-              final query = searchQuery.toLowerCase();
-              return nameAr.contains(query) ||
-                  nameEn.contains(query) ||
-                  code.contains(query);
-            }).toList();
-
-            return DraggableScrollableSheet(
-              initialChildSize: 0.7,
-              minChildSize: 0.5,
-              maxChildSize: 0.9,
-              expand: false,
-              builder: (context, scrollController) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Container(
-                      width: 40,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        onChanged: (value) {
-                          setModalState(() {
-                            searchQuery = value;
-                          });
-                        },
-                        style: TextStyle(
-                          color: appStateManager.isDarkMode
-                              ? ColorApp.appLight
-                              : ColorApp.appDark,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.searchCountry,
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.grey,
-                          ),
-                          filled: true,
-                          fillColor: appStateManager.isDarkMode
-                              ? Colors.grey[850]
-                              : Colors.grey[200],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Expanded(
-                      child: ListView.builder(
-                        controller: scrollController,
-                        itemCount: filteredCountries.length,
-                        itemBuilder: (context, index) {
-                          final country = filteredCountries[index];
-                          return ListTile(
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: SizedBox(
-                                width: 36,
-                                height: 26,
-                                child: CountryFlag.fromCountryCode(
-                                  country['isoCode']!,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              _t(
-                                country['nameAr'] ?? '',
-                                country['nameEn'] ?? '',
-                              ),
-                              style: TextStyle(
-                                color: appStateManager.isDarkMode
-                                    ? ColorApp.appLight
-                                    : ColorApp.appDark,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            trailing: Text(
-                              country['code'] ?? '',
-                              style: TextStyle(
-                                color: ColorApp.textFieldHighlight,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            onTap: () {
-                              setState(() {
-                                _selectedCountryCode = country['code'] ?? '+20';
-                                _selectedIsoCode = country['isoCode'] ?? 'EG';
-                              });
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        );
-      },
-    );
   }
 
   @override
@@ -348,19 +88,7 @@ class _LoginScreenState extends State<LoginScreen>
 
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
-                  child: Text(
-                    isSignupMode
-                        ? AppLocalizations.of(context)!.createAccount
-                        : AppLocalizations.of(context)!.login,
-                    key: ValueKey<bool>(isSignupMode),
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: appStateManager.isDarkMode
-                          ? ColorApp.appLight
-                          : ColorApp.primary,
-                    ),
-                  ),
+                  child: _buildHeader(),
                 ),
 
                 const SizedBox(height: 30),
@@ -376,67 +104,53 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                   child: Column(
                     children: [
-                      // Tab Switcher
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: ColorApp.primary,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: ColorApp.primary, width: 2),
-                        ),
-                        child: Row(
+                      // Fields
+                      if (isSignupMode) ...[
+                        const SizedBox(height: 10),
+                        Row(
                           children: [
-                            _buildTabButton(
-                              AppLocalizations.of(context)!.email,
-                              !isPhoneSelected,
-                              () => setState(() => isPhoneSelected = false),
+                            Expanded(
+                              child: _buildTextField(
+                                hint: AppLocalizations.of(context)!.username,
+                                controller: _usernameController,
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.validationError
+                                    : null,
+                              ),
                             ),
-                            _buildTabButton(
-                              AppLocalizations.of(context)!.phoneNumber,
-                              isPhoneSelected,
-                              () => setState(() => isPhoneSelected = true),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _buildTextField(
+                                hint: AppLocalizations.of(context)!.address,
+                                controller: _addressController,
+                                validator: (value) =>
+                                    value == null || value.isEmpty
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.validationError
+                                    : null,
+                              ),
                             ),
                           ],
                         ),
+                        const SizedBox(height: 15),
+                      ],
+
+                      _buildEmailInput(
+                        AppLocalizations.of(context)!.emailAddress,
                       ),
-                      const SizedBox(height: 25),
-
-                      // Fields
-                      if (isSignupMode) ...[
-                        _buildTextField(
-                          hint: AppLocalizations.of(context)!.username,
-                          controller: _usernameController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? AppLocalizations.of(context)!.validationError
-                              : null,
-                        ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          hint: AppLocalizations.of(context)!.address,
-                          controller: _addressController,
-                          validator: (value) => value == null || value.isEmpty
-                              ? AppLocalizations.of(context)!.validationError
-                              : null,
-                        ),
-                        const SizedBox(height: 15),
-                      ],
-
-                      if (isPhoneSelected)
-                        _buildPhoneInput()
-                      else ...[
-                        _buildEmailInput(
-                          AppLocalizations.of(context)!.emailAddress,
-                        ),
-                        const SizedBox(height: 15),
-                        _buildPasswordInput(),
-                      ],
+                      const SizedBox(height: 15),
+                      _buildPasswordInput(),
 
                       if (isSignupMode) ...[
                         const SizedBox(height: 15),
                         _buildConfirmPasswordInput(),
                       ],
 
-                      if (!isPhoneSelected && !isSignupMode)
+                      if (!isSignupMode)
                         Align(
                           alignment: AlignmentDirectional.centerEnd,
                           child: TextButton(
@@ -454,11 +168,10 @@ class _LoginScreenState extends State<LoginScreen>
                       const SizedBox(height: 25),
 
                       _buildMainButton(
-                        isPhoneSelected
-                            ? AppLocalizations.of(context)!.sendCode
-                            : isSignupMode
+                        isSignupMode
                             ? AppLocalizations.of(context)!.createAccount
                             : AppLocalizations.of(context)!.signIn,
+                        isLoading: _isLoading,
                         onTap: _isLoading
                             ? null
                             : () async {
@@ -471,28 +184,30 @@ class _LoginScreenState extends State<LoginScreen>
                                         password: _passwordController.text,
                                         confirmPassword:
                                             _confirmPasswordController.text,
-                                        phone:
-                                            _selectedCountryCode +
-                                            _phoneController.text,
                                         username: _usernameController.text,
                                         address: _addressController.text,
+                                        userType: isMedicalStaffSelected
+                                            ? 'medical_staff'
+                                            : 'patient',
                                       );
-                                      if (mounted) {
-                                        showCustomSnackBar(
-                                          context,
-                                          message:
-                                              "Account created successfully",
-                                          backgroundColor: Colors.green,
-                                        );
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OtpScreen(
-                                              email: _emailController.text,
-                                            ),
+                                      if (!context.mounted) return;
+                                      final l10nSignup = AppLocalizations.of(
+                                        context,
+                                      )!;
+                                      showCustomSnackBar(
+                                        context,
+                                        message:
+                                            l10nSignup.accountCreatedSuccess,
+                                        backgroundColor: Colors.green,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => OtpScreen(
+                                            email: _emailController.text,
                                           ),
-                                        );
-                                      }
+                                        ),
+                                      );
                                     } else {
                                       // Login logic
                                       final result = await authRepository.login(
@@ -508,28 +223,26 @@ class _LoginScreenState extends State<LoginScreen>
                                           key: 'token',
                                           value: token,
                                         );
-                                        if (mounted) {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MainShell(),
-                                            ),
-                                            (route) => false,
-                                          );
-                                        }
+                                        if (!context.mounted) return;
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          loginSuccessToMainShellRoute(),
+                                          (route) => false,
+                                        );
                                       }
                                     }
                                   } catch (e) {
-                                    if (mounted) {
-                                      showCustomSnackBar(
-                                        context,
-                                        message: e.toString(),
-                                        backgroundColor: ColorApp.error,
-                                        top: true,
-                                        icon: Icons.error_outline,
-                                      );
-                                    }
+                                    if (!context.mounted) return;
+                                    final l10n = AppLocalizations.of(context)!;
+                                    showCustomSnackBar(
+                                      context,
+                                      message: authErrorSnackMessage(e, l10n),
+                                      backgroundColor: ColorApp.error,
+                                      top: true,
+                                      icon: Icons.error_outline,
+                                      maxMessageLines: 8,
+                                      duration: const Duration(seconds: 5),
+                                    );
                                   } finally {
                                     if (mounted) {
                                       setState(() => _isLoading = false);
@@ -582,7 +295,7 @@ class _LoginScreenState extends State<LoginScreen>
                 const SizedBox(height: 25),
 
                 // Social Icons
-                if (!isPhoneSelected && !isSignupMode)
+                if (!isSignupMode)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -601,87 +314,111 @@ class _LoginScreenState extends State<LoginScreen>
       ),
     );
 
-    return Scaffold(
-      backgroundColor: ColorApp.buttonDetails,
-      body: Stack(
-        children: [
-          widget.revealOffset != null
-              ? AnimatedBuilder(
-                  animation: _revealAnimation,
-                  builder: (context, child) {
-                    return ClipPath(
-                      clipper: _CircularRevealClipper(
-                        revealPercent: _revealAnimation.value,
-                        center: widget.revealOffset!,
-                      ),
-                      child: body,
-                    );
-                  },
-                )
-              : body,
+    final stackBody = Stack(
+      children: [
+        widget.revealOffset != null
+            ? AnimatedBuilder(
+                animation: _revealAnimation,
+                builder: (context, child) {
+                  return ClipPath(
+                    clipper: _CircularRevealClipper(
+                      revealPercent: _revealAnimation.value,
+                      center: widget.revealOffset!,
+                    ),
+                    child: body,
+                  );
+                },
+              )
+            : body,
 
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 10,
-            left: 20,
-            right: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildFloatingButton(
-                  onTap: () {
-                    appStateManager.toggleLanguage();
-                    setState(() {});
-                  },
-                  child: AnimatedSize(
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 10,
+          left: 20,
+          right: 20,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildFloatingButton(
+                onTap: () {
+                  appStateManager.toggleLanguage();
+                  setState(() {});
+                },
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, animation) => ScaleTransition(
-                        scale: animation,
-                        child: FadeTransition(opacity: animation, child: child),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text(
-                          appStateManager.isArabic ? 'EN' : 'AR',
-                          key: ValueKey<bool>(appStateManager.isArabic),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: appStateManager.isDarkMode
-                                ? ColorApp.appLight
-                                : ColorApp.icons,
-                          ),
+                    transitionBuilder: (child, animation) => ScaleTransition(
+                      scale: animation,
+                      child: FadeTransition(opacity: animation, child: child),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        appStateManager.isArabic ? 'EN' : 'AR',
+                        key: ValueKey<bool>(appStateManager.isArabic),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: appStateManager.isDarkMode
+                              ? ColorApp.appLight
+                              : ColorApp.icons,
                         ),
                       ),
                     ),
                   ),
                 ),
-                _buildFloatingButton(
-                  onTap: () => appStateManager.toggleTheme(),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) => RotationTransition(
-                      turns: animation,
-                      child: ScaleTransition(scale: animation, child: child),
-                    ),
-                    child: Icon(
-                      appStateManager.isDarkMode
-                          ? Icons.light_mode_rounded
-                          : Icons.dark_mode_rounded,
-                      key: ValueKey<bool>(appStateManager.isDarkMode),
-                      color: appStateManager.isDarkMode
-                          ? ColorApp.appLight
-                          : ColorApp.icons,
-                    ),
+              ),
+              _buildFloatingButton(
+                onTap: () => appStateManager.toggleTheme(),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) => RotationTransition(
+                    turns: animation,
+                    child: ScaleTransition(scale: animation, child: child),
+                  ),
+                  child: Icon(
+                    appStateManager.isDarkMode
+                        ? Icons.light_mode_rounded
+                        : Icons.dark_mode_rounded,
+                    key: ValueKey<bool>(appStateManager.isDarkMode),
+                    color: appStateManager.isDarkMode
+                        ? ColorApp.appLight
+                        : ColorApp.icons,
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    final route = ModalRoute.of(context);
+    final Animation<double> secondary =
+        route?.secondaryAnimation ?? const AlwaysStoppedAnimation<double>(0.0);
+
+    final shellBody = AnimatedBuilder(
+      animation: secondary,
+      builder: (context, child) {
+        final t = Curves.easeInOutCubic.transform(secondary.value);
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
+        final sign = isRtl ? 1.0 : -1.0;
+        final w = MediaQuery.sizeOf(context).width;
+        return Transform.translate(
+          offset: Offset(sign * w * 0.1 * t, 0),
+          child: Transform.scale(
+            scale: 1.0 - 0.07 * t,
+            child: Opacity(
+              opacity: (1.0 - 0.15 * t).clamp(0.0, 1.0),
+              child: child!,
             ),
           ),
-        ],
-      ),
+        );
+      },
+      child: stackBody,
     );
+
+    return Scaffold(backgroundColor: ColorApp.buttonDetails, body: shellBody);
   }
 
   Widget _buildFloatingButton({
@@ -709,89 +446,60 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildTabButton(String title, bool isSelected, VoidCallback onTap) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? (appStateManager.isDarkMode
-                      ? ColorApp.appDark
-                      : ColorApp.appLight)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            title,
-            style: TextStyle(
-              color: isSelected
-                  ? (appStateManager.isDarkMode
-                        ? ColorApp.appLight
-                        : ColorApp.icons)
-                  : ColorApp.appLight,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
+  Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
+    if (!isSignupMode) {
+      return Text(
+        l10n.login,
+        key: const ValueKey('login_title'),
+        style: TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: appStateManager.isDarkMode
+              ? ColorApp.appLight
+              : ColorApp.primary,
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  //  حقل التليفون مع اختيار الدولة
-  Widget _buildPhoneInput() {
-    return Row(
+    return Wrap(
+      key: const ValueKey('signup_title'),
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        GestureDetector(
-          onTap: _showCountryPicker,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            decoration: BoxDecoration(
-              border: Border.all(color: ColorApp.textFieldHighlight),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
-                  child: SizedBox(
-                    width: 28,
-                    height: 20,
-                    child: CountryFlag.fromCountryCode(_selectedIsoCode),
-                  ),
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  _selectedCountryCode,
-                  style: TextStyle(
-                    color: appStateManager.isDarkMode
-                        ? ColorApp.icons
-                        : ColorApp.appLight,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_drop_down,
-                  color: appStateManager.isDarkMode
-                      ? ColorApp.icons
-                      : ColorApp.appLight,
-                  size: 20,
-                ),
-              ],
-            ),
+        Text(
+          l10n.createAccountFor,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: appStateManager.isDarkMode
+                ? ColorApp.appLight
+                : ColorApp.appDark,
           ),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildTextField(
-            hint: AppLocalizations.of(context)!.phoneNumber,
-            controller: _phoneController,
-            validator: (value) => AppValidator.validatePhone(value, context),
+        GestureDetector(
+          onTap: () =>
+              setState(() => isMedicalStaffSelected = !isMedicalStaffSelected),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(scale: animation, child: child),
+              );
+            },
+            child: Text(
+              isMedicalStaffSelected ? l10n.medicalStaff : l10n.patient,
+              key: ValueKey<bool>(isMedicalStaffSelected),
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: ColorApp.textFieldHighlight,
+                decoration: TextDecoration.underline,
+                decorationStyle: TextDecorationStyle.dashed,
+                decorationThickness: 1.5,
+              ),
+            ),
           ),
         ),
       ],
@@ -859,7 +567,7 @@ class _LoginScreenState extends State<LoginScreen>
       obscureText: !isConfirmPasswordVisible,
       validator: (value) {
         if (value != _passwordController.text) {
-          return "Passwords do not match";
+          return AppLocalizations.of(context)!.passwordsDoNotMatch;
         }
         return null;
       },
@@ -951,27 +659,40 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildMainButton(String title, {VoidCallback? onTap}) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap ?? () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ColorApp.textFieldHighlight,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 18,
-            color: appStateManager.isDarkMode
-                ? ColorApp.appLight
-                : ColorApp.appDark,
-            fontWeight: FontWeight.bold,
-          ),
+  Widget _buildMainButton(
+    String title, {
+    bool isLoading = false,
+    VoidCallback? onTap,
+  }) {
+    return Material(
+      color: isLoading
+          ? ColorApp.textFieldHighlight.withOpacity(0.5)
+          : ColorApp.textFieldHighlight,
+      borderRadius: BorderRadius.circular(15),
+      child: InkWell(
+        onTap: isLoading ? null : (onTap ?? () {}),
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: isLoading
+              ? const Center(
+                  child: ShefaBrandedTextLoader(
+                    arabicFontSize: 20,
+                    showDots: false,
+                  ),
+                )
+              : Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: appStateManager.isDarkMode
+                        ? ColorApp.appLight
+                        : ColorApp.appDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
         ),
       ),
     );

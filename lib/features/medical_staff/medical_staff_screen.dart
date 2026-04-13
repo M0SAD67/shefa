@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shefa/core/constants/assets_app.dart';
-import 'package:shefa/core/manager/app_state_manager.dart';
+import '../../core/constants/assets_app.dart';
+import '../../core/manager/app_state_manager.dart';
 import '../../core/theme/color_app.dart';
+import '../../core/widgets/app_header.dart';
+import '../../core/widgets/medical_background_icons.dart';
 import '../../l10n/app_localizations.dart';
 
 class MedicalStaffScreen extends StatefulWidget {
@@ -49,91 +51,58 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: appStateManager.isDarkMode
-          ? ColorApp.appDark
-          : ColorApp.appLight,
-      body: _isSubmitted ? _buildSuccessView() : _buildFormView(),
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      body: Stack(
+        children: [
+          // Pattern Background
+          const Positioned.fill(child: MedicalIconsBackground()),
+
+          SafeArea(
+            child: Column(
+              children: [
+                const AppHeader(),
+                Expanded(
+                  child: _isSubmitted ? _buildSuccessView() : _buildFormView(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildFormView() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          // ===== الهيدر =====
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 15,
-              bottom: 15,
-              left: 20,
-              right: 20,
-            ),
-            decoration: BoxDecoration(
-              color: appStateManager.isDarkMode
-                  ? ColorApp.icons
-                  : ColorApp.appLight,
-              border: Border(
-                bottom: BorderSide(
-                  color: ColorApp.locationText.withOpacity(0.2),
-                  width: 1.5,
-                ),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: ColorApp.appAmoled.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
+          const SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundColor: ColorApp.primary.withOpacity(0.2),
-                  child: const Icon(
-                    Icons.person,
-                    size: 28,
-                    color: ColorApp.primary,
+                Text(
+                  AppLocalizations.of(context)!.medicalStaff,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: isDark ? ColorApp.appLight : ColorApp.icons,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            _t('علي عماد', 'Ali Emad'),
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: appStateManager.isDarkMode
-                                  ? ColorApp.appLight
-                                  : ColorApp.appDark,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          const Text('👋', style: TextStyle(fontSize: 17)),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        _t('الفل بنها القليوبيه', 'El Fol, Banha, Qalyubia'),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: appStateManager.isDarkMode
-                              ? ColorApp.appLight.withOpacity(0.7)
-                              : ColorApp.locationText,
-                        ),
-                      ),
-                    ],
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 20,
+                    color: isDark ? ColorApp.appLight : ColorApp.icons,
                   ),
                 ),
-                Image.asset(AssetsApp.logo, height: 50),
               ],
             ),
           ),

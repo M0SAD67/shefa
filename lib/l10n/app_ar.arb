@@ -8,6 +8,7 @@
   "forgotPassword": "هل نسيت كلمة المرور؟",
   "dontHaveAccount": "ليس لديك حساب؟ ",
   "createAccount": "إنشاء حساب",
+  "createAccountFor": "إنشاء حساب لـ ",
   "password": "الرقم السري",
   "signUp": "إنشاء حساب",
   "skip": "تخطي",
@@ -22,9 +23,10 @@
   "phoneVerified": "تم التحقق من رقم الهاتف",
   "redirectToHome": "سيتم تحويلك إلى الصفحة الرئيسية خلال لحظات",
   "home": "الرئيسية",
-  "nurseries": "حضانات",
+  "nurseries": "حضانات أطفال",
   "icu": "عناية مركزة",
   "medicalStaff": "طاقم طبي",
+  "patient": "مستفيد",
   "bookings": "طلبات الحجز",
   "myAccount": "حسابي",
   "navHome": "الرئيسية",
@@ -54,7 +56,10 @@
       }
     }
   },
-  "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+  "invalidEmail": "أدخل بريداً صالحاً ينتهي بـ com أو net أو edu",
+  "networkError": "لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.",
+  "networkTimeout": "انتهت مهلة الاتصال بالخادم. حاول مرة أخرى بعد قليل.",
+  "unexpectedError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
   "invalidPassword": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
   "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
   "emptyField": "هذا الحقل لا يمكن أن يكون فارغاً",
@@ -93,5 +98,22 @@
   "status": "الحالة",
   "active": "نشط",
   "arabic": "العربية",
-  "english": "الإنجليزية"
+  "english": "الإنجليزية",
+  "loadingRingPreviewTitle": "دائرة التحميل",
+  "loadingRingPreviewMenu": "تصميم دائرة التحميل",
+  "loadingRingPreviewHint": "لمعة الاسم تستخدم ألوان الهوية؛ يمكنك تغيير النص أو الحجم من الكود حيث تعرض التحميل.",
+  "loadingRingPreviewBrandedCaption": "لمعة الاسم (الافتراضي)",
+  "loadingRingPreviewClassicCaption": "نسخة الدائرة (واجهات مدمجة)",
+  "accountCreatedSuccess": "تم إنشاء الحساب بنجاح",
+  "otpIncompleteCode": "يرجى إدخال رمز التحقق المكوّن من 6 أرقام",
+  "verify": "تحقق",
+  "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
+  "otpEnterCodeForEmail": "أدخل رمز التحقق المكوّن من 6 أرقام المرسل إلى البريد:\n{email}",
+  "@otpEnterCodeForEmail": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }
