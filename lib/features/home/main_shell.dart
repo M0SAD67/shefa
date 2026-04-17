@@ -2,11 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/theme/color_app.dart';
-import '../../l10n/app_localizations.dart';
 import 'home_screen.dart';
 import '../nurseries/nurseries_screen.dart';
-import '../icu/icu_screen.dart';
-import '../bookings/bookings_screen.dart';
 import '../profile/profile_screen.dart';
 
 class MainShell extends StatefulWidget {
