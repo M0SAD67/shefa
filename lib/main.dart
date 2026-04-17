@@ -8,6 +8,11 @@ import 'features/auth/signup_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/home/main_shell.dart';
 import 'features/nurseries/nurseries_screen.dart';
+import 'features/nurseries/IncubatorsScreen.dart';
+import 'features/nurseries/IncubatorsDetailsScreen.dart';
+import 'features/nurseries/Incubatorsbook.dart';
+import 'features/bookings/bookings_screen.dart';
+import 'features/bookings/bookconfirm.dart';
 import 'features/icu/icu_screen.dart';
 import 'features/medical_staff/medical_staff_screen.dart';
 import 'l10n/app_localizations.dart';
@@ -54,8 +59,16 @@ class ShefaApp extends StatelessWidget {
             SignupScreen.routeName: (context) => const SignupScreen(),
             MainShell.routeName: (context) => const MainShell(),
             NurseriesScreen.routeName: (context) => const NurseriesScreen(),
+            IncubatorsScreen.routeName: (context) => const IncubatorsScreen(),
+            IncubatorDetailsScreen.routeName: (context) =>
+                IncubatorDetailsScreen(),
+            BookingScreen.routeName: (context) => const BookingScreen(),
+            BookingConfirmationScreen.routeName: (context) =>
+                BookingConfirmationScreen(),
+            BookingsScreen.routeName: (context) => const BookingsScreen(),
             IcuScreen.routeName: (context) => const IcuScreen(),
-            MedicalStaffScreen.routeName: (context) => const MedicalStaffScreen(),
+            MedicalStaffScreen.routeName: (context) =>
+                const MedicalStaffScreen(),
           },
           home: const MainShell(),
         );

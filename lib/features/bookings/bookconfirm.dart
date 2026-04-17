@@ -1,84 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/constants/assets_app.dart';
-import 'package:my_app/theme/color_app.dart';
+import '../../core/constants/assets_app.dart';
+import '../../core/theme/color_app.dart';
+import '../../core/widgets/app_header.dart';
 
 class BookingConfirmationScreen extends StatelessWidget {
-  const BookingConfirmationScreen({Key? key}) : super(key: key);
+  static const String routeName = 'BookingConfirmationScreen';
+  BookingConfirmationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Directionality(
-      textDirection: TextDirection.rtl, 
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: ColorApp.appLight,
+        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
         body: Column(
           children: [
-           
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 15,
-                bottom: 15,
-                left: 20,
-                right: 20,
-              ),
-              decoration: BoxDecoration(
-                color: ColorApp.appLight,
-                border: Border(
-                  bottom: BorderSide(
-                    color: ColorApp.locationText.withOpacity(0.2),
-                    width: 1.5,
-                  ),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorApp.appAmoled.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: ColorApp.primary.withOpacity(0.2),
-                    backgroundImage: const AssetImage(AssetsApp.userAvatar),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: const [
-                            Text(
-                              'علي عماد',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: ColorApp.appDark,
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            Text('👋', style: TextStyle(fontSize: 17)),
-                          ],
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'الفلل بنها القليوبيه',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: ColorApp.locationText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Image.asset(AssetsApp.logo, height: 50),
-                ],
-              ),
-            ),
+            const AppHeader(),
 
             const SizedBox(height: 15),
 
@@ -98,7 +36,7 @@ class BookingConfirmationScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Icon(
-                        Icons.arrow_back, 
+                        Icons.arrow_back,
                         color: ColorApp.primary,
                         size: 24,
                       ),
@@ -112,11 +50,11 @@ class BookingConfirmationScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: ColorApp.secondary, width: 1.5),
-                      color: Colors.white,
+                      color: isDark ? ColorApp.appAmoled : Colors.white,
                     ),
                     child: ClipOval(
                       child: Image.asset(
-                        AssetsApp.icOnboard1, 
+                        AssetsApp.icOnboard1,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -154,13 +92,16 @@ class BookingConfirmationScreen extends StatelessWidget {
                   ),
 
                   SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 10,
+                    ),
                     child: Column(
                       children: [
-                        _buildRequestDataCard(),
-                        
+                        _buildRequestDataCard(context),
+
                         const SizedBox(height: 40),
-                        
+
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: const BoxDecoration(
@@ -169,22 +110,22 @@ class BookingConfirmationScreen extends StatelessWidget {
                           ),
                           child: const Icon(
                             Icons.check,
-                            color: ColorApp.icons, 
+                            color: ColorApp.icons,
                             size: 40,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         const Text(
                           'تم إرسال طلب الحجز',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: ColorApp.primary, 
+                            color: ColorApp.secondary,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -198,17 +139,17 @@ class BookingConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRequestDataCard() {
+  Widget _buildRequestDataCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: isDark
+            ? ColorApp.appDark.withOpacity(0.8)
+            : Colors.white.withOpacity(0.85),
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-          color: ColorApp.buttonDetails,
-          width: 1.5,
-        ),
+        border: Border.all(color: ColorApp.buttonDetails, width: 1.5),
         boxShadow: [
           BoxShadow(
             color: ColorApp.appAmoled.withOpacity(0.04),
@@ -219,9 +160,9 @@ class BookingConfirmationScreen extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, 
-        children: const [
-          Text(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
             'بيانات الطلب',
             style: TextStyle(
               color: ColorApp.locationText,
@@ -229,7 +170,7 @@ class BookingConfirmationScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
           Text(
             'مستشفي بنها الجامعي',
@@ -237,47 +178,47 @@ class BookingConfirmationScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: ColorApp.icons,
+              color: isDark ? Colors.white : ColorApp.icons,
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-          Text(
+          const Text(
             'اسم الطفل',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.primary,
+              color: ColorApp.secondary,
             ),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-          Text(
-            'رقم التليفون',
+          const Text(
+            'رقم تليفون',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.primary,
+              color: ColorApp.secondary,
             ),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-          Text(
+          const Text(
             'الحاله',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.primary,
+              color: ColorApp.secondary,
             ),
           ),
-          SizedBox(height: 6),
+          const SizedBox(height: 6),
 
-      Text(
+          const Text(
             'نوع الخدمة : حضانات اطفال',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.primary,
+              color: ColorApp.secondary,
             ),
           ),
         ],

@@ -1,113 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/constants/assets_app.dart';
-import 'package:my_app/theme/color_app.dart';
+import '../../core/widgets/app_header.dart';
+import '../../core/constants/assets_app.dart';
+import '../../core/theme/color_app.dart';
+import 'IncubatorsDetailsScreen.dart';
 
 class IncubatorsScreen extends StatelessWidget {
+  static const String routeName = 'IncubatorsScreen';
   const IncubatorsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: ColorApp.appLight,
+        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
         body: Column(
           children: [
-
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 15,
-                bottom: 15,
-                left: 20,
-                right: 20,
-              ),
-              decoration: BoxDecoration(
-                color: ColorApp.appLight,
-                border: Border(
-                  bottom: BorderSide(
-                    color: ColorApp.locationText.withOpacity(0.2),
-                    width: 1.5,
-                  ),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorApp.appAmoled.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: ColorApp.primary.withOpacity(0.2),
-                    backgroundImage: const AssetImage(AssetsApp.userAvatar),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: const [
-                            Text(
-                              'علي عماد',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: ColorApp.appDark,
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            Text('👋', style: TextStyle(fontSize: 17)),
-                          ],
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'الفلل بنها القليوبيه',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: ColorApp.locationText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Image.asset(AssetsApp.logo, height: 50),
-                ],
-              ),
-            ),
+            const AppHeader(),
 
             const SizedBox(height: 15),
-
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: ColorApp.buttonDetails,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: ColorApp.primary,
-                      size: 20,
+                  InkWell(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: ColorApp.buttonDetails,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: ColorApp.primary,
+                        size: 20,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  
+
                   Container(
                     width: 45,
                     height: 45,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: ColorApp.secondary, width: 1.5), // الإطار الأخضر
-                      color: Colors.white,
+                      border: Border.all(
+                        color: ColorApp.secondary,
+                        width: 1.5,
+                      ), // الإطار الأخضر
+                      color: isDark ? ColorApp.appAmoled : Colors.white,
                     ),
                     child: ClipOval(
                       child: Image.asset(
@@ -118,7 +62,6 @@ class IncubatorsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
 
-               
                   const Text(
                     'حضانات أطفال',
                     style: TextStyle(
@@ -133,15 +76,22 @@ class IncubatorsScreen extends StatelessWidget {
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark ? ColorApp.appAmoled : Colors.white,
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: ColorApp.secondary, width: 1), // إطار أخضر
+                        border: Border.all(
+                          color: ColorApp.secondary,
+                          width: 1,
+                        ), // إطار أخضر
                       ),
                       child: Row(
                         children: [
                           const SizedBox(width: 8),
                           Expanded(
                             child: TextField(
+                              style: TextStyle(
+                                color: isDark ? Colors.white : Colors.black,
+                                fontSize: 11,
+                              ),
                               decoration: InputDecoration(
                                 hintText: 'بحث عن منطقة , مستشفي , ....',
                                 hintStyle: TextStyle(
@@ -149,11 +99,17 @@ class IncubatorsScreen extends StatelessWidget {
                                   fontSize: 11,
                                 ),
                                 border: InputBorder.none,
-                                contentPadding: const EdgeInsets.only(bottom: 12), // لضبط النص في المنتصف
+                                contentPadding: const EdgeInsets.only(
+                                  bottom: 12,
+                                ), // لضبط النص في المنتصف
                               ),
                             ),
                           ),
-                          const Icon(Icons.search, color: ColorApp.locationText, size: 20),
+                          const Icon(
+                            Icons.search,
+                            color: ColorApp.locationText,
+                            size: 20,
+                          ),
                           const SizedBox(width: 8),
                         ],
                       ),
@@ -182,9 +138,13 @@ class IncubatorsScreen extends StatelessWidget {
                   ),
 
                   ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 10,
+                    ),
                     children: [
                       _buildHospitalCard(
+                        context: context,
                         hospitalName: 'مستشفي بنها الجامعي',
                         address: 'القليوبيه,بنها,اشاره',
                         normalIncubatorsText: '3 متاح',
@@ -194,6 +154,7 @@ class IncubatorsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _buildHospitalCard(
+                        context: context,
                         hospitalName: 'مستشفي بنها التعليمي',
                         address: 'القليوبيه,بنها,اهرام',
                         normalIncubatorsText: '4 متاح',
@@ -203,6 +164,7 @@ class IncubatorsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _buildHospitalCard(
+                        context: context,
                         hospitalName: 'مستشفى أطفال بنها',
                         address: 'القليوبيه,بنها,اهرام',
                         normalIncubatorsText: '3 متاح',
@@ -212,6 +174,7 @@ class IncubatorsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _buildHospitalCard(
+                        context: context,
                         hospitalName: 'مستشفى أطفال بنها',
                         address: 'القليوبيه,بنها,اهرام',
                         normalIncubatorsText: '3 متاح',
@@ -232,6 +195,7 @@ class IncubatorsScreen extends StatelessWidget {
   }
 
   Widget _buildHospitalCard({
+    required BuildContext context,
     required String hospitalName,
     required String address,
     required String normalIncubatorsText,
@@ -239,16 +203,16 @@ class IncubatorsScreen extends StatelessWidget {
     required String nicuText,
     required bool nicuAvailable,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: isDark
+            ? ColorApp.appDark.withOpacity(0.8)
+            : Colors.white.withOpacity(0.85),
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-          color: ColorApp.buttonDetails,
-          width: 1.5,
-        ),
+        border: Border.all(color: ColorApp.buttonDetails, width: 1.5),
         boxShadow: [
           BoxShadow(
             color: ColorApp.appAmoled.withOpacity(0.04),
@@ -265,37 +229,39 @@ class IncubatorsScreen extends StatelessWidget {
             children: [
               Text(
                 hospitalName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: ColorApp.icons,
+                  color: isDark ? Colors.white : ColorApp.icons,
                 ),
               ),
               const SizedBox(height: 6),
 
               Text(
                 'العنوان : $address',
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: ColorApp.primary,
-                ),
+                style: const TextStyle(fontSize: 13, color: ColorApp.primary),
               ),
               const SizedBox(height: 12),
 
               Row(
                 children: [
-                  const Text('🍼', style: TextStyle(fontSize: 14)), 
+                  const Text('🍼', style: TextStyle(fontSize: 14)),
                   const SizedBox(width: 6),
-                  const Text(
+                  Text(
                     'حضانات أطفال: ',
-                    style: TextStyle(fontSize: 13, color: ColorApp.locationText),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: isDark ? Colors.white70 : ColorApp.locationText,
+                    ),
                   ),
                   Text(
                     normalIncubatorsText,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: normalAvailable ? ColorApp.secondary : ColorApp.red, // أخضر لو متاح، أحمر لو غير متاح
+                      color: normalAvailable
+                          ? ColorApp.secondary
+                          : ColorApp.error, // أخضر لو متاح، أحمر لو غير متاح
                     ),
                   ),
                 ],
@@ -304,18 +270,23 @@ class IncubatorsScreen extends StatelessWidget {
 
               Row(
                 children: [
-                  const Text('👶', style: TextStyle(fontSize: 14)), 
+                  const Text('👶', style: TextStyle(fontSize: 14)),
                   const SizedBox(width: 6),
-                  const Text(
+                  Text(
                     'حضانات (NICU) : ',
-                    style: TextStyle(fontSize: 13, color: ColorApp.locationText),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: isDark ? Colors.white70 : ColorApp.locationText,
+                    ),
                   ),
                   Text(
                     nicuText,
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: nicuAvailable ? ColorApp.secondary : ColorApp.red, // أخضر لو متاح، أحمر لو غير متاح
+                      color: nicuAvailable
+                          ? ColorApp.secondary
+                          : ColorApp.error, // أخضر لو متاح، أحمر لو غير متاح
                     ),
                   ),
                 ],
@@ -328,16 +299,22 @@ class IncubatorsScreen extends StatelessWidget {
             left: 0,
             child: InkWell(
               onTap: () {
+                Navigator.pushNamed(context, IncubatorDetailsScreen.routeName);
               },
               borderRadius: BorderRadius.circular(12),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: ColorApp.buttonDetails,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: ColorApp.secondary.withOpacity(0.4), // الظل الأخضر الخفيف تحت الزر
+                      color: ColorApp.secondary.withOpacity(
+                        0.4,
+                      ), // الظل الأخضر الخفيف تحت الزر
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),

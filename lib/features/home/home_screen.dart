@@ -8,6 +8,8 @@ import '../../core/widgets/medical_background_icons.dart';
 import '../../l10n/app_localizations.dart';
 import '../icu/icu_screen.dart';
 import '../nurseries/nurseries_screen.dart';
+import '../nurseries/IncubatorsScreen.dart';
+import '../bookings/bookings_screen.dart';
 import '../medical_staff/medical_staff_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -43,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                             imagePath: AssetsApp.icOnboard1,
                             onTap: () => Navigator.pushNamed(
                               context,
-                              NurseriesScreen.routeName,
+                              IncubatorsScreen.routeName,
                             ),
                           ),
                           const SizedBox(height: 35),
@@ -62,6 +64,15 @@ class HomeScreen extends StatelessWidget {
                             onTap: () => Navigator.pushNamed(
                               context,
                               MedicalStaffScreen.routeName,
+                            ),
+                          ),
+                          const SizedBox(height: 35),
+                          _CategoryCircle(
+                            title: l10n.bookings,
+                            imagePath: AssetsApp.logo, // Temporary using logo until a specific icon is found
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              BookingsScreen.routeName,
                             ),
                           ),
                           const SizedBox(height: 40),

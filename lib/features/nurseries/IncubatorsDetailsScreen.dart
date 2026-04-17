@@ -1,84 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/constants/assets_app.dart';
-import 'package:my_app/theme/color_app.dart';
+import '../../core/constants/assets_app.dart';
+import '../../core/theme/color_app.dart';
+import '../../core/widgets/app_header.dart';
+import 'Incubatorsbook.dart';
 
 class IncubatorDetailsScreen extends StatelessWidget {
-  const IncubatorDetailsScreen({Key? key}) : super(key: key);
+  static const String routeName = 'IncubatorDetailsScreen';
+  IncubatorDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Directionality(
-      textDirection: TextDirection.rtl, 
+      textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: ColorApp.appLight,
+        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
         body: Column(
           children: [
-            
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 15,
-                bottom: 15,
-                left: 20,
-                right: 20,
-              ),
-              decoration: BoxDecoration(
-                color: ColorApp.appLight,
-                border: Border(
-                  bottom: BorderSide(
-                    color: ColorApp.locationText.withOpacity(0.2),
-                    width: 1.5,
-                  ),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorApp.appAmoled.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 26,
-                    backgroundColor: ColorApp.primary.withOpacity(0.2),
-                    backgroundImage: const AssetImage(AssetsApp.userAvatar),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: const [
-                            Text(
-                              'علي عماد',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: ColorApp.appDark,
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            Text('👋', style: TextStyle(fontSize: 17)),
-                          ],
-                        ),
-                        const SizedBox(height: 3),
-                        const Text(
-                          'الفلل بنها القليوبيه',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: ColorApp.locationText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Image.asset(AssetsApp.logo, height: 50),
-                ],
-              ),
-            ),
+            const AppHeader(),
 
             const SizedBox(height: 15),
 
@@ -88,7 +27,7 @@ class IncubatorDetailsScreen extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pop(context); 
+                      Navigator.pop(context);
                     },
                     borderRadius: BorderRadius.circular(6),
                     child: Container(
@@ -98,7 +37,7 @@ class IncubatorDetailsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Icon(
-                        Icons.arrow_back, 
+                        Icons.arrow_back,
                         color: ColorApp.primary,
                         size: 24,
                       ),
@@ -111,8 +50,8 @@ class IncubatorDetailsScreen extends StatelessWidget {
                     height: 45,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: ColorApp.secondary, width: 1.5), 
-                      color: Colors.white,
+                      border: Border.all(color: ColorApp.secondary, width: 1.5),
+                      color: isDark ? ColorApp.appAmoled : Colors.white,
                     ),
                     child: ClipOval(
                       child: Image.asset(
@@ -137,7 +76,6 @@ class IncubatorDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-          
             Expanded(
               child: Stack(
                 children: [
@@ -155,15 +93,18 @@ class IncubatorDetailsScreen extends StatelessWidget {
                   ),
 
                   SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 10,
+                    ),
                     child: Column(
                       children: [
-                        _buildDetailsCard(),
-                        
+                        _buildDetailsCard(context),
+
                         const SizedBox(height: 30),
-                        
-                        _buildBookButton(),
-                        
+
+                        _buildBookButton(context),
+
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -177,18 +118,17 @@ class IncubatorDetailsScreen extends StatelessWidget {
     );
   }
 
-
-  Widget _buildDetailsCard() {
+  Widget _buildDetailsCard(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: isDark
+            ? ColorApp.appDark.withOpacity(0.8)
+            : Colors.white.withOpacity(0.85),
         borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(
-          color: ColorApp.buttonDetails,
-          width: 1.5,
-        ),
+        border: Border.all(color: ColorApp.buttonDetails, width: 1.5),
         boxShadow: [
           BoxShadow(
             color: ColorApp.appAmoled.withOpacity(0.04),
@@ -199,15 +139,15 @@ class IncubatorDetailsScreen extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Center(
+          Center(
             child: Text(
               'مستشفي بنها الجامعي',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: ColorApp.icons,
+                color: isDark ? Colors.white : ColorApp.icons,
               ),
             ),
           ),
@@ -215,23 +155,16 @@ class IncubatorDetailsScreen extends StatelessWidget {
 
           const Text(
             'عنوان المستشفي : القليوبيه,بنها,اشاره',
-            style: TextStyle(
-              fontSize: 14,
-              color: ColorApp.primary,
-            ),
+            style: TextStyle(fontSize: 14, color: ColorApp.primary),
           ),
           const SizedBox(height: 12),
 
           const Text(
             'رقم تليفون : ',
-            style: TextStyle(
-              fontSize: 14,
-              color: ColorApp.primary,
-            ),
+            style: TextStyle(fontSize: 14, color: ColorApp.primary),
           ),
           const SizedBox(height: 16),
 
-      
           Row(
             children: [
               const Text('🍼', style: TextStyle(fontSize: 16)),
@@ -245,7 +178,7 @@ class IncubatorDetailsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: ColorApp.secondary, 
+                  color: ColorApp.secondary,
                 ),
               ),
             ],
@@ -276,7 +209,7 @@ class IncubatorDetailsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: ColorApp.secondary, 
+                  color: ColorApp.secondary,
                 ),
               ),
             ],
@@ -297,7 +230,10 @@ class IncubatorDetailsScreen extends StatelessWidget {
 
   Widget _buildBulletPoint(String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6.0, right: 16.0), // إزاحة لليمين (Indentation)
+      padding: const EdgeInsets.only(
+        bottom: 6.0,
+        right: 16.0,
+      ), // إزاحة لليمين (Indentation)
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -312,10 +248,7 @@ class IncubatorDetailsScreen extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 14,
-                color: ColorApp.primary,
-              ),
+              style: const TextStyle(fontSize: 14, color: ColorApp.primary),
             ),
           ),
         ],
@@ -323,20 +256,21 @@ class IncubatorDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBookButton() {
+  Widget _buildBookButton(BuildContext context) {
     return InkWell(
       onTap: () {
+        Navigator.pushNamed(context, BookingScreen.routeName);
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        width: 180, 
+        width: 180,
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: ColorApp.buttonDetails,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: ColorApp.secondary.withOpacity(0.4), 
+              color: ColorApp.secondary.withOpacity(0.4),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
