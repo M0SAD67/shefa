@@ -2,6 +2,7 @@ abstract class AssetsApp {
   // logo
   static const String logo = 'assets/logo/Logo.png';
   static const String logoMedical = 'assets/logo/حضانات.png';
+  static const String hospitalLogo = 'assets/logo/hospital.png';
 
   // onboarding
   static const String icOnboard1 = 'assets/images/onboard/onboard-1.png';

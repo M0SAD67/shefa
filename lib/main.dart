@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shefa/features/hospital/bookingChildrensNurseries.dart';
+import 'package:shefa/features/hospital/icu_requests_screen.dart';
+import 'package:shefa/features/nurseries/nursing/nurse_bookings_screen.dart';
 import 'core/cache/cache_helper.dart';
 import 'core/manager/app_state_manager.dart';
 import 'core/theme/color_app.dart';
@@ -70,7 +73,7 @@ class ShefaApp extends StatelessWidget {
             MedicalStaffScreen.routeName: (context) =>
                 const MedicalStaffScreen(),
           },
-          home: const MainShell(),
+          home: NurseBookingsScreen(),
         );
       },
     );
