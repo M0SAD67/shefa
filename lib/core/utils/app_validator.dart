@@ -6,9 +6,9 @@ class AppValidator {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.emptyField;
     }
-    // Matches API (Joi): local@sub.domain.com — TLD must be com, net, or edu.
+    // Matches standard email format
     final emailRegex = RegExp(
-      r'^[^\s@]+@([a-zA-Z0-9-]+\.){1,2}(com|net|edu)$',
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     if (!emailRegex.hasMatch(value.trim())) {
       return AppLocalizations.of(context)!.invalidEmail;
@@ -20,9 +20,21 @@ class AppValidator {
     if (value == null || value.isEmpty) {
       return AppLocalizations.of(context)!.emptyField;
     }
-    if (value.length < 6) {
+
+    // Length check
+    if (value.length < 8) {
       return AppLocalizations.of(context)!.invalidPassword;
     }
+
+    // Complexity check: Uppercase, Lowercase, Number, and Special Character
+    final passwordRegex = RegExp(
+      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$',
+    );
+
+    if (!passwordRegex.hasMatch(value)) {
+      return AppLocalizations.of(context)!.invalidPassword;
+    }
+
     return null;
   }
 

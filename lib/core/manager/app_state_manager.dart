@@ -19,6 +19,11 @@ class AppStateManager extends ChangeNotifier {
 
   static const String _themeKey = 'themeMode';
   static const String _langKey = 'languageCode';
+  static const String _genderKey = 'userGender';
+
+  String _gender = 'male';
+  String get gender => _gender;
+  bool get isFemale => _gender == 'female';
 
   void init() {
     final savedTheme = CacheHelper.getData(key: _themeKey);
@@ -30,6 +35,17 @@ class AppStateManager extends ChangeNotifier {
     if (savedLang != null) {
       _locale = Locale(savedLang);
     }
+
+    final savedGender = CacheHelper.getData(key: _genderKey);
+    if (savedGender != null) {
+      _gender = savedGender;
+    }
+    notifyListeners();
+  }
+
+  void setGender(String gender) {
+    _gender = gender;
+    CacheHelper.saveData(key: _genderKey, value: gender);
     notifyListeners();
   }
 

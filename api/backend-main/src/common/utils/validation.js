@@ -26,7 +26,7 @@ export const generalValidationFields = {
       maxDomainSegments: 3,
       tlds: { allow: ["com", "net", "edu"] },
     })
-    .pattern(/^[^\s@]+@([a-zA-Z0-9-]+\.){1,2}(com|net|edu)$/)
+    .pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(com|net|edu)$/)
     .messages({
       "string.base": "البريد الإلكتروني لازم يكون نص",
       "string.empty": "البريد الإلكتروني مطلوب",
@@ -39,7 +39,7 @@ export const generalValidationFields = {
   password: joi
     .string()
     .pattern(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
     )
     .messages({
       "string.base": "كلمة المرور لازم تكون نص",
@@ -51,12 +51,12 @@ export const generalValidationFields = {
 
   username: joi
     .string()
-    .pattern(/^[\u0600-\u06FF]+(\s[\u0600-\u06FF]+)+$/)
+    .pattern(/^[a-zA-Z\u0600-\u06FF]+(\s[a-zA-Z\u0600-\u06FF]+)+$/)
     .messages({
       "string.base": "اسم المستخدم لازم يكون نص",
       "string.empty": "اسم المستخدم مطلوب",
       "string.pattern.base":
-        "لازم تكتب الاسم الأول واسم العائلة (حروف عربية فقط)",
+        "لازم تكتب الاسم الأول واسم العائلة (حروف عربية أو إنجليزية)",
       "any.required": "اسم المستخدم مطلوب",
     }),
 

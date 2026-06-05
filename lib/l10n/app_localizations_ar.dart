@@ -148,6 +148,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidEmail => 'أدخل بريداً صالحاً ينتهي بـ com أو net أو edu';
 
   @override
+  String get noConnectionText => 'Please check your internet connection';
+
+  @override
+  String get gender => 'النوع';
+
+  @override
+  String get male => 'ذكر';
+
+  @override
+  String get female => 'أنثى';
+
+  @override
+  String get uploadVerificationDoc => 'إرسال مستند للتحقق (مطلوب للطاقم الطبي)';
+
+  @override
+  String get documentUploaded => 'تم إرفاق المستند';
+
+  @override
   String get networkError =>
       'لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.';
 
@@ -221,6 +239,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bookingRequestSent => 'تم إرسال طلب الحجز';
+
+  @override
+  String get bookingRequests => 'طلبات الحجز';
 
   @override
   String get backToHome => 'العودة للرئيسية';

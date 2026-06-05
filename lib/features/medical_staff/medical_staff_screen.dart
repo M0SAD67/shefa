@@ -36,10 +36,6 @@ class _MedicalStaffScreenState extends State<MedicalStaffScreen> {
     }
   }
 
-  String _t(String ar, String en) {
-    return appStateManager.isArabic ? ar : en;
-  }
-
   @override
   void dispose() {
     _nameController.dispose();

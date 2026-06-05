@@ -151,6 +151,25 @@ class AppLocalizationsEn extends AppLocalizations {
       'Use a valid email that ends with .com, .net, or .edu';
 
   @override
+  String get noConnectionText => 'Please check your internet connection';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get uploadVerificationDoc =>
+      'Upload Verification Document (Required for Staff)';
+
+  @override
+  String get documentUploaded => 'Document Uploaded';
+
+  @override
   String get networkError =>
       'No internet connection. Check your network and try again.';
 
@@ -224,6 +243,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookingRequestSent => 'Booking Request Sent';
+
+  @override
+  String get bookingRequests => 'Booking Requests';
 
   @override
   String get backToHome => 'Back to Home';

@@ -362,6 +362,42 @@ abstract class AppLocalizations {
   /// **'Use a valid email that ends with .com, .net, or .edu'**
   String get invalidEmail;
 
+  /// No description provided for @noConnectionText.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection'**
+  String get noConnectionText;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @uploadVerificationDoc.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Verification Document (Required for Staff)'**
+  String get uploadVerificationDoc;
+
+  /// No description provided for @documentUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Uploaded'**
+  String get documentUploaded;
+
   /// No description provided for @networkError.
   ///
   /// In en, this message translates to:
@@ -505,6 +541,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Booking Request Sent'**
   String get bookingRequestSent;
+
+  /// No description provided for @bookingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Requests'**
+  String get bookingRequests;
 
   /// No description provided for @backToHome.
   ///

@@ -14,10 +14,17 @@ abstract class AssetsApp {
   static const String bgOnboardOpacity =
       'assets/images/background/background-reduce-opacity.png';
 
-  static const String userAvatar = 'assets/images/user_avatar.png';
+  static const String userAvatarMan = 'assets/icon/profile-man.png';
+  static const String userAvatarWomen = 'assets/icon/profile-womman.png';
 
   // social icons
   static const String icGoogle = 'assets/icon/google.png';
   static const String icApple = 'assets/icon/apple.png';
   static const String icFacebook = 'assets/icon/Facebook.png';
+
+  // partners
+  static const String partner1 = 'assets/partners/1.png';
+  static const String partner2 = 'assets/partners/2.png';
+  static const String partner3 = 'assets/partners/3.png';
+  static const String partner4 = 'assets/partners/4.png';
 }

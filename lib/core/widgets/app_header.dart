@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/assets_app.dart';
+import '../manager/app_state_manager.dart';
 import '../theme/color_app.dart';
 
 class AppHeader extends StatelessWidget {
@@ -10,7 +11,7 @@ class AppHeader extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 15),
+      padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 15),
       decoration: BoxDecoration(
         color: isDark ? ColorApp.appDark : ColorApp.appLight,
       ),
@@ -19,71 +20,76 @@ class AppHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Logo
-              Hero(
-                tag: 'app_logo',
-                child: Image.asset(
-                  AssetsApp.logo,
-                  height: 45,
-                ),
-              ),
-
               // User Info
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+              ListenableBuilder(
+                listenable: appStateManager,
+                builder: (context, _) {
+                  return Row(
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            '👋',
-                            style: TextStyle(fontSize: 14),
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: ColorApp.primary.withOpacity(0.2),
+                            width: 2,
                           ),
-                          const SizedBox(width: 4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 24,
+                          backgroundImage: AssetImage(
+                            appStateManager.isFemale
+                                ? AssetsApp.userAvatarWomen
+                                : AssetsApp.userAvatarMan,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                appStateManager.isFemale ? 'سارة أحمد' : 'علي عماد',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  color: isDark
+                                      ? ColorApp.appLight
+                                      : ColorApp.appDark,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Text('👋', style: TextStyle(fontSize: 14)),
+                            ],
+                          ),
                           Text(
-                            'علي عماد',
+                            'الفلل بنها القليوبيه',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              color: isDark ? ColorApp.appLight : ColorApp.appDark,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: ColorApp.locationText.withOpacity(0.8),
                             ),
                           ),
                         ],
                       ),
-                      Text(
-                        'الفلل بنها القليوبيه',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: ColorApp.locationText.withOpacity(0.8),
-                        ),
-                      ),
                     ],
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ColorApp.primary.withOpacity(0.2),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: const CircleAvatar(
-                      radius: 24,
-                      backgroundImage: AssetImage(AssetsApp.userAvatar),
-                    ),
-                  ),
-                ],
+                  );
+                },
+              ),
+
+              // Logo
+              Hero(
+                tag: 'app_logo',
+                child: Image.asset(AssetsApp.logo, height: 45),
               ),
             ],
           ),

@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/manager/app_state_manager.dart';
 import 'package:shefa/core/utils/app_validator.dart';
@@ -10,6 +12,7 @@ import 'package:shefa/core/navigation/main_shell_route.dart';
 import 'package:shefa/features/auth/auth_repository.dart';
 import '../../core/theme/color_app.dart';
 import 'otp_screen.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:shefa/core/widgets/shefa_branded_text_loader.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -29,6 +32,10 @@ class _LoginScreenState extends State<LoginScreen>
   bool isSignupMode = false;
   bool _isLoading = false;
   bool isMedicalStaffSelected = false;
+  String _selectedGender = 'male';
+  String _completePhoneNumber = '';
+  int _phoneLength = 0;
+  File? _verificationDocument;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -38,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen>
       TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   late AnimationController _revealController;
   late Animation<double> _revealAnimation;
@@ -64,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen>
     _confirmPasswordController.dispose();
     _usernameController.dispose();
     _addressController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -138,16 +147,30 @@ class _LoginScreenState extends State<LoginScreen>
                         ),
                         const SizedBox(height: 15),
                       ],
+                      if (isSignupMode) ...[
+                        _buildGenderSelector(),
+                        const SizedBox(height: 15),
+                      ],
 
                       _buildEmailInput(
                         AppLocalizations.of(context)!.emailAddress,
                       ),
                       const SizedBox(height: 15),
+
+                      if (isSignupMode) ...[
+                        _buildPhoneInput(),
+                        const SizedBox(height: 15),
+                      ],
+
                       _buildPasswordInput(),
 
                       if (isSignupMode) ...[
                         const SizedBox(height: 15),
                         _buildConfirmPasswordInput(),
+                        if (isMedicalStaffSelected) ...[
+                          const SizedBox(height: 15),
+                          _buildDocumentUploadButton(),
+                        ],
                       ],
 
                       if (!isSignupMode)
@@ -186,6 +209,7 @@ class _LoginScreenState extends State<LoginScreen>
                                             _confirmPasswordController.text,
                                         username: _usernameController.text,
                                         address: _addressController.text,
+                                        phone: _completePhoneNumber,
                                         userType: isMedicalStaffSelected
                                             ? 'medical_staff'
                                             : 'patient',
@@ -514,6 +538,89 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  Widget _buildPhoneInput() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        IntlPhoneField(
+          controller: _phoneController,
+          dropdownIconPosition: IconPosition.trailing,
+          autovalidateMode: AutovalidateMode.disabled,
+          disableLengthCheck: false,
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.phoneNumber,
+            labelStyle: const TextStyle(color: ColorApp.locationText),
+            floatingLabelStyle: const TextStyle(
+              color: ColorApp.textFieldHighlight,
+            ),
+            counterText: "",
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 18,
+              horizontal: 15,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: ColorApp.textFieldHighlight),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: ColorApp.textFieldHighlight,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          initialCountryCode: 'EG',
+          languageCode: appStateManager.isArabic ? 'ar' : 'en',
+          onChanged: (phone) {
+            setState(() {
+              _phoneLength = phone.number.length;
+              _completePhoneNumber = phone.completeNumber;
+            });
+          },
+          style: TextStyle(
+            color: appStateManager.isDarkMode
+                ? ColorApp.appDark
+                : ColorApp.appLight,
+          ),
+          dropdownTextStyle: TextStyle(
+            color: appStateManager.isDarkMode
+                ? ColorApp.appDark
+                : ColorApp.appLight,
+          ),
+        ),
+        // Custom counter positioned on the top border (End side to avoid label overlap)
+        Positioned.directional(
+          textDirection: Directionality.of(context),
+          end: 12,
+          top: -8,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            color: appStateManager.isDarkMode
+                ? ColorApp.appLight
+                : ColorApp.icons,
+            child: Text(
+              '$_phoneLength',
+              style: const TextStyle(
+                color: ColorApp.textFieldHighlight,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildPasswordInput() {
     return TextFormField(
       controller: _passwordController,
@@ -565,6 +672,7 @@ class _LoginScreenState extends State<LoginScreen>
     return TextFormField(
       controller: _confirmPasswordController,
       obscureText: !isConfirmPasswordVisible,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (value) {
         if (value != _passwordController.text) {
           return AppLocalizations.of(context)!.passwordsDoNotMatch;
@@ -619,10 +727,12 @@ class _LoginScreenState extends State<LoginScreen>
     required String hint,
     TextEditingController? controller,
     String? Function(String?)? validator,
+    TextInputType? keyboardType,
   }) {
     return TextFormField(
       controller: controller,
       validator: validator,
+      keyboardType: keyboardType,
       style: TextStyle(
         color: appStateManager.isDarkMode
             ? ColorApp.appDark
@@ -705,6 +815,335 @@ class _LoginScreenState extends State<LoginScreen>
       child: Image.asset(path),
     );
   }
+
+  Widget _buildGenderSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final bool isDark = appStateManager.isDarkMode;
+    final Color textColor = isDark ? ColorApp.appDark : ColorApp.appLight;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        children: [
+          Icon(Icons.wc_rounded, color: ColorApp.textFieldHighlight, size: 22),
+          const SizedBox(width: 8),
+          Text(
+            l10n.gender,
+            style: TextStyle(
+              color: ColorApp.locationText,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const Spacer(),
+          // Male option
+          _buildGenderOption(
+            label: l10n.male,
+            isSelected: _selectedGender == 'male',
+            onTap: () {
+              setState(() => _selectedGender = 'male');
+              appStateManager.setGender('male');
+            },
+            textColor: textColor,
+          ),
+          const SizedBox(width: 20),
+          // Female option
+          _buildGenderOption(
+            label: l10n.female,
+            isSelected: _selectedGender == 'female',
+            onTap: () {
+              setState(() => _selectedGender = 'female');
+              appStateManager.setGender('female');
+            },
+            textColor: textColor,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenderOption({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color textColor,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected
+                    ? ColorApp.textFieldHighlight
+                    : ColorApp.locationText.withOpacity(0.5),
+                width: 2,
+              ),
+            ),
+            child: Center(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: isSelected ? 10 : 0,
+                height: isSelected ? 10 : 0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: ColorApp.textFieldHighlight,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? ColorApp.textFieldHighlight : textColor,
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDocumentUploadButton() {
+    final l10n = AppLocalizations.of(context)!;
+    final bool isDark = appStateManager.isDarkMode;
+    final bool hasDoc = _verificationDocument != null;
+
+    return GestureDetector(
+      onTap: () async {
+        try {
+          FilePickerResult? result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp'],
+          );
+
+          if (result != null && result.files.single.path != null) {
+            setState(() {
+              _verificationDocument = File(result.files.single.path!);
+            });
+            if (mounted) {
+              showCustomSnackBar(
+                context,
+                message: l10n.documentUploaded,
+                icon: Icons.check_circle_outline,
+                backgroundColor: Colors.green,
+                top: true,
+              );
+            }
+          }
+        } catch (e) {
+          if (mounted) {
+            showCustomSnackBar(
+              context,
+              message: l10n.unexpectedError,
+              icon: Icons.error_outline,
+              backgroundColor: Colors.red,
+              top: true,
+            );
+          }
+        }
+      },
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: _DashedPainter(
+              color: hasDoc
+                  ? Colors.green.withOpacity(0.8)
+                  : ColorApp.textFieldHighlight.withOpacity(0.6),
+              borderRadius: 20,
+              strokeWidth: 2,
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+              decoration: BoxDecoration(
+                color: hasDoc
+                    ? Colors.green.withOpacity(isDark ? 0.15 : 0.08)
+                    : ColorApp.textFieldHighlight.withOpacity(
+                        isDark ? 0.15 : 0.08,
+                      ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Upload Icon with Animation
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 400),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: hasDoc
+                          ? Colors.green.withOpacity(0.2)
+                          : ColorApp.textFieldHighlight.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      hasDoc
+                          ? Icons.verified_rounded
+                          : Icons.cloud_upload_outlined,
+                      color: hasDoc
+                          ? Colors.green
+                          : ColorApp.textFieldHighlight,
+                      size: 32,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Text info
+                  Text(
+                    hasDoc ? l10n.documentUploaded : l10n.uploadVerificationDoc,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: isDark ? ColorApp.appDark : ColorApp.appLight,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (!hasDoc)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        "PDF, PNG, JPG, WEBP (Max 5MB)",
+                        style: TextStyle(
+                          color: isDark
+                              ? ColorApp.appAmoled
+                              : ColorApp.locationText,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                  if (hasDoc) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: (isDark ? Colors.black : Colors.white)
+                            .withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.green.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.description_outlined,
+                            size: 16,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              _verificationDocument!.path.split('/').last,
+                              style: TextStyle(
+                                color: isDark ? Colors.white : Colors.black87,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          if (hasDoc)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _verificationDocument = null;
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close_rounded,
+                    size: 16,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DashedPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+  final double borderRadius;
+
+  _DashedPainter({
+    required this.color,
+    this.strokeWidth = 1.5,
+    this.dashWidth = 5,
+    this.dashSpace = 3,
+    this.borderRadius = 20,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    final path = Path()
+      ..addRRect(
+        RRect.fromLTRBR(
+          0,
+          0,
+          size.width,
+          size.height,
+          Radius.circular(borderRadius),
+        ),
+      );
+
+    final dashPath = Path();
+    double distance = 0;
+    for (final pathMetric in path.computeMetrics()) {
+      while (distance < pathMetric.length) {
+        dashPath.addPath(
+          pathMetric.extractPath(distance, distance + dashWidth),
+          Offset.zero,
+        );
+        distance += dashWidth + dashSpace;
+      }
+    }
+    canvas.drawPath(dashPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _CircularRevealClipper extends CustomClipper<Path> {

@@ -25,6 +25,7 @@ class AuthRepository {
     required String confirmPassword,
     required String username,
     required String address,
+    required String phone,
     required String userType,
   }) async {
     try {
@@ -36,6 +37,7 @@ class AuthRepository {
           'confirmPassword': confirmPassword,
           'username': username,
           'address': address,
+          'phone': phone,
           'userType': userType,
         },
       );

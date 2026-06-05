@@ -44,6 +44,8 @@ dependencies:
   dio: ^5.9.2
   pretty_dio_logger: ^1.4.0
   iconsax: ^0.0.8
+  file_picker: ^8.1.7
+  intl_phone_field: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,7 @@ flutter:
     - assets/images/onboard/
     - assets/images/background/
     - assets/logo/
+    - assets/partners/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
