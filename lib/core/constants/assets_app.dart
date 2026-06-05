@@ -1,6 +1,8 @@
 abstract class AssetsApp {
   // logo
   static const String logo = 'assets/logo/Logo.png';
+  static const String hospitalLogo = 'assets/logo/Benha uni.png';
+  static const String alarmLogo = 'assets/logo/alarm.png';
   static const String logoMedical = 'assets/logo/حضانات.png';
   static const String hospitalLogo = 'assets/logo/hospital.png';
 
