@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shefa/core/theme/color_app.dart';
-import 'package:shefa/core/widgets/hospital_header.dart';
-import 'package:shefa/features/hospital/icu_request_model.dart';
+import '../../core/theme/color_app.dart';
+import '../../core/widgets/hospital_header.dart';
+import '../../core/manager/app_state_manager.dart';
+import '../../l10n/app_localizations.dart';
+import 'icu_request_model.dart';
 
 class IcuRequestDetailsScreen extends StatelessWidget {
   final IcuRequest request;
@@ -10,12 +12,19 @@ class IcuRequestDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
     return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
               'assets/images/background/background-reduce-opacity.png',
+              fit: BoxFit.cover,
+              opacity: AlwaysStoppedAnimation(isDark ? 0.15 : 0.6),
             ),
           ),
           Column(
@@ -31,15 +40,19 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
+                  color: isDark
+                      ? ColorApp.icons.withValues(alpha: 0.9)
+                      : Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: ColorApp.primary.withOpacity(0.4),
+                    color: isDark
+                        ? Colors.grey[800]!
+                        : ColorApp.primary.withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
@@ -51,15 +64,15 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                       width: 22,
                       height: 22,
                       decoration: BoxDecoration(
-                        color: ColorApp.primary.withOpacity(0.1),
+                        color: ColorApp.primary.withValues(alpha: 0.1),
                         shape: BoxShape.rectangle,
                       ),
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: ColorApp.primary,
+                        icon: Icon(
+                          isAr ? Icons.arrow_forward : Icons.arrow_back,
+                          color: isDark ? Colors.white : ColorApp.primary,
                           size: 18,
                         ),
                       ),
@@ -71,7 +84,7 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: ColorApp.primary.withOpacity(0.3),
+                          color: ColorApp.primary.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                       ),
@@ -83,15 +96,16 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      request.serviceType,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorApp.primary,
+                    Expanded(
+                      child: Text(
+                        request.serviceType,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : ColorApp.primary,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 10),
                   ],
                 ),
               ),
@@ -104,14 +118,18 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.7),
+                      color: isDark
+                          ? ColorApp.icons.withValues(alpha: 0.9)
+                          : Colors.white.withValues(alpha: 0.75),
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(
-                        color: ColorApp.primary.withOpacity(0.2),
+                        color: isDark
+                            ? Colors.grey[800]!
+                            : ColorApp.primary.withValues(alpha: 0.2),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: ColorApp.icons.withOpacity(0.05),
+                          color: ColorApp.icons.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -121,148 +139,94 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                       child: Stack(
                         children: [
+                          Positioned(
+                            bottom: -10,
+                            left: isAr ? 10 : null,
+                            right: isAr ? null : 10,
+                            child: Opacity(
+                              opacity: isDark ? 0.04 : 0.1,
+                              child: Image.asset(
+                                'assets/images/onboard/onboard-2.png',
+                                width: 140,
+                              ),
+                            ),
+                          ),
                           Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(20.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
                                     request.time,
-                                    style: const TextStyle(
-                                      color: ColorApp.locationText,
-                                      fontSize: 10,
+                                    style: TextStyle(
+                                      color: isDark ? Colors.grey[400] : ColorApp.locationText,
+                                      fontSize: 11,
                                     ),
                                   ),
                                 ),
-                                const Center(
+                                const SizedBox(height: 8),
+                                Center(
                                   child: Text(
-                                    'بيانات الطلب',
+                                    l10n.requestDataTitle,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: ColorApp.locationText,
+                                      color: isDark ? Colors.white : ColorApp.locationText,
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'اسم المريض:',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' ${request.patientName}',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'رقم التليفون:',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' ${request.phone}',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'الحالة:',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' ${request.status}',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'نوع الخدمة:',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' ${request.serviceType}',
-                                          style: TextStyle(
-                                            color: ColorApp.icons,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                Divider(
+                                  color: isDark ? Colors.grey[800] : Colors.grey[200],
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 12),
+                                _buildDetailRow(
+                                  l10n.patientNameLabel,
+                                  request.patientName,
+                                  isDark,
+                                ),
+                                const SizedBox(height: 12),
+                                _buildDetailRow(
+                                  l10n.phoneLabelText,
+                                  request.phone,
+                                  isDark,
+                                ),
+                                const SizedBox(height: 12),
+                                _buildDetailRow(
+                                  l10n.statusLabel,
+                                  request.status,
+                                  isDark,
+                                ),
+                                const SizedBox(height: 12),
+                                _buildDetailRow(
+                                  l10n.serviceTypeLabel,
+                                  request.serviceType,
+                                  isDark,
+                                ),
+                                const SizedBox(height: 25),
                                 Row(
                                   children: [
                                     Expanded(
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          appStateManager.acceptIcu(request);
+                                          Navigator.pop(context);
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 14,
                                           ),
                                           decoration: BoxDecoration(
                                             color: ColorApp.secondary,
-                                            borderRadius: BorderRadius.circular(
-                                              15,
-                                            ),
+                                            borderRadius: BorderRadius.circular(15),
                                           ),
-                                          child: const Center(
+                                          child: Center(
                                             child: Text(
-                                              'قبول الطلب',
-                                              style: TextStyle(
+                                              l10n.acceptRequestButton,
+                                              style: const TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15,
@@ -275,23 +239,25 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: GestureDetector(
-                                        onTap: () {},
+                                        onTap: () {
+                                          appStateManager.rejectIcu(request);
+                                          Navigator.pop(context);
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
                                             vertical: 14,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: ColorApp.locationText
-                                                .withOpacity(0.3),
-                                            borderRadius: BorderRadius.circular(
-                                              15,
-                                            ),
+                                            color: isDark
+                                                ? Colors.white.withValues(alpha: 0.1)
+                                                : ColorApp.locationText.withValues(alpha: 0.3),
+                                            borderRadius: BorderRadius.circular(15),
                                           ),
-                                          child: const Center(
+                                          child: Center(
                                             child: Text(
-                                              'رفض',
+                                              l10n.rejectRequestButton,
                                               style: TextStyle(
-                                                color: ColorApp.icons,
+                                                color: isDark ? Colors.white : ColorApp.icons,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15,
                                               ),
@@ -315,6 +281,39 @@ class IcuRequestDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, bool isDark) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.grey[400] : ColorApp.primary.withValues(alpha: 0.8),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: isDark ? ColorApp.primary.withValues(alpha: 0.2) : const Color(0xFFF0F4F8),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

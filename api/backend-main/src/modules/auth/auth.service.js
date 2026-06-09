@@ -107,7 +107,7 @@ export const signup = async (inputs) => {
     await verifyEmailOtp({ email });
   });
 
-  return ;
+  return;
 };
 
 export const resendConfirmEmail = async (inputs) => {

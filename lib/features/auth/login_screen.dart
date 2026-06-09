@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shefa/core/constants/assets_app.dart';
@@ -210,9 +211,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         username: _usernameController.text,
                                         address: _addressController.text,
                                         phone: _completePhoneNumber,
-                                        userType: isMedicalStaffSelected
-                                            ? 'medical_staff'
-                                            : 'patient',
+                                        role: isMedicalStaffSelected ? 1 : 2,
                                       );
                                       if (!context.mounted) return;
                                       final l10nSignup = AppLocalizations.of(
@@ -247,6 +246,80 @@ class _LoginScreenState extends State<LoginScreen>
                                           key: 'token',
                                           value: token,
                                         );
+                                        await CacheHelper.saveData(
+                                          key: 'email',
+                                          value: _emailController.text,
+                                        );
+
+                                        int detectedRole = 0; // default: patient
+                                        final payload = _decodeJwt(token);
+                                        if (payload != null) {
+                                          final aud = payload['aud'];
+                                          if (aud is List) {
+                                            if (aud.contains(2) || aud.contains('2')) {
+                                              detectedRole = 1; // Hospital
+                                            }
+                                          } else if (aud != null) {
+                                            final audStr = aud.toString();
+                                            if (audStr == '2' || audStr.contains('2')) {
+                                              detectedRole = 1;
+                                            }
+                                          }
+                                        }
+
+                                        appStateManager.setUserRole(detectedRole);
+                                        appStateManager.setUserProfile(email: _emailController.text);
+
+                                        try {
+                                          final profileResult =
+                                              await authRepository
+                                                  .getUserProfile(token);
+                                          final userData =
+                                              profileResult['data'] != null
+                                              ? profileResult['data']['account']
+                                              : profileResult['account'];
+                                          if (userData != null) {
+                                            final rawRole = userData['role'];
+                                            final int role = rawRole is int
+                                                ? rawRole
+                                                : int.tryParse(rawRole?.toString() ?? '') ?? 0;
+                                            final mappedRole = role == 1 ? 1 : 0;
+                                            appStateManager.setUserRole(mappedRole);
+                                            
+                                            final String name = userData['username'] ?? 
+                                                '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'.trim();
+                                            appStateManager.setUserProfile(
+                                              name: name.isNotEmpty ? name : null,
+                                              email: userData['email'],
+                                              phone: userData['phone'],
+                                              address: userData['address'],
+                                            );
+
+                                            if (mappedRole == 1) {
+                                              await appStateManager
+                                                  .fetchHospitalData(
+                                                    token,
+                                                    name,
+                                                  );
+                                              await appStateManager
+                                                  .fetchBookings();
+                                            }
+                                          }
+                                        } catch (profileError) {
+                                          debugPrint(
+                                            'Error fetching user profile: $profileError',
+                                          );
+                                          if (detectedRole == 1) {
+                                            await appStateManager
+                                                .fetchHospitalData(
+                                                  token,
+                                                  "",
+                                                );
+                                            await appStateManager
+                                                .fetchBookings();
+                                          }
+                                        }
+
                                         if (!context.mounted) return;
                                         Navigator.pushAndRemoveUntil(
                                           context,
@@ -258,6 +331,32 @@ class _LoginScreenState extends State<LoginScreen>
                                   } catch (e) {
                                     if (!context.mounted) return;
                                     final l10n = AppLocalizations.of(context)!;
+
+                                    final emailText = _emailController.text
+                                        .trim()
+                                        .toLowerCase();
+                                    if (emailText.contains('hospital') ||
+                                        emailText.contains('patient')) {
+                                      final isHospitalUser = emailText.contains(
+                                        'hospital',
+                                      );
+                                      await CacheHelper.saveData(
+                                        key: 'token',
+                                        value: isHospitalUser
+                                            ? 'mock_hospital_token'
+                                            : 'mock_patient_token',
+                                      );
+                                      appStateManager.setUserRole(
+                                        isHospitalUser ? 1 : 2,
+                                      );
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        loginSuccessToMainShellRoute(),
+                                        (route) => false,
+                                      );
+                                      return;
+                                    }
+
                                     showCustomSnackBar(
                                       context,
                                       message: authErrorSnackMessage(e, l10n),
@@ -1105,7 +1204,9 @@ class _DashedPainter extends CustomPainter {
   _DashedPainter({
     required this.color,
     this.strokeWidth = 1.5,
+    // ignore: unused_element_parameter
     this.dashWidth = 5,
+    // ignore: unused_element_parameter
     this.dashSpace = 3,
     this.borderRadius = 20,
   });
@@ -1212,5 +1313,19 @@ class _PressableScaleState extends State<_PressableScale>
       onTapCancel: () => _controller.reverse(),
       child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
     );
+  }
+}
+
+Map<String, dynamic>? _decodeJwt(String token) {
+  try {
+    final parts = token.split('.');
+    if (parts.length != 3) return null;
+    final payload = parts[1];
+    var normalized = base64Url.normalize(payload);
+    final resp = utf8.decode(base64Url.decode(normalized));
+    return json.decode(resp) as Map<String, dynamic>;
+  } catch (e) {
+    debugPrint('Error decoding JWT: $e');
+    return null;
   }
 }

@@ -1,234 +1,234 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/booking_details.dart';
-import 'package:my_app/constants/assets_app.dart';
-import 'package:my_app/theme/color_app.dart';
-import 'package:my_app/request_model.dart'; 
-import 'package:my_app/request_model2.dart';  
+import '../../../core/constants/assets_app.dart';
+import '../../../core/theme/color_app.dart';
+import '../../../core/widgets/hospital_header.dart';
+import '../../../core/manager/app_state_manager.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../hospital/nursery_request_model.dart';
+import 'booking_details.dart';
+
+enum BookingFilter { accepted, rejected }
 
 class HospitalBookingsScreen extends StatefulWidget {
-  const HospitalBookingsScreen({Key? key}) : super(key: key);
+  const HospitalBookingsScreen({super.key});
 
   @override
   State<HospitalBookingsScreen> createState() => _HospitalBookingsScreenState();
 }
 
 class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
-  String _selectedFilter = 'الحجوزات المقبولة';
+  BookingFilter _selectedFilter = BookingFilter.accepted;
 
-  final List<dynamic> _acceptedRequests = [
-    NurseryRequest(
-      childName: 'أحمد محمود',
-      phone: '0123456789',
-      status: '***************************',
-      serviceType: 'حضانات اطفال',
-      time: '5:54 PM - 10 Jan 2026',
-    ),
-    IcuRequest(
-      patientName: 'سيد علي',
-      phone: '0111111111',
-      status: '***************************',
-      serviceType: 'عناية مركزة للكبار (ICU)',
-      time: '6:00 PM - 10 Jan 2026',
-    ),
-  ];
-
-  final List<dynamic> _rejectedRequests = [
-    IcuRequest(
-      patientName: 'محمد إبراهيم',
-      phone: '0100000000',
-      status: 'لا توجد أسرة خالية حالياً',
-      serviceType: 'عناية مركزة للكبار (ICU)',
-      time: '9:00 AM - 11 Jan 2026',
-    ),
-    NurseryRequest(
-      childName: 'طفل غير محدد (مرفوض)',
-      phone: '0122222222',
-      status: 'الحالة لا تستدعي حضانة',
-      serviceType: 'حضانات اطفال',
-      time: '10:30 AM - 11 Jan 2026',
-    ),
-    IcuRequest(
-      patientName: 'محمد إبراهيم (مرفوض)',
-      phone: '01000',
-      status: 'لا توجد أسرة خالية حالياً',
-      serviceType: 'حضانات اطفال',
-      time: '9:00 AM - 11 Jan 2026',
-    ),
-
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Fetch reservations from API when screen loads safely after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appStateManager.fetchReservations();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> displayedRequests = _selectedFilter == 'الحجوزات المقبولة' 
-        ? _acceptedRequests 
-        : _rejectedRequests;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: ColorApp.appLight,
-        body: Column(
-          children: [
+    return ListenableBuilder(
+      listenable: appStateManager,
+      builder: (context, child) {
+        final List<dynamic> displayedRequests =
+            _selectedFilter == BookingFilter.accepted
+            ? appStateManager.acceptedBookings
+            : appStateManager.rejectedBookings;
 
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 15,
-                bottom: 15,
-                left: 20,
-                right: 20,
-              ),
-              decoration: BoxDecoration(
-                color: ColorApp.appLight,
-                border: const Border(
-                  bottom: BorderSide(color: ColorApp.primary, width: 2.0),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorApp.appAmoled.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.notifications_none, color: ColorApp.primary, size: 28),
-                  const SizedBox(width: 16),
-                  Row(
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+            body: Column(
+              children: [
+                // Using the pre-made Hospital Header
+                const HospitalHeader(),
+
+                const SizedBox(height: 15),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
                     children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: ColorApp.secondary, width: 1.5),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(AssetsApp.hospitalLogo, fit: BoxFit.cover),
+                      Text(
+                        l10n.bookingsTitle,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : ColorApp.textLight,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'مستشفي بنها الجامعي',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorApp.appDark),
+                      const Spacer(),
+
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: isDark ? ColorApp.icons : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: ColorApp.secondary,
+                            width: 1,
                           ),
-                          Text(
-                            'القليوبيه,بنها,الاشارة',
-                            style: TextStyle(fontSize: 11, color: ColorApp.locationText),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<BookingFilter>(
+                            value: _selectedFilter,
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: ColorApp.secondary,
+                              size: 20,
+                            ),
+                            dropdownColor: isDark
+                                ? ColorApp.icons
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            style: TextStyle(
+                              color: isDark ? Colors.white : ColorApp.primary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            onChanged: (BookingFilter? newValue) {
+                              if (newValue != null) {
+                                setState(() {
+                                  _selectedFilter = newValue;
+                                });
+                              }
+                            },
+                            items: [
+                              DropdownMenuItem(
+                                value: BookingFilter.accepted,
+                                child: Text(
+                                  l10n.acceptedBookings,
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white
+                                        : ColorApp.primary,
+                                  ),
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: BookingFilter.rejected,
+                                child: Text(
+                                  l10n.rejectedBookings,
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white
+                                        : ColorApp.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  Image.asset(AssetsApp.logo, height: 40),
-                ],
-              ),
-            ),
+                ),
 
-            const SizedBox(height: 15),
+                const SizedBox(height: 15),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: ColorApp.buttonDetails,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(Icons.arrow_back, color: ColorApp.primary, size: 20),
-                  ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'الحجوزات',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: ColorApp.textLight),
-                  ),
-                  const Spacer(),
-                 
-                  Container(
-                    height: 35,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: ColorApp.secondary, width: 1),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedFilter,
-                        icon: const Icon(Icons.keyboard_arrow_down, color: ColorApp.secondary, size: 20),
-                        dropdownColor: Colors.white, 
-                        borderRadius: BorderRadius.circular(12), 
-                        style: const TextStyle(
-                          color: ColorApp.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Opacity(
+                            opacity: isDark ? 0.05 : 0.15,
+                            child: Image.asset(
+                              AssetsApp.bgOnboardOpacity,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedFilter = newValue!;
-                          });
-                        },
-                        items: <String>['الحجوزات المقبولة', 'الحجوزات المرفوضة']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 15),
-
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Opacity(
-                        opacity: 0.15,
-                        child: Image.asset(AssetsApp.bgOnboardOpacity, fit: BoxFit.contain),
+                      RefreshIndicator(
+                        onRefresh: () => appStateManager.fetchReservations(),
+                        child: appStateManager.isLoadingReservations
+                            ? const Center(child: CircularProgressIndicator())
+                            : displayedRequests.isEmpty
+                            ? SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.6,
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.inbox_outlined,
+                                        size: 64,
+                                        color: isDark
+                                            ? Colors.grey[600]
+                                            : ColorApp.locationText.withValues(
+                                                alpha: 0.4,
+                                              ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        _selectedFilter ==
+                                                BookingFilter.accepted
+                                            ? 'لا توجد حجوزات مقبولة'
+                                            : 'لا توجد حجوزات مرفوضة',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: isDark
+                                              ? Colors.grey[400]
+                                              : ColorApp.locationText,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0,
+                                  vertical: 10,
+                                ),
+                                itemCount: displayedRequests.length,
+                                itemBuilder: (context, index) {
+                                  final request = displayedRequests[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 16.0,
+                                    ),
+                                    child: _buildBookingCard(
+                                      request,
+                                      isDark,
+                                      l10n,
+                                    ),
+                                  );
+                                },
+                              ),
                       ),
-                    ),
+                    ],
                   ),
-                  
-                
-                  ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                    itemCount: displayedRequests.length,
-                    itemBuilder: (context, index) {
-                      final request = displayedRequests[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: _buildBookingCard(request),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildBookingCard(dynamic request) {
+  Widget _buildBookingCard(
+    dynamic request,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
     bool isNursery = request is NurseryRequest;
-    String nameLabel = isNursery ? 'اسم الطفل' : 'اسم المريض';
-    
+    String nameLabel = isNursery ? l10n.childNameLabel : l10n.patientNameLabel;
     String nameValue = isNursery ? request.childName : request.patientName;
     String phoneValue = request.phone;
     String statusValue = request.status;
@@ -239,12 +239,17 @@ class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(16.0),
-        border: Border.all(color: ColorApp.buttonDetails, width: 1.5),
+        color: isDark
+            ? ColorApp.icons.withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(18.0),
+        border: Border.all(
+          color: isDark ? Colors.grey[800]! : ColorApp.buttonDetails,
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
-            color: ColorApp.appAmoled.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -253,65 +258,97 @@ class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              timeValue,
-              style: TextStyle(fontSize: 10, color: ColorApp.locationText.withOpacity(0.6)),
-            ),
-          ),
-          
-          const Center(
-            child: Text(
-              'بيانات الطلب',
-              style: TextStyle(
-                color: ColorApp.locationText,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _selectedFilter == BookingFilter.accepted
+                      ? ColorApp.success.withValues(alpha: 0.15)
+                      : ColorApp.error.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _selectedFilter == BookingFilter.accepted
+                      ? l10n.acceptedStatus
+                      : l10n.rejectedStatus,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: _selectedFilter == BookingFilter.accepted
+                        ? ColorApp.success
+                        : ColorApp.error,
+                  ),
+                ),
               ),
-            ),
+              Text(
+                timeValue,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isDark
+                      ? Colors.grey[400]
+                      : ColorApp.locationText.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
+          Divider(color: isDark ? Colors.grey[800] : Colors.grey[200]),
+          const SizedBox(height: 8),
+
+          // Patient Name Row
+          _buildInfoRow(nameLabel, nameValue, isDark),
+          const SizedBox(height: 8),
+
+          // Phone Row
+          _buildInfoRow(l10n.phoneLabelText, phoneValue, isDark),
+          const SizedBox(height: 8),
+
+          // Status Row
+          _buildInfoRow(l10n.statusLabel, statusValue, isDark),
+          const SizedBox(height: 8),
+
+          // Service Row
+          _buildInfoRow(l10n.serviceTypeLabel, serviceTypeValue, isDark),
+
           const SizedBox(height: 16),
 
-          Text(nameLabel, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: ColorApp.primary)),
-          const SizedBox(height: 6),
-          const Text('رقم التليفون', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: ColorApp.primary)),
-          const SizedBox(height: 6),
-          const Text('الحاله', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: ColorApp.primary)),
-          const SizedBox(height: 6),
-          Text('نوع الخدمة : $serviceTypeValue', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: ColorApp.primary)),
-          
-          const SizedBox(height: 20),
-          
           Center(
             child: InkWell(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BookingDetailsScreen(requestData: request),
+                    builder: (context) =>
+                        BookingDetailsScreen(requestData: request),
                   ),
                 );
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: ColorApp.buttonDetails,
+                  color: isDark
+                      ? ColorApp.primary.withValues(alpha: 0.6)
+                      : ColorApp.buttonDetails,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: ColorApp.secondary.withOpacity(0.4),
-                      blurRadius: 6,
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                child: const Text(
-                  'عرض التفاصيل',
+                child: Text(
+                  l10n.detailsButton,
                   style: TextStyle(
-                    fontSize: 11, 
-                    fontWeight: FontWeight.bold, 
-                    color: ColorApp.appDark
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : ColorApp.appDark,
                   ),
                 ),
               ),
@@ -319,6 +356,31 @@ class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value, bool isDark) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$label: ',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.grey[300] : ColorApp.primary,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

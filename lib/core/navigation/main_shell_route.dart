@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shefa/features/home/main_shell.dart';
+import 'package:shefa/features/hospital/hospital_main_shell.dart';
+import 'package:shefa/core/manager/app_state_manager.dart';
 
 const Duration kLoginToMainTransition = Duration(milliseconds: 480);
 
@@ -12,7 +14,12 @@ Route<void> loginSuccessToMainShellRoute() {
     barrierColor: Colors.transparent,
     transitionDuration: kLoginToMainTransition,
     reverseTransitionDuration: const Duration(milliseconds: 320),
-    pageBuilder: (context, animation, secondaryAnimation) => const MainShell(),
+    pageBuilder: (context, animation, secondaryAnimation) {
+      if (appStateManager.isHospital) {
+        return const HospitalMainShell();
+      }
+      return const MainShell();
+    },
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       final curved = CurvedAnimation(
         parent: animation,

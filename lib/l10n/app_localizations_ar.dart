@@ -329,4 +329,187 @@ class AppLocalizationsAr extends AppLocalizations {
   String otpEnterCodeForEmail(String email) {
     return 'أدخل رمز التحقق المكوّن من 6 أرقام المرسل إلى البريد:\n$email';
   }
+
+  @override
+  String get acceptedBookings => 'الحجوزات المقبولة';
+
+  @override
+  String get rejectedBookings => 'الحجوزات المرفوضة';
+
+  @override
+  String get childNameLabel => 'اسم الطفل';
+
+  @override
+  String get patientNameLabel => 'اسم المريض';
+
+  @override
+  String get phoneLabelText => 'رقم التليفون';
+
+  @override
+  String get serviceTypeLabel => 'نوع الخدمة';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String get acceptedStatus => 'مقبول';
+
+  @override
+  String get rejectedStatus => 'مرفوض';
+
+  @override
+  String get detailsButton => 'التفاصيل';
+
+  @override
+  String get bookingsTitle => 'الحجوزات';
+
+  @override
+  String get bookingDetailsTitle => 'تفاصيل الحجز';
+
+  @override
+  String get detailedRequestData => 'بيانات الطلب التفصيلية';
+
+  @override
+  String get deleteRequestButton => 'حذف الطلب';
+
+  @override
+  String get areYouSureDialogTitle => 'هل انت متأكد ؟';
+
+  @override
+  String get confirmDeleteButton => 'تأكيد الحذف';
+
+  @override
+  String get backButtonText => 'رجوع';
+
+  @override
+  String get editDataTitle => 'تعديل البيانات والأماكن المتاحة';
+
+  @override
+  String get availableNurseriesHeader => 'الأماكن المتاحة للحضانات:';
+
+  @override
+  String get availableIcuHeader => 'الأماكن المتاحة للعناية المركزة:';
+
+  @override
+  String get totalBedsHeader => 'إجمالي عدد الأسرة:';
+
+  @override
+  String get nurseryKidsLabel => 'حضانات أطفال';
+
+  @override
+  String get nurseryNicuLabel => 'العناية لحديثي الولادة (NICU)';
+
+  @override
+  String get icuAdultsLabel => 'عناية مركزة للكبار (ICU)';
+
+  @override
+  String get icuCcuLabel => 'عناية القلب (CCU)';
+
+  @override
+  String get icuPicuLabel => 'عناية أطفال (PICU)';
+
+  @override
+  String get totalNurseryBedsLabel => 'إجمالي أسرة الحضانات';
+
+  @override
+  String get totalIcuBedsLabel => 'إجمالي أسرة العناية';
+
+  @override
+  String get bookingOverviewTitle => 'نبذة عامة للحجوزات';
+
+  @override
+  String get todayLabel => 'اليوم';
+
+  @override
+  String get totalBookingRequestsCard => 'إجمالي\nطلبات الحجز';
+
+  @override
+  String get nurseriesCard => 'الحضانات';
+
+  @override
+  String get icuCard => 'العناية المركزة';
+
+  @override
+  String get kidsSub => 'اطفال 🍼';
+
+  @override
+  String get nicuSub => 'NICU 👶';
+
+  @override
+  String get icuSub => 'ICU 🏥';
+
+  @override
+  String get ccuSub => 'CCU ❤️';
+
+  @override
+  String get picuSub => 'PICU 👶';
+
+  @override
+  String get availablePlacesLabel => 'الاماكن المتاحة';
+
+  @override
+  String get nurseriesBedsTotalLabel => 'عدد الاسره الكلي للحضانات';
+
+  @override
+  String get icuBedsTotalLabel => 'عدد الاسره الكلي للعناية';
+
+  @override
+  String get editDataButton => 'تعديل البيانات';
+
+  @override
+  String get nurseryBookingRequests => 'طلبات حجز حضانات الأطفال';
+
+  @override
+  String get icuBookingRequests => 'طلبات حجز العناية المركزة';
+
+  @override
+  String get noNurseryRequests => 'لا يوجد طلبات حجز حضانات حالياً';
+
+  @override
+  String get noIcuRequests => 'لا يوجد طلبات حجز عناية مركزة حالياً';
+
+  @override
+  String get requestDataTitle => 'بيانات الطلب';
+
+  @override
+  String get acceptRequestButton => 'قبول الطلب';
+
+  @override
+  String get rejectRequestButton => 'رفض';
+
+  @override
+  String get notificationsTitle => 'الاشعارات';
+
+  @override
+  String get noNotifications => 'لا يوجد اشعارات';
+
+  @override
+  String get notificationsSubtitle => 'سيتم إشعارك عند حدوث أي تحديث.';
+
+  @override
+  String get notifNewIcuRequest => 'طلب حجز جديد في العناية المركزة ICU';
+
+  @override
+  String get notifRequestDetails => 'تفاصيل الطلب';
+
+  @override
+  String get notifUnreviewedRequests => 'طلبات حجز لم يتم مراجعتها';
+
+  @override
+  String get notifBookingRequestsButton => 'طلبات الحجز';
+
+  @override
+  String get notifOneBedLeftNursery => 'متبقي سرير واحد في الحضانة';
+
+  @override
+  String get notifAvailablePlacesButton => 'الاماكن المتاحه';
+
+  @override
+  String get notifIcuFullAlert => 'قسم العناية ممتلئ';
+
+  @override
+  String get hospitalName => 'مستشفى بنها الجامعي';
+
+  @override
+  String get hospitalLocation => 'القليوبية، بنها، الإشارة';
 }

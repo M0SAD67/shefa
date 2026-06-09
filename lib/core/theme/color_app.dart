@@ -5,6 +5,7 @@ abstract class ColorApp {
   static const Color primary = Color(0xFF2D7FA3);
   static const Color secondary = Color(0xFF79B740);
   static const Color icons = Color(0xFF083345);
+  static const Color thairty = Color(0xFF528638);
 
   // login screen
   static const Color loginContainer = Color(0xFF083345);

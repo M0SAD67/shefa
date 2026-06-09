@@ -1,44 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:shefa/core/theme/color_app.dart';
-import 'package:shefa/core/widgets/hospital_header.dart';
-import 'package:shefa/features/hospital/icu_request_card.dart';
-import 'package:shefa/features/hospital/icu_request_model.dart';
+import '../../core/theme/color_app.dart';
+import '../../core/widgets/hospital_header.dart';
+import '../../core/manager/app_state_manager.dart';
+import '../../l10n/app_localizations.dart';
+import 'icu_request_card.dart';
 
 class IcuRequestsScreen extends StatelessWidget {
-  IcuRequestsScreen({super.key});
-
-  final List<IcuRequest> requests = [
-    IcuRequest(
-      patientName: 'أحمد محمد',
-      phone: '0100000000',
-      status: ' ***************************',
-      serviceType: 'عناية مركزة للكبار(ICU)',
-      time: '5:54 PM - 10 Jan 2026',
-    ),
-    IcuRequest(
-      patientName: 'سارة علي',
-      phone: '0111111111',
-      status: '***************************',
-      serviceType: 'عناية قلب (CCU)',
-      time: '3:20 PM - 11 Jan 2026',
-    ),
-    IcuRequest(
-      patientName: 'محمود حسن',
-      phone: '0122222222',
-      status: '***************************',
-      serviceType: 'عناية قلب (CCU)',
-      time: '1:10 PM - 12 Jan 2026',
-    ),
-  ];
+  const IcuRequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
     return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
               'assets/images/background/background-reduce-opacity.png',
+              fit: BoxFit.cover,
+              opacity: AlwaysStoppedAnimation(isDark ? 0.15 : 0.6),
             ),
           ),
           Column(
@@ -54,10 +38,13 @@ class IcuRequestsScreen extends StatelessWidget {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.0),
+                  color: isDark
+                      ? ColorApp.icons.withValues(alpha: 0.9)
+                      : Colors.white.withValues(alpha: 0.85),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),
@@ -66,18 +53,19 @@ class IcuRequestsScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Container(
-                      width: 22,
-                      height: 22,
+                      width: 28,
+                      height: 28,
                       decoration: BoxDecoration(
-                        color: ColorApp.primary.withOpacity(0.1),
+                        color: ColorApp.primary.withValues(alpha: 0.1),
                         shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: ColorApp.primary,
+                        icon: Icon(
+                          isAr ? Icons.arrow_forward : Icons.arrow_back,
+                          color: isDark ? Colors.white : ColorApp.primary,
                           size: 18,
                         ),
                       ),
@@ -89,7 +77,7 @@ class IcuRequestsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: ColorApp.primary.withOpacity(0.3),
+                          color: ColorApp.primary.withValues(alpha: 0.3),
                           width: 1.5,
                         ),
                       ),
@@ -101,24 +89,50 @@ class IcuRequestsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'طلبات حجز عنايات مركزة',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: ColorApp.primary,
+                    Expanded(
+                      child: Text(
+                        l10n.icuBookingRequests,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : ColorApp.primary,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 10),
                   ],
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  itemCount: requests.length,
-                  itemBuilder: (context, index) {
-                    return IcuRequestCard(request: requests[index]);
+                child: ListenableBuilder(
+                  listenable: appStateManager,
+                  builder: (context, _) {
+                    final requests = appStateManager.icuRequests;
+                    if (requests.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.local_hospital_rounded, size: 80, color: Colors.grey),
+                            const SizedBox(height: 15),
+                            Text(
+                              l10n.noIcuRequests,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: requests.length,
+                      itemBuilder: (context, index) {
+                        return IcuRequestCard(request: requests[index]);
+                      },
+                    );
                   },
                 ),
               ),

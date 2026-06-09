@@ -1,4 +1,5 @@
 class NurseryRequest {
+  final String? id;
   final String childName;
   final String phone;
   final String status;
@@ -6,6 +7,7 @@ class NurseryRequest {
   final String time;
 
   NurseryRequest({
+    this.id,
     required this.childName,
     required this.phone,
     required this.status,

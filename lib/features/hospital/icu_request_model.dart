@@ -1,4 +1,5 @@
 class IcuRequest {
+  final String? id;
   final String patientName;
   final String phone;
   final String status;
@@ -6,6 +7,7 @@ class IcuRequest {
   final String time;
 
   const IcuRequest({
+    this.id,
     required this.patientName,
     required this.phone,
     required this.status,

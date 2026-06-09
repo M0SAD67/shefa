@@ -3,4 +3,5 @@ class Api {
   static const String login = '/auth/login';
   static const String signup = '/auth/signup';
   static const String confirmEmail = '/auth/confirm-email';
+  static const String userProfile = '/user';
 }

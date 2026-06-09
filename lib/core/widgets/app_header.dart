@@ -58,7 +58,7 @@ class AppHeader extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                appStateManager.isFemale ? 'سارة أحمد' : 'علي عماد',
+                                appStateManager.userName,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w900,
@@ -72,7 +72,7 @@ class AppHeader extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            'الفلل بنها القليوبيه',
+                            appStateManager.userAddress,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
@@ -93,7 +93,6 @@ class AppHeader extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
           // Subtle Divider
           Container(
             height: 1.5,

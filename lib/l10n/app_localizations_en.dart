@@ -333,4 +333,188 @@ class AppLocalizationsEn extends AppLocalizations {
   String otpEnterCodeForEmail(String email) {
     return 'Enter the 6-digit verification code sent to $email.';
   }
+
+  @override
+  String get acceptedBookings => 'Accepted Bookings';
+
+  @override
+  String get rejectedBookings => 'Rejected Bookings';
+
+  @override
+  String get childNameLabel => 'Child Name';
+
+  @override
+  String get patientNameLabel => 'Patient Name';
+
+  @override
+  String get phoneLabelText => 'Phone Number';
+
+  @override
+  String get serviceTypeLabel => 'Service Type';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get acceptedStatus => 'Accepted';
+
+  @override
+  String get rejectedStatus => 'Rejected';
+
+  @override
+  String get detailsButton => 'Details';
+
+  @override
+  String get bookingsTitle => 'Bookings';
+
+  @override
+  String get bookingDetailsTitle => 'Booking Details';
+
+  @override
+  String get detailedRequestData => 'Detailed Request Data';
+
+  @override
+  String get deleteRequestButton => 'Delete Request';
+
+  @override
+  String get areYouSureDialogTitle => 'Are you sure?';
+
+  @override
+  String get confirmDeleteButton => 'Confirm Delete';
+
+  @override
+  String get backButtonText => 'Back';
+
+  @override
+  String get editDataTitle => 'Edit Data & Available Places';
+
+  @override
+  String get availableNurseriesHeader => 'Available Places for Nurseries:';
+
+  @override
+  String get availableIcuHeader => 'Available Places for Intensive Care:';
+
+  @override
+  String get totalBedsHeader => 'Total Bed Counts:';
+
+  @override
+  String get nurseryKidsLabel => 'Nursery Kids';
+
+  @override
+  String get nurseryNicuLabel => 'Nursery NICU';
+
+  @override
+  String get icuAdultsLabel => 'ICU Adults';
+
+  @override
+  String get icuCcuLabel => 'ICU CCU';
+
+  @override
+  String get icuPicuLabel => 'ICU PICU';
+
+  @override
+  String get totalNurseryBedsLabel => 'Total Nursery Beds';
+
+  @override
+  String get totalIcuBedsLabel => 'Total ICU Beds';
+
+  @override
+  String get bookingOverviewTitle => 'Bookings Overview';
+
+  @override
+  String get todayLabel => 'Today';
+
+  @override
+  String get totalBookingRequestsCard => 'Total\nBookings';
+
+  @override
+  String get nurseriesCard => 'Nurseries';
+
+  @override
+  String get icuCard => 'Intensive Care';
+
+  @override
+  String get kidsSub => 'Kids 🍼';
+
+  @override
+  String get nicuSub => 'NICU 👶';
+
+  @override
+  String get icuSub => 'ICU 🏥';
+
+  @override
+  String get ccuSub => 'CCU ❤️';
+
+  @override
+  String get picuSub => 'PICU 👶';
+
+  @override
+  String get availablePlacesLabel => 'Available Places';
+
+  @override
+  String get nurseriesBedsTotalLabel => 'Total Nursery Beds';
+
+  @override
+  String get icuBedsTotalLabel => 'Total ICU Beds';
+
+  @override
+  String get editDataButton => 'Edit Data';
+
+  @override
+  String get nurseryBookingRequests => 'Nursery Booking Requests';
+
+  @override
+  String get icuBookingRequests => 'ICU Booking Requests';
+
+  @override
+  String get noNurseryRequests => 'No nursery booking requests at the moment';
+
+  @override
+  String get noIcuRequests => 'No ICU booking requests at the moment';
+
+  @override
+  String get requestDataTitle => 'Request Data';
+
+  @override
+  String get acceptRequestButton => 'Accept Request';
+
+  @override
+  String get rejectRequestButton => 'Reject';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications';
+
+  @override
+  String get notificationsSubtitle =>
+      'You will be notified when there is any update.';
+
+  @override
+  String get notifNewIcuRequest => 'New booking request in ICU';
+
+  @override
+  String get notifRequestDetails => 'Request Details';
+
+  @override
+  String get notifUnreviewedRequests => 'Unreviewed booking requests';
+
+  @override
+  String get notifBookingRequestsButton => 'Booking Requests';
+
+  @override
+  String get notifOneBedLeftNursery => 'One nursery bed left';
+
+  @override
+  String get notifAvailablePlacesButton => 'Available Places';
+
+  @override
+  String get notifIcuFullAlert => 'Intensive care department is full';
+
+  @override
+  String get hospitalName => 'Benha University Hospital';
+
+  @override
+  String get hospitalLocation => 'Qalyubia, Benha, El-Eshara';
 }

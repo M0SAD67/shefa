@@ -715,6 +715,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the 6-digit verification code sent to {email}.'**
   String otpEnterCodeForEmail(String email);
+
+  /// No description provided for @acceptedBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted Bookings'**
+  String get acceptedBookings;
+
+  /// No description provided for @rejectedBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected Bookings'**
+  String get rejectedBookings;
+
+  /// No description provided for @childNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Name'**
+  String get childNameLabel;
+
+  /// No description provided for @patientNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient Name'**
+  String get patientNameLabel;
+
+  /// No description provided for @phoneLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneLabelText;
+
+  /// No description provided for @serviceTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Type'**
+  String get serviceTypeLabel;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// No description provided for @acceptedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get acceptedStatus;
+
+  /// No description provided for @rejectedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejectedStatus;
+
+  /// No description provided for @detailsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get detailsButton;
+
+  /// No description provided for @bookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookingsTitle;
+
+  /// No description provided for @bookingDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Details'**
+  String get bookingDetailsTitle;
+
+  /// No description provided for @detailedRequestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Request Data'**
+  String get detailedRequestData;
+
+  /// No description provided for @deleteRequestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Request'**
+  String get deleteRequestButton;
+
+  /// No description provided for @areYouSureDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get areYouSureDialogTitle;
+
+  /// No description provided for @confirmDeleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Delete'**
+  String get confirmDeleteButton;
+
+  /// No description provided for @backButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get backButtonText;
+
+  /// No description provided for @editDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Data & Available Places'**
+  String get editDataTitle;
+
+  /// No description provided for @availableNurseriesHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Places for Nurseries:'**
+  String get availableNurseriesHeader;
+
+  /// No description provided for @availableIcuHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Places for Intensive Care:'**
+  String get availableIcuHeader;
+
+  /// No description provided for @totalBedsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Bed Counts:'**
+  String get totalBedsHeader;
+
+  /// No description provided for @nurseryKidsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nursery Kids'**
+  String get nurseryKidsLabel;
+
+  /// No description provided for @nurseryNicuLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nursery NICU'**
+  String get nurseryNicuLabel;
+
+  /// No description provided for @icuAdultsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU Adults'**
+  String get icuAdultsLabel;
+
+  /// No description provided for @icuCcuLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU CCU'**
+  String get icuCcuLabel;
+
+  /// No description provided for @icuPicuLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU PICU'**
+  String get icuPicuLabel;
+
+  /// No description provided for @totalNurseryBedsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Nursery Beds'**
+  String get totalNurseryBedsLabel;
+
+  /// No description provided for @totalIcuBedsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total ICU Beds'**
+  String get totalIcuBedsLabel;
+
+  /// No description provided for @bookingOverviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings Overview'**
+  String get bookingOverviewTitle;
+
+  /// No description provided for @todayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayLabel;
+
+  /// No description provided for @totalBookingRequestsCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Total\nBookings'**
+  String get totalBookingRequestsCard;
+
+  /// No description provided for @nurseriesCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Nurseries'**
+  String get nurseriesCard;
+
+  /// No description provided for @icuCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Intensive Care'**
+  String get icuCard;
+
+  /// No description provided for @kidsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids 🍼'**
+  String get kidsSub;
+
+  /// No description provided for @nicuSub.
+  ///
+  /// In en, this message translates to:
+  /// **'NICU 👶'**
+  String get nicuSub;
+
+  /// No description provided for @icuSub.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU 🏥'**
+  String get icuSub;
+
+  /// No description provided for @ccuSub.
+  ///
+  /// In en, this message translates to:
+  /// **'CCU ❤️'**
+  String get ccuSub;
+
+  /// No description provided for @picuSub.
+  ///
+  /// In en, this message translates to:
+  /// **'PICU 👶'**
+  String get picuSub;
+
+  /// No description provided for @availablePlacesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Places'**
+  String get availablePlacesLabel;
+
+  /// No description provided for @nurseriesBedsTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Nursery Beds'**
+  String get nurseriesBedsTotalLabel;
+
+  /// No description provided for @icuBedsTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Total ICU Beds'**
+  String get icuBedsTotalLabel;
+
+  /// No description provided for @editDataButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Data'**
+  String get editDataButton;
+
+  /// No description provided for @nurseryBookingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Nursery Booking Requests'**
+  String get nurseryBookingRequests;
+
+  /// No description provided for @icuBookingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU Booking Requests'**
+  String get icuBookingRequests;
+
+  /// No description provided for @noNurseryRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No nursery booking requests at the moment'**
+  String get noNurseryRequests;
+
+  /// No description provided for @noIcuRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No ICU booking requests at the moment'**
+  String get noIcuRequests;
+
+  /// No description provided for @requestDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Data'**
+  String get requestDataTitle;
+
+  /// No description provided for @acceptRequestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Request'**
+  String get acceptRequestButton;
+
+  /// No description provided for @rejectRequestButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get rejectRequestButton;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be notified when there is any update.'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @notifNewIcuRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'New booking request in ICU'**
+  String get notifNewIcuRequest;
+
+  /// No description provided for @notifRequestDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Details'**
+  String get notifRequestDetails;
+
+  /// No description provided for @notifUnreviewedRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Unreviewed booking requests'**
+  String get notifUnreviewedRequests;
+
+  /// No description provided for @notifBookingRequestsButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Requests'**
+  String get notifBookingRequestsButton;
+
+  /// No description provided for @notifOneBedLeftNursery.
+  ///
+  /// In en, this message translates to:
+  /// **'One nursery bed left'**
+  String get notifOneBedLeftNursery;
+
+  /// No description provided for @notifAvailablePlacesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Places'**
+  String get notifAvailablePlacesButton;
+
+  /// No description provided for @notifIcuFullAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'Intensive care department is full'**
+  String get notifIcuFullAlert;
+
+  /// No description provided for @hospitalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Benha University Hospital'**
+  String get hospitalName;
+
+  /// No description provided for @hospitalLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Qalyubia, Benha, El-Eshara'**
+  String get hospitalLocation;
 }
 
 class _AppLocalizationsDelegate

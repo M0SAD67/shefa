@@ -7,6 +7,8 @@ import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/core/constants/assets_app.dart';
 import 'package:shefa/core/constants/routes_app.dart';
 import 'package:shefa/features/profile/loading_ring_preview_screen.dart';
+import 'package:shefa/core/cache/cache_helper.dart';
+import 'package:shefa/features/auth/auth_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'ProfileScreen';
@@ -18,18 +20,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _nameController = TextEditingController(
-    text: "علي عماد",
-  );
-  final TextEditingController _addressController = TextEditingController(
-    text: "الفلل بنها القليوبيه",
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: "01020304050",
-  );
-  final TextEditingController _emailController = TextEditingController(
-    text: "aliemad@gmail.com",
-  );
+  late final TextEditingController _nameController;
+  late final TextEditingController _addressController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _emailController;
   final TextEditingController _passwordController = TextEditingController(
     text: "********",
   );
@@ -40,6 +34,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController(text: appStateManager.userName);
+    _addressController = TextEditingController(
+      text: appStateManager.userAddress,
+    );
+    _phoneController = TextEditingController(text: appStateManager.userPhone);
+    _emailController = TextEditingController(text: appStateManager.userEmail);
+    appStateManager.addListener(_onAppStateChanged);
+
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -50,8 +52,20 @@ class _ProfileScreenState extends State<ProfileScreen>
     _animController.forward();
   }
 
+  void _onAppStateChanged() {
+    if (mounted) {
+      setState(() {
+        _nameController.text = appStateManager.userName;
+        _addressController.text = appStateManager.userAddress;
+        _phoneController.text = appStateManager.userPhone;
+        _emailController.text = appStateManager.userEmail;
+      });
+    }
+  }
+
   @override
   void dispose() {
+    appStateManager.removeListener(_onAppStateChanged);
     _animController.dispose();
     _nameController.dispose();
     _addressController.dispose();
@@ -131,7 +145,81 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () async {
+                  final token = CacheHelper.getData(key: 'token') as String?;
+                  if (token != null &&
+                      token != 'mock_hospital_token' &&
+                      token != 'mock_patient_token') {
+                    // Show loading dialog
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) =>
+                          const Center(child: CircularProgressIndicator()),
+                    );
+
+                    try {
+                      final nameParts = _nameController.text.trim().split(' ');
+                      final firstName = nameParts.first;
+                      final lastName = nameParts.length > 1
+                          ? nameParts.sublist(1).join(' ')
+                          : '';
+
+                      // Update profile info on backend
+                      await authRepository.updateProfile(
+                        token: token,
+                        firstName: firstName,
+                        lastName: lastName,
+                        phone: _phoneController.text,
+                      );
+
+                      // Update password if changed
+                      if (_passwordController.text != "********" &&
+                          _passwordController.text.isNotEmpty) {
+                        await authRepository.updatePassword(
+                          token: token,
+                          password: _passwordController.text,
+                        );
+                      }
+
+                      // Update local state
+                      appStateManager.setUserProfile(
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        phone: _phoneController.text,
+                      );
+
+                      if (context.mounted) {
+                        Navigator.pop(context); // Pop loading dialog
+                        Navigator.pop(context); // Pop sheet
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("تم حفظ التعديلات بنجاح"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        Navigator.pop(context); // Pop loading
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("فشل في حفظ التعديلات: $e"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  } else {
+                    // For mock tokens, just update state locally
+                    appStateManager.setUserProfile(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      phone: _phoneController.text,
+                    );
+                    Navigator.pop(context);
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: ColorApp.primary,
                   foregroundColor: Colors.white,
@@ -507,11 +595,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           radius: lerpDouble(20, 55, t)!,
                                           backgroundColor: Colors.white24,
                                           child: CircleAvatar(
-                                            radius: lerpDouble(18, 50, t)!,
-                                            backgroundImage: AssetImage(
-                                              appStateManager.isFemale
-                                                  ? AssetsApp.userAvatarWomen
-                                                  : AssetsApp.userAvatarMan,
+                                            radius: lerpDouble(20, 55, t)!,
+                                            backgroundColor: Colors.white24,
+                                            child: CircleAvatar(
+                                              radius: lerpDouble(18, 50, t)!,
+                                              backgroundImage: AssetImage(
+                                                appStateManager.isFemale
+                                                    ? AssetsApp.userAvatarWomen
+                                                    : AssetsApp.userAvatarMan,
+                                              ),
                                             ),
                                           ),
                                         ),
