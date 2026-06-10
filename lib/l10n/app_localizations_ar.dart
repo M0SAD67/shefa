@@ -148,7 +148,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidEmail => 'أدخل بريداً صالحاً ينتهي بـ com أو net أو edu';
 
   @override
-  String get noConnectionText => 'Please check your internet connection';
+  String get noConnectionText => 'يرجى التحقق من اتصالك بالإنترنت';
 
   @override
   String get gender => 'النوع';
@@ -506,6 +506,131 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get notifIcuFullAlert => 'قسم العناية ممتلئ';
+
+  @override
+  String get yesterday => 'أمس';
+
+  @override
+  String get chooseDate => 'اختر تاريخاً...';
+
+  @override
+  String get profileUpdatedSuccess => 'تم حفظ التعديلات بنجاح';
+
+  @override
+  String profileUpdateFailed(String error) {
+    return 'فشل في حفظ التعديلات: $error';
+  }
+
+  @override
+  String get underDevelopment => 'هذا القسم قيد التطوير حالياً';
+
+  @override
+  String get searchHospitalOrArea => 'بحث عن منطقة أو مستشفى';
+
+  @override
+  String get failedToLoadNurseries => 'تعذر تحميل الحضانات';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get noNurseriesAvailable => 'لا توجد حضانات متاحة';
+
+  @override
+  String addressLabel(String address) {
+    return 'العنوان : $address';
+  }
+
+  @override
+  String get noServiceData => 'لا توجد بيانات للخدمة';
+
+  @override
+  String hospitalAddressLabel(String address) {
+    return 'عنوان المستشفى : $address';
+  }
+
+  @override
+  String hospitalPhoneLabel(String phone) {
+    return 'رقم تليفون : $phone';
+  }
+
+  @override
+  String get forCases => 'لحالات:';
+
+  @override
+  String get bookAction => 'حجز';
+
+  @override
+  String get unavailable => 'غير متاح';
+
+  @override
+  String availableCount(int count) {
+    return '$count متاح';
+  }
+
+  @override
+  String get medicalService => 'خدمة طبية';
+
+  @override
+  String get hospital => 'مستشفى';
+
+  @override
+  String get nurseryNicuOption => 'العناية لحديثي الولادة (NICU)';
+
+  @override
+  String get childNameHint => 'اسم الطفل';
+
+  @override
+  String get phoneHint => 'رقم تليفون';
+
+  @override
+  String get medicalConditionHint => 'الحالة الطبية';
+
+  @override
+  String get pleaseCompleteBookingData => 'من فضلك أكمل بيانات الحجز';
+
+  @override
+  String get failedToLoadIcuServices => 'تعذر تحميل خدمات العناية';
+
+  @override
+  String get noIcuServicesAvailable => 'لا توجد خدمات عناية متاحة';
+
+  @override
+  String get addressNotSpecified => 'العنوان غير محدد';
+
+  @override
+  String icuRequestForPatient(String name) {
+    return 'طلب رعاية عناية مركزة للمريض: $name';
+  }
+
+  @override
+  String newNurseryBookingForChild(String name) {
+    return 'حجز حضانة جديد للطفل: $name';
+  }
+
+  @override
+  String get now => 'الآن';
+
+  @override
+  String get alertNurseryFull => 'تنبيه: حضانات الأطفال ممتلئة بالكامل!';
+
+  @override
+  String get alertNurseryOneBed => 'تنبيه: متبقي سرير حضانة أطفال واحد فقط!';
+
+  @override
+  String get alertIcuFull => 'تنبيه: العناية المركزة للكبار ممتلئة بالكامل!';
+
+  @override
+  String get alertIcuOneBed => 'تنبيه: متبقي سرير عناية مركزة للكبار واحد فقط!';
+
+  @override
+  String get bookingData => 'بيانات الحجز';
+
+  @override
+  String get requestDetailsLabel => 'تفاصيل الطلب';
+
+  @override
+  String get conditionLabel => 'الحاله';
 
   @override
   String get hospitalName => 'مستشفى بنها الجامعي';

@@ -82,100 +82,75 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                   curve: Curves.easeInOut,
                   width: currentBellWidth,
                   height: 25,
-                  child: ClipRect(
-                    child: OverflowBox(
-                      maxWidth: 25,
-                      minWidth: 25,
-                      maxHeight: 25,
-                      minHeight: 25,
-                      alignment: AlignmentDirectional.centerStart,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NotificationsScreen(),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 350),
-                              curve: Curves.easeInOut,
-                              width: currentBellWidth,
-                              height: 25,
-                              child: ClipRect(
-                                child: OverflowBox(
-                                  maxWidth: 25,
-                                  minWidth: 25,
-                                  maxHeight: 25,
-                                  minHeight: 25,
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const NotificationsScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Image.asset(
-                                      AssetsApp.alarmLogo,
-                                      height: 23,
-                                    ),
+                  child: currentBellWidth == 0
+                      ? const SizedBox.shrink()
+                      : OverflowBox(
+                          maxWidth: 35,
+                          maxHeight: 35,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const NotificationsScreen(),
+                                ),
+                              );
+                            },
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2, right: 2),
+                                  child: Image.asset(
+                                    AssetsApp.alarmLogo,
+                                    height: 23,
                                   ),
                                 ),
-                              ),
-                            ),
-                            if (unreadCount > 0 && widget.showNotificationIcon)
-                              PositionedDirectional(
-                                end: -6,
-                                top: -6,
-                                child: IgnorePointer(
-                                  child: Container(
-                                    padding: unreadCount > 9
-                                        ? const EdgeInsets.symmetric(
-                                            horizontal: 4,
-                                            vertical: 1,
-                                          )
-                                        : const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      shape: unreadCount > 9
-                                          ? BoxShape.rectangle
-                                          : BoxShape.circle,
-                                      borderRadius: unreadCount > 9
-                                          ? BorderRadius.circular(10)
-                                          : null,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 16,
-                                      minHeight: 16,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        unreadCount > 9
-                                            ? '9+'
-                                            : unreadCount.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
+                                if (unreadCount > 0 && widget.showNotificationIcon)
+                                  PositionedDirectional(
+                                    end: -4,
+                                    top: -4,
+                                    child: IgnorePointer(
+                                      child: Container(
+                                        padding: unreadCount > 9
+                                            ? const EdgeInsets.symmetric(
+                                                horizontal: 4,
+                                                vertical: 1,
+                                              )
+                                            : const EdgeInsets.all(2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: unreadCount > 9
+                                              ? BoxShape.rectangle
+                                              : BoxShape.circle,
+                                          borderRadius: unreadCount > 9
+                                              ? BorderRadius.circular(10)
+                                              : null,
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 16,
+                                          minHeight: 16,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            unreadCount > 9
+                                                ? '9+'
+                                                : unreadCount.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              height: 1.0,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                          ],
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 350),

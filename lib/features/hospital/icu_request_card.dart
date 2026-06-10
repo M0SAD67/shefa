@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shefa/core/theme/color_app.dart';
+import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/features/hospital/icu_request_details_screen.dart';
 import 'package:shefa/features/hospital/icu_request_model.dart';
 
@@ -10,6 +11,9 @@ class IcuRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -42,7 +46,7 @@ class IcuRequestCard extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      'بيانات الطلب',
+                      l10n.requestDataTitle,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -51,14 +55,14 @@ class IcuRequestCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _buildLabelOnly('اسم المريض'),
-                  _buildLabelOnly('رقم التليفون'),
-                  _buildLabelOnly('الحالة'),
+                  _buildLabelOnly(l10n.patientNameLabel, isAr),
+                  _buildLabelOnly(l10n.phoneLabelText, isAr),
+                  _buildLabelOnly(l10n.conditionLabel, isAr),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'نوع الخدمة:',
+                        '${l10n.serviceTypeLabel}:',
                         style: TextStyle(
                           color: ColorApp.icons,
                           fontWeight: FontWeight.bold,
@@ -98,7 +102,7 @@ class IcuRequestCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Text(
-                          'تفاصيل الطلب',
+                          l10n.requestDetailsLabel,
                           style: TextStyle(
                             color: ColorApp.icons,
                             fontWeight: FontWeight.bold,
@@ -117,11 +121,11 @@ class IcuRequestCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLabelOnly(String title) {
+  Widget _buildLabelOnly(String title, bool isAr) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Align(
-        alignment: Alignment.centerRight,
+        alignment: isAr ? Alignment.centerRight : Alignment.centerLeft,
         child: Text(
           title,
           style: TextStyle(

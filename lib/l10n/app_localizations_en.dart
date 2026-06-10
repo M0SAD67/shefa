@@ -513,6 +513,131 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifIcuFullAlert => 'Intensive care department is full';
 
   @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get chooseDate => 'Choose a date...';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully';
+
+  @override
+  String profileUpdateFailed(String error) {
+    return 'Failed to update profile: $error';
+  }
+
+  @override
+  String get underDevelopment => 'This section is currently under development';
+
+  @override
+  String get searchHospitalOrArea => 'Search for area or hospital';
+
+  @override
+  String get failedToLoadNurseries => 'Failed to load nurseries';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get noNurseriesAvailable => 'No nurseries available';
+
+  @override
+  String addressLabel(String address) {
+    return 'Address: $address';
+  }
+
+  @override
+  String get noServiceData => 'No service data available';
+
+  @override
+  String hospitalAddressLabel(String address) {
+    return 'Hospital Address: $address';
+  }
+
+  @override
+  String hospitalPhoneLabel(String phone) {
+    return 'Phone: $phone';
+  }
+
+  @override
+  String get forCases => 'For cases:';
+
+  @override
+  String get bookAction => 'Book';
+
+  @override
+  String get unavailable => 'Unavailable';
+
+  @override
+  String availableCount(int count) {
+    return '$count Available';
+  }
+
+  @override
+  String get medicalService => 'Medical Service';
+
+  @override
+  String get hospital => 'Hospital';
+
+  @override
+  String get nurseryNicuOption => 'Neonatal ICU (NICU)';
+
+  @override
+  String get childNameHint => 'Child Name';
+
+  @override
+  String get phoneHint => 'Phone Number';
+
+  @override
+  String get medicalConditionHint => 'Medical Condition';
+
+  @override
+  String get pleaseCompleteBookingData => 'Please complete the booking data';
+
+  @override
+  String get failedToLoadIcuServices => 'Failed to load ICU services';
+
+  @override
+  String get noIcuServicesAvailable => 'No ICU services available';
+
+  @override
+  String get addressNotSpecified => 'Address not specified';
+
+  @override
+  String icuRequestForPatient(String name) {
+    return 'ICU care request for patient: $name';
+  }
+
+  @override
+  String newNurseryBookingForChild(String name) {
+    return 'New nursery booking for child: $name';
+  }
+
+  @override
+  String get now => 'Now';
+
+  @override
+  String get alertNurseryFull => 'Alert: All nursery beds are full!';
+
+  @override
+  String get alertNurseryOneBed => 'Alert: Only one nursery bed left!';
+
+  @override
+  String get alertIcuFull => 'Alert: Adult ICU is completely full!';
+
+  @override
+  String get alertIcuOneBed => 'Alert: Only one adult ICU bed left!';
+
+  @override
+  String get bookingData => 'Booking Data';
+
+  @override
+  String get requestDetailsLabel => 'Request Details';
+
+  @override
+  String get conditionLabel => 'Condition';
+
+  @override
   String get hospitalName => 'Benha University Hospital';
 
   @override

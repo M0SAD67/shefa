@@ -70,6 +70,21 @@ class AuthRepository {
       );
       return response.data;
     } on DioException catch (e) {
+      // If /user is not found or fails for patients, try /profile as fallback
+      if (e.response?.statusCode == 404 ||
+          e.message?.contains('routing') == true ||
+          e.response?.data?.toString().contains('routing') == true) {
+        try {
+          final responseFallback = await apiService.get(
+            path: '/profile',
+            token: token,
+          );
+          return responseFallback.data;
+        } catch (_) {
+          // If fallback also fails, throw original exception
+          throw AppHttpException.fromDio(e);
+        }
+      }
       throw AppHttpException.fromDio(e);
     }
   }
@@ -84,11 +99,7 @@ class AuthRepository {
       final response = await apiService.put(
         path: '/profile',
         token: token,
-        data: {
-          'firstName': firstName,
-          'lastName': lastName,
-          'phone': phone,
-        },
+        data: {'firstName': firstName, 'lastName': lastName, 'phone': phone},
       );
       return response.data;
     } on DioException catch (e) {
@@ -104,9 +115,7 @@ class AuthRepository {
       final response = await apiService.put(
         path: '/profile/password',
         token: token,
-        data: {
-          'password': password,
-        },
+        data: {'password': password},
       );
       return response.data;
     } on DioException catch (e) {

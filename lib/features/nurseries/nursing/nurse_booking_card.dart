@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shefa/core/theme/color_app.dart';
-
+import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/features/nurseries/nursing/nurse_booking_details_screen.dart';
 import 'package:shefa/features/nurseries/nursing/nurse_booking_model.dart';
 
@@ -11,6 +11,7 @@ class NurseBookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -38,19 +39,19 @@ class NurseBookingCard extends StatelessWidget {
                   fontSize: 10,
                 ),
               ),
-              const Text(
-                'بيانات الحجز',
-                style: TextStyle(
+              Text(
+                l10n.requestDetails,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: ColorApp.locationText,
                 ),
               ),
               const SizedBox(height: 12),
-              _buildInfoRow('اسم المريض:', booking.patientName),
-              _buildInfoRow('رقم التليفون:', booking.phone),
-              _buildInfoRow('الحالة:', booking.status),
-              _buildInfoRow('نوع الخدمة:', booking.serviceType),
+              _buildInfoRow('${l10n.patientNameLabel}:', booking.patientName),
+              _buildInfoRow('${l10n.phoneLabelText}:', booking.phone),
+              _buildInfoRow('${l10n.statusLabel}:', booking.status),
+              _buildInfoRow('${l10n.serviceTypeLabel}:', booking.serviceType),
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
@@ -71,9 +72,9 @@ class NurseBookingCard extends StatelessWidget {
                     color: ColorApp.buttonDetails,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: const Text(
-                    'تفاصيل الحجز',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.detailsButton,
+                    style: const TextStyle(
                       color: ColorApp.icons,
                       fontWeight: FontWeight.bold,
                       fontSize: 13,

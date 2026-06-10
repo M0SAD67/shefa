@@ -12,7 +12,6 @@ import 'features/nurseries/nurseries_screen.dart';
 import 'features/nurseries/IncubatorsScreen.dart';
 import 'features/nurseries/IncubatorsDetailsScreen.dart';
 import 'features/nurseries/Incubatorsbook.dart';
-import 'features/bookings/bookings_screen.dart';
 import 'features/bookings/bookconfirm.dart';
 import 'features/icu/icu_screen.dart';
 import 'features/medical_staff/medical_staff_screen.dart';
@@ -70,7 +69,6 @@ class ShefaApp extends StatelessWidget {
             BookingScreen.routeName: (context) => const BookingScreen(),
             BookingConfirmationScreen.routeName: (context) =>
                 BookingConfirmationScreen(),
-            BookingsScreen.routeName: (context) => const BookingsScreen(),
             IcuScreen.routeName: (context) => const IcuScreen(),
             MedicalStaffScreen.routeName: (context) =>
                 const MedicalStaffScreen(),

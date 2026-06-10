@@ -242,6 +242,7 @@ class _LoginScreenState extends State<LoginScreen>
                                           : result['access_token'];
 
                                       if (token != null) {
+                                        await appStateManager.clearUserData();
                                         await CacheHelper.saveData(
                                           key: 'token',
                                           value: token,
@@ -251,24 +252,31 @@ class _LoginScreenState extends State<LoginScreen>
                                           value: _emailController.text,
                                         );
 
-                                        int detectedRole = 0; // default: patient
+                                        int detectedRole =
+                                            0; // default: patient
                                         final payload = _decodeJwt(token);
                                         if (payload != null) {
                                           final aud = payload['aud'];
                                           if (aud is List) {
-                                            if (aud.contains(2) || aud.contains('2')) {
+                                            if (aud.contains(2) ||
+                                                aud.contains('2')) {
                                               detectedRole = 1; // Hospital
                                             }
                                           } else if (aud != null) {
                                             final audStr = aud.toString();
-                                            if (audStr == '2' || audStr.contains('2')) {
+                                            if (audStr == '2' ||
+                                                audStr.contains('2')) {
                                               detectedRole = 1;
                                             }
                                           }
                                         }
 
-                                        appStateManager.setUserRole(detectedRole);
-                                        appStateManager.setUserProfile(email: _emailController.text);
+                                        appStateManager.setUserRole(
+                                          detectedRole,
+                                        );
+                                        appStateManager.setUserProfile(
+                                          email: _emailController.text,
+                                        );
 
                                         try {
                                           final profileResult =
@@ -282,17 +290,34 @@ class _LoginScreenState extends State<LoginScreen>
                                             final rawRole = userData['role'];
                                             final int role = rawRole is int
                                                 ? rawRole
-                                                : int.tryParse(rawRole?.toString() ?? '') ?? 0;
-                                            final mappedRole = role == 1 ? 1 : 0;
-                                            appStateManager.setUserRole(mappedRole);
-                                            
-                                            final String name = userData['username'] ?? 
-                                                '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'.trim();
+                                                : int.tryParse(
+                                                        rawRole?.toString() ??
+                                                            '',
+                                                      ) ??
+                                                      0;
+                                            final mappedRole = role == 1
+                                                ? 1
+                                                : 0;
+                                            appStateManager.setUserRole(
+                                              mappedRole,
+                                            );
+
+                                            final String name =
+                                                userData['username'] ??
+                                                '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'
+                                                    .trim();
                                             appStateManager.setUserProfile(
-                                              name: name.isNotEmpty ? name : null,
+                                              name: name.isNotEmpty
+                                                  ? name
+                                                  : null,
                                               email: userData['email'],
                                               phone: userData['phone'],
                                               address: userData['address'],
+                                              profileImage:
+                                                  userData['profilePicture'] ??
+                                                  userData['avatar'] ??
+                                                  userData['image'] ??
+                                                  userData['photo'],
                                             );
 
                                             if (mappedRole == 1) {
@@ -303,6 +328,9 @@ class _LoginScreenState extends State<LoginScreen>
                                                   );
                                               await appStateManager
                                                   .fetchBookings();
+                                            } else {
+                                              await appStateManager
+                                                  .fetchPatientBookings();
                                             }
                                           }
                                         } catch (profileError) {
@@ -311,12 +339,12 @@ class _LoginScreenState extends State<LoginScreen>
                                           );
                                           if (detectedRole == 1) {
                                             await appStateManager
-                                                .fetchHospitalData(
-                                                  token,
-                                                  "",
-                                                );
+                                                .fetchHospitalData(token, "");
                                             await appStateManager
                                                 .fetchBookings();
+                                          } else {
+                                            await appStateManager
+                                                .fetchPatientBookings();
                                           }
                                         }
 

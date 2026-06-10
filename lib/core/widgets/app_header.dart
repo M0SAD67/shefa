@@ -15,99 +15,125 @@ class AppHeader extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? ColorApp.appDark : ColorApp.appLight,
       ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // User Info
-              ListenableBuilder(
-                listenable: appStateManager,
-                builder: (context, _) {
-                  return Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: ColorApp.primary.withOpacity(0.2),
-                            width: 2,
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // User Info
+                ListenableBuilder(
+                  listenable: appStateManager,
+                  builder: (context, _) {
+                    final String patientName = appStateManager.userName.isNotEmpty
+                        ? appStateManager.userName
+                        : 'مريض';
+                    final String patientAddress = appStateManager.userAddress.isNotEmpty
+                        ? appStateManager.userAddress
+                        : 'موقع غير محدد';
+
+                    return Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: ColorApp.primary.withOpacity(0.2),
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                          child: ClipOval(
+                            child: appStateManager.profileImage.isNotEmpty
+                                ? Image.network(
+                                    appStateManager.profileImage,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        appStateManager.isFemale
+                                            ? AssetsApp.userAvatarWomen
+                                            : AssetsApp.userAvatarMan,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    appStateManager.isFemale
+                                        ? AssetsApp.userAvatarWomen
+                                        : AssetsApp.userAvatarMan,
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  patientName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900,
+                                    color: isDark
+                                        ? ColorApp.appLight
+                                        : ColorApp.appDark,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Text('👋', style: TextStyle(fontSize: 14)),
+                              ],
+                            ),
+                            Text(
+                              patientAddress,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: ColorApp.locationText.withOpacity(0.8),
+                              ),
                             ),
                           ],
                         ),
-                        child: CircleAvatar(
-                          radius: 24,
-                          backgroundImage: AssetImage(
-                            appStateManager.isFemale
-                                ? AssetsApp.userAvatarWomen
-                                : AssetsApp.userAvatarMan,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                appStateManager.userName,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  color: isDark
-                                      ? ColorApp.appLight
-                                      : ColorApp.appDark,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              const Text('👋', style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                          Text(
-                            appStateManager.userAddress,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: ColorApp.locationText.withOpacity(0.8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
+                      ],
+                    );
+                  },
+                ),
 
-              // Logo
-              Hero(
-                tag: 'app_logo',
-                child: Image.asset(AssetsApp.logo, height: 45),
-              ),
-            ],
-          ),
-          // Subtle Divider
-          Container(
-            height: 1.5,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  ColorApp.primary.withOpacity(0.0),
-                  ColorApp.primary.withOpacity(0.5),
-                  ColorApp.primary.withOpacity(0.0),
-                ],
+                // Logo
+                Hero(
+                  tag: 'app_logo',
+                  child: Image.asset(AssetsApp.logo, height: 45),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Subtle Divider
+            Container(
+              height: 1.5,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    ColorApp.primary.withOpacity(0.0),
+                    ColorApp.primary.withOpacity(0.5),
+                    ColorApp.primary.withOpacity(0.0),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

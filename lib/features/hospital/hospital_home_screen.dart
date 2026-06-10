@@ -16,6 +16,47 @@ class HospitalHomeScreen extends StatefulWidget {
 }
 
 class _HospitalHomeScreenState extends State<HospitalHomeScreen> {
+  DateTime? _selectedDate = DateTime.now();
+  String? _customDateLabel;
+
+  bool _isSameDay(String timeStr, DateTime targetDate) {
+    try {
+      final dt = DateTime.parse(timeStr);
+      return dt.year == targetDate.year &&
+          dt.month == targetDate.month &&
+          dt.day == targetDate.day;
+    } catch (_) {
+      final months = {
+        'jan': 1,
+        'feb': 2,
+        'mar': 3,
+        'apr': 4,
+        'may': 5,
+        'jun': 6,
+        'jul': 7,
+        'aug': 8,
+        'sep': 9,
+        'oct': 10,
+        'nov': 11,
+        'dec': 12,
+      };
+      final lower = timeStr.toLowerCase();
+      final match = RegExp(r'(\d+)\s+([a-z]{3})\s+(\d{4})').firstMatch(lower);
+      if (match != null) {
+        final day = int.tryParse(match.group(1) ?? '');
+        final monthStr = match.group(2) ?? '';
+        final year = int.tryParse(match.group(3) ?? '');
+        final month = months[monthStr];
+        if (day != null && month != null && year != null) {
+          return year == targetDate.year &&
+              month == targetDate.month &&
+              day == targetDate.day;
+        }
+      }
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -300,11 +341,23 @@ class _HospitalHomeScreenState extends State<HospitalHomeScreen> {
         listenable: appStateManager,
         builder: (context, _) {
           final state = appStateManager;
+          final isArabic = state.isArabic;
+          final String displayLabel = _customDateLabel ?? l10n.todayLabel;
 
-          // Calculations for active/dynamic booking count changes
-          final int activeNurseryCount =
-              25 - (3 - state.nurseryRequests.length);
-          final int activeIcuCount = 10 - (3 - state.icuRequests.length);
+          // Filter requests by the selected date
+          final filteredNursery = _selectedDate == null
+              ? state.nurseryRequests
+              : state.nurseryRequests
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+          final filteredIcu = _selectedDate == null
+              ? state.icuRequests
+              : state.icuRequests
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+
+          final int activeNurseryCount = 25 - (3 - filteredNursery.length);
+          final int activeIcuCount = 10 - (3 - filteredIcu.length);
           final int activeTotalCount = activeNurseryCount + activeIcuCount;
 
           return Column(
@@ -332,33 +385,94 @@ class _HospitalHomeScreenState extends State<HospitalHomeScreen> {
                               color: isDark ? Colors.white : ColorApp.icons,
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isDark ? ColorApp.icons : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: ColorApp.secondary),
-                            ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  l10n.todayLabel,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
+                          Material(
+                            color: isDark ? ColorApp.icons : Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            clipBehavior: Clip.antiAlias,
+                            child: PopupMenuButton<String>(
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              menuPadding: EdgeInsets.zero,
+                              onSelected: (value) async {
+                                if (value == 'today') {
+                                  setState(() {
+                                    _selectedDate = DateTime.now();
+                                    _customDateLabel = null;
+                                  });
+                                  await appStateManager.fetchBookings();
+                                } else if (value == 'yesterday') {
+                                  setState(() {
+                                    _selectedDate = DateTime.now().subtract(
+                                      const Duration(days: 1),
+                                    );
+                                    _customDateLabel = l10n.yesterday;
+                                  });
+                                  await appStateManager.fetchBookings();
+                                } else if (value == 'custom') {
+                                  final DateTime? picked = await showDatePicker(
+                                    context: context,
+                                    initialDate:
+                                        _selectedDate ?? DateTime.now(),
+                                    firstDate: DateTime(2020),
+                                    lastDate:
+                                        DateTime.now(), // Disable future dates
+                                    locale: Locale(isArabic ? 'ar' : 'en'),
+                                  );
+                                  if (picked != null) {
+                                    setState(() {
+                                      _selectedDate = picked;
+                                      _customDateLabel =
+                                          "${picked.year}/${picked.month}/${picked.day}";
+                                    });
+                                    await appStateManager.fetchBookings();
+                                  }
+                                }
+                              },
+                              itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                    PopupMenuItem<String>(
+                                      value: 'custom',
+                                      child: Text(l10n.chooseDate),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      value: 'yesterday',
+                                      child: Text(l10n.yesterday),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      value: 'today',
+                                      child: Text(l10n.todayLabel),
+                                    ),
+                                  ],
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
                                 ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  size: 16,
-                                  color: Colors.grey,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: ColorApp.secondary),
                                 ),
-                              ],
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      displayLabel,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      size: 16,
+                                      color: Colors.grey,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ],

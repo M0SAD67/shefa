@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shefa/core/theme/color_app.dart';
-import 'package:shefa/core/widgets/hospital_header.dart';
-
+import 'package:shefa/core/widgets/app_header.dart';
+import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/features/nurseries/nursing/nurse_booking_card.dart';
 import 'package:shefa/features/nurseries/nursing/nurse_booking_model.dart';
 
@@ -51,7 +51,7 @@ class NurseBookingsScreen extends StatelessWidget {
           ),
           Column(
             children: [
-              const HospitalHeader(),
+              const AppHeader(),
               _buildCustomAppBar(context),
               Expanded(
                 child: ListView.builder(
@@ -70,6 +70,7 @@ class NurseBookingsScreen extends StatelessWidget {
   }
 
   Widget _buildCustomAppBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -121,9 +122,9 @@ class NurseBookingsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const Text(
-            ' طاقم طبي',
-            style: TextStyle(
+          Text(
+            l10n.medicalStaff,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: ColorApp.primary,

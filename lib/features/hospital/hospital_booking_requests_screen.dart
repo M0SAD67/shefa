@@ -16,64 +16,53 @@ class HospitalBookingRequestsSelectScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
-      body: Stack(
+      body: Column(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              AssetsApp.bgOnboardOpacity,
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.6),
-            ),
-          ),
-          Column(
-            children: [
-              const HospitalHeader(),
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Nursery Requests Circle Card
-                        _buildImageButton(
+          const HospitalHeader(),
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Nursery Requests Circle Card
+                    _buildImageButton(
+                      context,
+                      isDark: isDark,
+                      title: l10n.nurseryBookingRequests,
+                      imagePath: AssetsApp.icOnboard1,
+                      onTap: () {
+                        Navigator.push(
                           context,
-                          isDark: isDark,
-                          title: l10n.nurseryBookingRequests,
-                          imagePath: AssetsApp.icOnboard1,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NurseryRequestsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 35),
-
-                        // ICU Requests Circle Card
-                        _buildImageButton(
-                          context,
-                          isDark: isDark,
-                          title: l10n.icuBookingRequests,
-                          imagePath: AssetsApp.icOnboard2,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => IcuRequestsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                          MaterialPageRoute(
+                            builder: (context) => const NurseryRequestsScreen(),
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                    const SizedBox(height: 35),
+
+                    // ICU Requests Circle Card
+                    _buildImageButton(
+                      context,
+                      isDark: isDark,
+                      title: l10n.icuBookingRequests,
+                      imagePath: AssetsApp.icOnboard2,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const IcuRequestsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ],
       ),

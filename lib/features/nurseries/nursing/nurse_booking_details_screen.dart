@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shefa/core/theme/color_app.dart';
-import 'package:shefa/core/widgets/hospital_header.dart';
-
+import 'package:shefa/core/widgets/app_header.dart';
+import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/features/nurseries/nursing/nurse_booking_model.dart';
 
 class NurseBookingDetailsScreen extends StatelessWidget {
@@ -11,6 +11,7 @@ class NurseBookingDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Stack(
         children: [
@@ -21,7 +22,7 @@ class NurseBookingDetailsScreen extends StatelessWidget {
           ),
           Column(
             children: [
-              const HospitalHeader(),
+              const AppHeader(),
               _buildScreenHeader(context),
               Expanded(
                 child: SingleChildScrollView(
@@ -60,10 +61,10 @@ class NurseBookingDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Center(
+                          Center(
                             child: Text(
-                              'بيانات  الطلب',
-                              style: TextStyle(
+                              l10n.requestDetails,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: ColorApp.locationText,
@@ -71,12 +72,12 @@ class NurseBookingDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          _buildDetailRow('اسم المريض:', booking.patientName),
-                          _buildDetailRow('رقم التليفون:', booking.phone),
-                          _buildDetailRow('الحالة:', booking.status),
-                          _buildDetailRow('نوع الخدمة:', booking.serviceType),
+                          _buildDetailRow('${l10n.patientNameLabel}:', booking.patientName),
+                          _buildDetailRow('${l10n.phoneLabelText}:', booking.phone),
+                          _buildDetailRow('${l10n.statusLabel}:', booking.status),
+                          _buildDetailRow('${l10n.serviceTypeLabel}:', booking.serviceType),
                           const SizedBox(height: 20),
-                          _buildActionButtons(),
+                          _buildActionButtons(l10n),
                         ],
                       ),
                     ),
@@ -91,6 +92,7 @@ class NurseBookingDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildScreenHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -141,7 +143,7 @@ class NurseBookingDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            " طاقم طبي",
+            l10n.medicalStaff,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -179,7 +181,7 @@ class NurseBookingDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(AppLocalizations l10n) {
     return Row(
       children: [
         Expanded(
@@ -191,10 +193,10 @@ class NurseBookingDetailsScreen extends StatelessWidget {
                 color: ColorApp.secondary,
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'قبول الحجز',
-                  style: TextStyle(
+                  l10n.acceptRequestButton,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 15,

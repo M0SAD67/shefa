@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../core/utils/api_service.dart';
 import '../../core/errors/app_http_exception.dart';
 
@@ -77,14 +78,37 @@ class HospitalRepository {
         token: token,
       );
       final data = response.data;
-      if (data != null && data['data'] != null) {
-        final reservations = data['data']['reservations'];
-        if (reservations != null && reservations['reservations'] != null) {
-          return List<Map<String, dynamic>>.from(reservations['reservations']);
-        }
+      debugPrint('=== CHILDCARE RAW RESPONSE: $data');
+
+      if (data == null) return [];
+
+      // Try multiple parsing paths
+      final dataObj = data['data'];
+      if (dataObj == null) return [];
+
+      // Path 1: data.data.reservations.reservations (double nested)
+      final reservations = dataObj['reservations'];
+      if (reservations is Map && reservations['reservations'] is List) {
+        debugPrint('=== CHILDCARE: Found reservations.reservations path');
+        return List<Map<String, dynamic>>.from(reservations['reservations']);
       }
+
+      // Path 2: data.data.reservations is directly a List
+      if (reservations is List) {
+        debugPrint('=== CHILDCARE: Found reservations as List directly');
+        return List<Map<String, dynamic>>.from(reservations);
+      }
+
+      // Path 3: data.data is directly a List
+      if (dataObj is List) {
+        debugPrint('=== CHILDCARE: Found data as List directly');
+        return List<Map<String, dynamic>>.from(dataObj);
+      }
+
+      debugPrint('=== CHILDCARE: No matching structure found');
       return [];
     } on DioException catch (e) {
+      debugPrint('=== CHILDCARE DioException: ${e.response?.data}');
       throw AppHttpException.fromDio(e);
     }
   }
@@ -99,34 +123,62 @@ class HospitalRepository {
         token: token,
       );
       final data = response.data;
-      if (data != null && data['data'] != null) {
-        final reservations = data['data']['reservations'];
-        if (reservations != null && reservations['reservations'] != null) {
-          return List<Map<String, dynamic>>.from(reservations['reservations']);
-        }
+      debugPrint('=== HEALTHCARE RAW RESPONSE: $data');
+
+      if (data == null) return [];
+
+      final dataObj = data['data'];
+      if (dataObj == null) return [];
+
+      // Path 1: data.data.reservations.reservations (double nested)
+      final reservations = dataObj['reservations'];
+      if (reservations is Map && reservations['reservations'] is List) {
+        debugPrint('=== HEALTHCARE: Found reservations.reservations path');
+        return List<Map<String, dynamic>>.from(reservations['reservations']);
       }
+
+      // Path 2: data.data.reservations is directly a List
+      if (reservations is List) {
+        debugPrint('=== HEALTHCARE: Found reservations as List directly');
+        return List<Map<String, dynamic>>.from(reservations);
+      }
+
+      // Path 3: data.data is directly a List
+      if (dataObj is List) {
+        debugPrint('=== HEALTHCARE: Found data as List directly');
+        return List<Map<String, dynamic>>.from(dataObj);
+      }
+
+      debugPrint('=== HEALTHCARE: No matching structure found');
       return [];
     } on DioException catch (e) {
+      debugPrint('=== HEALTHCARE DioException: ${e.response?.data}');
       throw AppHttpException.fromDio(e);
     }
   }
 
-  // Fetch accepted bookings for hospital
-  Future<List<Map<String, dynamic>>> getAcceptedBookings(String token) async {
+  // Fetch bookings (accepted/refused) for hospital (type: childcare/healthcare)
+  Future<List<Map<String, dynamic>>> getBookings({
+    required String token,
+    required String type,
+    required String status,
+  }) async {
     try {
       final response = await apiService.get(
-        path: '/hospital-account/bookings/healthcare/accepted',
+        path: '/hospital-account/bookings/$type/$status',
         token: token,
       );
       final data = response.data;
+      debugPrint('=== BOOKINGS RAW RESPONSE ($type/$status): $data');
       if (data != null && data['data'] != null) {
-        final bookings = data['data']['bookings'];
-        if (bookings != null) {
-          return List<Map<String, dynamic>>.from(bookings);
+        final bookingsData = data['data']['bookings'];
+        if (bookingsData != null && bookingsData['reservations'] != null) {
+          return List<Map<String, dynamic>>.from(bookingsData['reservations']);
         }
       }
       return [];
     } on DioException catch (e) {
+      debugPrint('=== BOOKINGS $type/$status DioException: ${e.response?.data}');
       throw AppHttpException.fromDio(e);
     }
   }

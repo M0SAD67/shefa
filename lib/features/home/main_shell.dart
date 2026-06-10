@@ -2,6 +2,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/theme/color_app.dart';
+import '../../core/manager/app_state_manager.dart';
 import '../bookings/booking_requests_screen.dart';
 import 'home_screen.dart';
 import '../profile/profile_screen.dart';
@@ -16,6 +17,15 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appStateManager.fetchUserProfile();
+      appStateManager.fetchPatientBookings();
+    });
+  }
 
   final List<Widget> _screens = [
     const HomeScreen(),

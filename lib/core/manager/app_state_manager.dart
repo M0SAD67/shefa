@@ -3,6 +3,7 @@ import '../cache/cache_helper.dart';
 import '../../features/hospital/nursery_request_model.dart';
 import '../../features/hospital/icu_request_model.dart';
 import '../../features/hospital/hospital_repository.dart';
+import '../utils/api.dart';
 import '../utils/api_service.dart';
 
 class AppStateManager extends ChangeNotifier {
@@ -38,11 +39,13 @@ class AppStateManager extends ChangeNotifier {
   String _userEmail = "";
   String _userPhone = "";
   String _userAddress = "";
+  String _profileImage = "";
 
   String get userName => _userName;
   String get userEmail => _userEmail;
   String get userPhone => _userPhone;
   String get userAddress => _userAddress;
+  String get profileImage => _profileImage;
   // عدد الاشعارات الغير مقروءة (يستخدمه الهيدر لعرض الشارة)
   int get unreadNotificationsCount {
     try {
@@ -57,11 +60,15 @@ class AppStateManager extends ChangeNotifier {
     String? email,
     String? phone,
     String? address,
+    String? profileImage,
   }) {
     if (name != null && name.isNotEmpty) _userName = name;
     if (email != null && email.isNotEmpty) _userEmail = email;
     if (phone != null && phone.isNotEmpty) _userPhone = phone;
     if (address != null && address.isNotEmpty) _userAddress = address;
+    if (profileImage != null && profileImage.isNotEmpty) {
+      _profileImage = _normalizeImageUrl(profileImage);
+    }
     notifyListeners();
 
     if (name != null && name.isNotEmpty)
@@ -72,6 +79,104 @@ class AppStateManager extends ChangeNotifier {
       CacheHelper.saveData(key: 'profile_phone', value: phone);
     if (address != null && address.isNotEmpty)
       CacheHelper.saveData(key: 'profile_address', value: address);
+    if (profileImage != null && profileImage.isNotEmpty) {
+      CacheHelper.saveData(key: 'profile_image', value: _profileImage);
+    }
+  }
+
+  String _normalizeImageUrl(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return '';
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    if (trimmed.startsWith('/')) {
+      return '${Api.baseUrl}$trimmed';
+    }
+    return '${Api.baseUrl}/$trimmed';
+  }
+
+  Future<void> fetchUserProfile() async {
+    final token = CacheHelper.getData(key: 'token') as String?;
+    if (token == null ||
+        token == 'mock_hospital_token' ||
+        token == 'mock_patient_token') {
+      return;
+    }
+
+    try {
+      dynamic data;
+      try {
+        final response = await apiService.get(
+          path: Api.userProfile,
+          token: token,
+        );
+        data = response.data;
+      } catch (e) {
+        debugPrint(
+          'Failed to get profile from /user, trying /profile fallback: $e',
+        );
+        try {
+          final responseFallback = await apiService.get(
+            path: '/profile',
+            token: token,
+          );
+          data = responseFallback.data;
+        } catch (fallbackError) {
+          debugPrint('Error fetching fallback profile: $fallbackError');
+          return;
+        }
+      }
+
+      if (data == null) return;
+
+      final account =
+          data['data']?['account'] ??
+          data['account'] ??
+          data['data']?['user'] ??
+          data['user'] ??
+          data['data'] ??
+          data;
+
+      if (account == null) return;
+
+      final rawRole = account['role'];
+      final role = rawRole is int
+          ? rawRole
+          : int.tryParse(rawRole?.toString() ?? '') ?? _userRole;
+      setUserRole(role == 1 ? 1 : 0);
+
+      final name =
+          account['username']?.toString() ??
+          (account['firstName'] != null || account['lastName'] != null
+              ? '${account['firstName'] ?? ''} ${account['lastName'] ?? ''}'
+                    .trim()
+              : '');
+
+      final genderValue = account['gender'];
+      if (genderValue != null) {
+        final genderText = genderValue.toString();
+        if (genderText == '2' || genderText.toLowerCase() == 'female') {
+          setGender('female');
+        } else if (genderText == '1' || genderText.toLowerCase() == 'male') {
+          setGender('male');
+        }
+      }
+
+      setUserProfile(
+        name: name.isNotEmpty ? name : null,
+        email: account['email']?.toString(),
+        phone: account['phone']?.toString(),
+        address: account['address']?.toString(),
+        profileImage:
+            account['profilePicture']?.toString() ??
+            account['avatar']?.toString() ??
+            account['image']?.toString() ??
+            account['photo']?.toString(),
+      );
+    } catch (e) {
+      debugPrint('Error fetching user profile for header: $e');
+    }
   }
 
   // Hospital Dashboard & Operations State
@@ -294,6 +399,10 @@ class AppStateManager extends ChangeNotifier {
             name: hName.isNotEmpty ? hName : null,
             address: hAddress.isNotEmpty ? hAddress : null,
             phone: hPhone.isNotEmpty ? hPhone : null,
+            profileImage:
+                hospital['logo']?.toString() ??
+                hospital['profilePicture']?.toString() ??
+                hospital['image']?.toString(),
           );
         }
 
@@ -401,40 +510,51 @@ class AppStateManager extends ChangeNotifier {
           totalIcuBeds = icuAdults + icuCcu + icuPicu;
         }
 
-        // Parse notifications
-        final notificationsObj = homeData['notifications'];
-        if (notificationsObj != null && notificationsObj['latest'] != null) {
-          final List<dynamic> latestList = notificationsObj['latest'];
-          apiNotifications = latestList.map((notif) {
-            final String id = notif['_id']?.toString() ?? '';
-            final String title = notif['title']?.toString() ?? '';
-            final String message = notif['message']?.toString() ?? '';
-            final String route = notif['route']?.toString() ?? '';
-            final bool isRead = notif['isRead'] as bool? ?? false;
-            final String createdAt = notif['createdAt']?.toString() ?? '';
-
-            // Map route to internal action
-            String action = 'home';
-            String buttonText = 'عرض التفاصيل';
-            if (route.contains('childcare')) {
-              action = 'requests';
-              buttonText = 'طلبات الحجوزات';
-            } else if (route.contains('healthcare')) {
-              action = 'icu';
-              buttonText = 'طلبات العناية';
-            }
-
-            return <String, dynamic>{
-              'id': id,
-              'title': title,
-              'message': message,
-              'time': createdAt,
-              'badge': isRead ? null : '1',
-              'buttonText': buttonText,
-              'action': action,
-            };
-          }).toList();
+        // Parse notifications (flexible parsing to support all backend response formats)
+        final notificationsObj = homeData['notifications'] ?? homeData['latestNotifications'] ?? homeData['items'];
+        List<dynamic> latestList = [];
+        if (notificationsObj is List) {
+          latestList = notificationsObj;
+        } else if (notificationsObj is Map) {
+          if (notificationsObj['latest'] is List) {
+            latestList = notificationsObj['latest'];
+          } else if (notificationsObj['items'] is List) {
+            latestList = notificationsObj['items'];
+          } else if (notificationsObj['notifications'] is List) {
+            latestList = notificationsObj['notifications'];
+          }
         }
+
+        apiNotifications = latestList.map((notif) {
+          if (notif is! Map) return <String, dynamic>{};
+          final String id = notif['_id']?.toString() ?? notif['id']?.toString() ?? '';
+          final String title = notif['title']?.toString() ?? '';
+          final String message = notif['message']?.toString() ?? notif['body']?.toString() ?? notif['description']?.toString() ?? '';
+          final String route = notif['route']?.toString() ?? notif['action']?.toString() ?? notif['type']?.toString() ?? '';
+          final bool isRead = (notif['isRead'] ?? notif['read']) as bool? ?? false;
+          final String createdAt = notif['createdAt']?.toString() ?? notif['date']?.toString() ?? notif['time']?.toString() ?? '';
+
+          // Map route to internal action
+          String action = 'home';
+          String buttonText = 'عرض التفاصيل';
+          if (route.contains('childcare') || route.contains('nursery') || route.contains('booking')) {
+            action = 'requests';
+            buttonText = 'طلبات الحجوزات';
+          } else if (route.contains('healthcare') || route.contains('icu') || route.contains('care')) {
+            action = 'icu';
+            buttonText = 'طلبات العناية';
+          }
+
+          return <String, dynamic>{
+            'id': id,
+            'title': title,
+            'message': message,
+            'time': createdAt,
+            'badge': isRead ? null : '1',
+            'buttonText': buttonText,
+            'action': action,
+          };
+        }).where((element) => element.isNotEmpty).toList();
 
         final List<dynamic> requests = homeData['requests'] ?? [];
         final List<NurseryRequest> newNurseryRequests = [];
@@ -596,7 +716,7 @@ class AppStateManager extends ChangeNotifier {
     }
   }
 
-  /// Fetches reservations from API and splits them into accepted/rejected lists
+  /// Fetches reservations from API and splits them into pending requests, and accepted/rejected bookings
   Future<void> fetchReservations() async {
     final token = CacheHelper.getData(key: 'token') as String?;
     if (token == null) return;
@@ -609,93 +729,132 @@ class AppStateManager extends ChangeNotifier {
     final List<dynamic> newAccepted = [];
     final List<dynamic> newRejected = [];
 
+    // --- Helper to parse data into request objects ---
+    void parseAndAddRequest(
+      Map<String, dynamic> res,
+      bool isChildcare,
+      String defaultStatus,
+      List<dynamic> targetList,
+    ) {
+      final String id = res['_id']?.toString() ?? '';
+      final String status = res['status']?.toString() ?? defaultStatus;
+      final String dateStr = res['createdAt']?.toString() ?? '';
+
+      final details = res['reservationDetails'];
+      final String phone =
+          details?['phone']?.toString() ?? res['phone']?.toString() ?? '';
+      final String patientName =
+          details?['patientName']?.toString() ??
+          res['patientName']?.toString() ??
+          res['childName']?.toString() ??
+          (isChildcare ? 'طفل' : 'مريض');
+
+      final serviceObj = res['service'] ?? res['serviceId'];
+      final String serviceName = serviceObj is Map
+          ? (serviceObj['name']?.toString() ??
+                (isChildcare ? 'حضانات أطفال' : 'عناية مركزة'))
+          : (isChildcare ? 'حضانات أطفال' : 'عناية مركزة');
+
+      if (isChildcare) {
+        targetList.add(
+          NurseryRequest(
+            id: id,
+            childName: patientName,
+            phone: phone,
+            status: status,
+            serviceType: serviceName,
+            time: dateStr,
+          ),
+        );
+      } else {
+        targetList.add(
+          IcuRequest(
+            id: id,
+            patientName: patientName,
+            phone: phone,
+            status: status,
+            serviceType: serviceName,
+            time: dateStr,
+          ),
+        );
+      }
+    }
+
     try {
-      // Fetch childcare reservations
+      // 1. Fetch pending childcare reservations
       final childcareList = await hospitalRepository.getChildcareReservations(
         token,
       );
       for (final res in childcareList) {
-        final String id = res['_id']?.toString() ?? '';
-        final String status = res['status']?.toString() ?? 'pending';
-        final String dateStr = res['createdAt']?.toString() ?? '';
-        final String phone = res['phone']?.toString() ?? '';
-        final String childName =
-            res['patientName']?.toString() ??
-            res['childName']?.toString() ??
-            'طفل';
-        final serviceObj = res['service'];
-        final String serviceName = serviceObj != null
-            ? (serviceObj['name']?.toString() ?? 'حضانات أطفال')
-            : 'حضانات أطفال';
-
-        final request = NurseryRequest(
-          id: id,
-          childName: childName,
-          phone: phone,
-          status: status == 'confirmed'
-              ? 'مقبول - تم تأكيد الحجز'
-              : (status == 'refused' ? 'مرفوض' : 'قيد الانتظار'),
-          serviceType: serviceName,
-          time: dateStr,
-        );
-
-        if (status == 'confirmed') {
-          newAccepted.add(request);
-        } else if (status == 'refused') {
-          newRejected.add(request);
-        } else {
-          // Add pending to nursery requests list
-          newNurseryRequests.add(request);
-        }
+        parseAndAddRequest(res, true, 'قيد الانتظار', newNurseryRequests);
       }
     } catch (e) {
-      debugPrint('Error fetching childcare reservations: $e');
+      debugPrint('Error fetching pending childcare reservations: $e');
     }
 
     try {
-      // Fetch healthcare reservations
+      // 2. Fetch pending healthcare reservations
       final healthcareList = await hospitalRepository.getHealthcareReservations(
         token,
       );
       for (final res in healthcareList) {
-        final String id = res['_id']?.toString() ?? '';
-        final String status = res['status']?.toString() ?? 'pending';
-        final String dateStr = res['createdAt']?.toString() ?? '';
-        final String phone = res['phone']?.toString() ?? '';
-        final String patientName = res['patientName']?.toString() ?? 'مريض';
-        final serviceObj = res['service'];
-        final String serviceName = serviceObj != null
-            ? (serviceObj['name']?.toString() ?? 'عناية مركزة')
-            : 'عناية مركزة';
-
-        final request = IcuRequest(
-          id: id,
-          patientName: patientName,
-          phone: phone,
-          status: status == 'confirmed'
-              ? 'مقبول - تم حجز السرير'
-              : (status == 'refused' ? 'مرفوض' : 'قيد الانتظار'),
-          serviceType: serviceName,
-          time: dateStr,
-        );
-
-        if (status == 'confirmed') {
-          newAccepted.add(request);
-        } else if (status == 'refused') {
-          newRejected.add(request);
-        } else {
-          // Add pending to ICU requests list
-          newIcuRequests.add(request);
-        }
+        parseAndAddRequest(res, false, 'قيد الانتظار', newIcuRequests);
       }
     } catch (e) {
-      debugPrint('Error fetching healthcare reservations: $e');
+      debugPrint('Error fetching pending healthcare reservations: $e');
+    }
+
+    try {
+      // 3. Fetch accepted childcare bookings
+      final acceptedChildcare = await hospitalRepository.getBookings(
+        token: token,
+        type: 'childcare',
+        status: 'accepted',
+      );
+      for (final res in acceptedChildcare) {
+        parseAndAddRequest(res, true, 'مقبول - تم تأكيد الحجز', newAccepted);
+      }
+
+      // 4. Fetch accepted healthcare bookings
+      final acceptedHealthcare = await hospitalRepository.getBookings(
+        token: token,
+        type: 'healthcare',
+        status: 'accepted',
+      );
+      for (final res in acceptedHealthcare) {
+        parseAndAddRequest(res, false, 'مقبول - تم حجز السرير', newAccepted);
+      }
+
+      // 5. Fetch refused childcare bookings
+      final refusedChildcare = await hospitalRepository.getBookings(
+        token: token,
+        type: 'childcare',
+        status: 'refused',
+      );
+      for (final res in refusedChildcare) {
+        parseAndAddRequest(res, true, 'مرفوض', newRejected);
+      }
+
+      // 6. Fetch refused healthcare bookings
+      final refusedHealthcare = await hospitalRepository.getBookings(
+        token: token,
+        type: 'healthcare',
+        status: 'refused',
+      );
+      for (final res in refusedHealthcare) {
+        parseAndAddRequest(res, false, 'مرفوض', newRejected);
+      }
+    } catch (e) {
+      debugPrint('Error fetching accepted/refused bookings: $e');
     }
 
     nurseryRequests = newNurseryRequests;
     icuRequests = newIcuRequests;
     acceptedBookings = newAccepted;
     rejectedBookings = newRejected;
+    debugPrint(
+      '=== FINAL: accepted=${newAccepted.length}, rejected=${newRejected.length}, pendingNursery=${newNurseryRequests.length}, pendingIcu=${newIcuRequests.length}',
+    );
     isLoadingReservations = false;
     notifyListeners();
   }
@@ -739,6 +898,27 @@ class AppStateManager extends ChangeNotifier {
       final data = response.data;
       if (data != null && data['data'] != null) {
         patientBookings = data['data']['bookings'] as List<dynamic>? ?? [];
+        if (patientBookings.isNotEmpty) {
+          final firstBooking = patientBookings.first;
+          final details = firstBooking['reservationDetails'];
+          if (details != null) {
+            final pName = details['patientName']?.toString();
+            final pPhone = details['phone']?.toString();
+            final pAddress = details['address']?.toString();
+
+            if (_userName.isEmpty ||
+                _userName == 'Patient User' ||
+                _userAddress.isEmpty) {
+              setUserProfile(
+                name: (pName != null && pName.isNotEmpty) ? pName : null,
+                phone: (pPhone != null && pPhone.isNotEmpty) ? pPhone : null,
+                address: (pAddress != null && pAddress.isNotEmpty)
+                    ? pAddress
+                    : null,
+              );
+            }
+          }
+        }
       }
     } catch (e) {
       debugPrint('Error fetching patient bookings: $e');
@@ -825,6 +1005,9 @@ class AppStateManager extends ChangeNotifier {
     final savedAddress = CacheHelper.getData(key: 'profile_address');
     if (savedAddress != null) _userAddress = savedAddress.toString();
 
+    final savedImage = CacheHelper.getData(key: 'profile_image');
+    if (savedImage != null) _profileImage = savedImage.toString();
+
     final savedTheme = CacheHelper.getData(key: _themeKey);
     if (savedTheme != null) {
       _themeMode = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
@@ -846,6 +1029,44 @@ class AppStateManager extends ChangeNotifier {
           ? savedRole
           : int.tryParse(savedRole.toString()) ?? 0;
     }
+    notifyListeners();
+  }
+
+  Future<void> clearUserData() async {
+    _userRole = 0;
+    _userName = '';
+    _userEmail = '';
+    _userPhone = '';
+    _userAddress = '';
+    _profileImage = '';
+    _gender = '';
+
+    // Clear lists & data
+    nurseryRequests = [];
+    icuRequests = [];
+    apiNotifications = [];
+    acceptedBookings = [];
+    rejectedBookings = [];
+    patientBookings = [];
+
+    // Clear service IDs
+    hospitalId = null;
+    kidsServiceId = null;
+    nicuServiceId = null;
+    adultsServiceId = null;
+    ccuServiceId = null;
+    picuServiceId = null;
+
+    await CacheHelper.removeData(key: 'token');
+    await CacheHelper.removeData(key: 'email');
+    await CacheHelper.removeData(key: _roleKey);
+    await CacheHelper.removeData(key: _genderKey);
+    await CacheHelper.removeData(key: 'profile_name');
+    await CacheHelper.removeData(key: 'profile_email');
+    await CacheHelper.removeData(key: 'profile_phone');
+    await CacheHelper.removeData(key: 'profile_address');
+    await CacheHelper.removeData(key: 'profile_image');
+
     notifyListeners();
   }
 

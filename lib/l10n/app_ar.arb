@@ -62,6 +62,7 @@
     }
   },
   "invalidEmail": "أدخل بريداً صالحاً ينتهي بـ com أو net أو edu",
+  "noConnectionText": "يرجى التحقق من اتصالك بالإنترنت",
   "networkError": "لا يوجد اتصال بالإنترنت. تحقق من الشبكة وحاول مرة أخرى.",
   "networkTimeout": "انتهت مهلة الاتصال بالخادم. حاول مرة أخرى بعد قليل.",
   "unexpectedError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
@@ -181,6 +182,92 @@
   "notifOneBedLeftNursery": "متبقي سرير واحد في الحضانة",
   "notifAvailablePlacesButton": "الاماكن المتاحه",
   "notifIcuFullAlert": "قسم العناية ممتلئ",
+  "yesterday": "أمس",
+  "chooseDate": "اختر تاريخاً...",
+  "profileUpdatedSuccess": "تم حفظ التعديلات بنجاح",
+  "profileUpdateFailed": "فشل في حفظ التعديلات: {error}",
+  "@profileUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "underDevelopment": "هذا القسم قيد التطوير حالياً",
+  "searchHospitalOrArea": "بحث عن منطقة أو مستشفى",
+  "failedToLoadNurseries": "تعذر تحميل الحضانات",
+  "retry": "إعادة المحاولة",
+  "noNurseriesAvailable": "لا توجد حضانات متاحة",
+  "addressLabel": "العنوان : {address}",
+  "@addressLabel": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "noServiceData": "لا توجد بيانات للخدمة",
+  "hospitalAddressLabel": "عنوان المستشفى : {address}",
+  "@hospitalAddressLabel": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "hospitalPhoneLabel": "رقم تليفون : {phone}",
+  "@hospitalPhoneLabel": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "forCases": "لحالات:",
+  "bookAction": "حجز",
+  "unavailable": "غير متاح",
+  "availableCount": "{count} متاح",
+  "@availableCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "medicalService": "خدمة طبية",
+  "hospital": "مستشفى",
+  "nurseryNicuOption": "العناية لحديثي الولادة (NICU)",
+  "childNameHint": "اسم الطفل",
+  "phoneHint": "رقم تليفون",
+  "medicalConditionHint": "الحالة الطبية",
+  "pleaseCompleteBookingData": "من فضلك أكمل بيانات الحجز",
+  "failedToLoadIcuServices": "تعذر تحميل خدمات العناية",
+  "noIcuServicesAvailable": "لا توجد خدمات عناية متاحة",
+  "addressNotSpecified": "العنوان غير محدد",
+  "icuRequestForPatient": "طلب رعاية عناية مركزة للمريض: {name}",
+  "@icuRequestForPatient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newNurseryBookingForChild": "حجز حضانة جديد للطفل: {name}",
+  "@newNurseryBookingForChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "now": "الآن",
+  "alertNurseryFull": "تنبيه: حضانات الأطفال ممتلئة بالكامل!",
+  "alertNurseryOneBed": "تنبيه: متبقي سرير حضانة أطفال واحد فقط!",
+  "alertIcuFull": "تنبيه: العناية المركزة للكبار ممتلئة بالكامل!",
+  "alertIcuOneBed": "تنبيه: متبقي سرير عناية مركزة للكبار واحد فقط!",
+  "bookingData": "بيانات الحجز",
+  "requestDetailsLabel": "تفاصيل الطلب",
+  "conditionLabel": "الحاله",
   "hospitalName": "مستشفى بنها الجامعي",
   "hospitalLocation": "القليوبية، بنها، الإشارة"
 }

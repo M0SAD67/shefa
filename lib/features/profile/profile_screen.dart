@@ -79,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     final bool isDark = appStateManager.isDarkMode;
     final Color bgColor = isDark ? ColorApp.icons : Colors.white;
     final Color textColor = isDark ? Colors.white : ColorApp.icons;
+    final l10n = AppLocalizations.of(context)!;
 
     showModalBottomSheet(
       context: context,
@@ -193,8 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                         Navigator.pop(context); // Pop loading dialog
                         Navigator.pop(context); // Pop sheet
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("تم حفظ التعديلات بنجاح"),
+                          SnackBar(
+                            content: Text(l10n.profileUpdatedSuccess),
                             backgroundColor: Colors.green,
                           ),
                         );
@@ -204,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         Navigator.pop(context); // Pop loading
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text("فشل في حفظ التعديلات: $e"),
+                            content: Text(l10n.profileUpdateFailed(e.toString())),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -411,12 +412,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                   child: const Text("Cancel", style: TextStyle(fontSize: 16)),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.pop(context); // Close dialog
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      RoutesApp.login,
-                      (route) => false,
-                    );
+                    await appStateManager.clearUserData();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        RoutesApp.login,
+                        (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: ColorApp.error,

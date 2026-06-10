@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shefa/core/theme/color_app.dart';
+import 'package:shefa/l10n/app_localizations.dart';
 import 'package:shefa/features/hospital/nursery_request_model.dart';
 import 'package:shefa/features/hospital/requestDetailScreen.dart';
 
@@ -11,6 +12,7 @@ class RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
@@ -43,7 +45,7 @@ class RequestCard extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      'بيانات الطلب',
+                      l10n.requestDataTitle,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -52,14 +54,14 @@ class RequestCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _buildLabelOnly('اسم الطفل'),
-                  _buildLabelOnly('رقم التليفون'),
-                  _buildLabelOnly('الحاله'),
+                  _buildLabelOnly(l10n.childNameLabel),
+                  _buildLabelOnly(l10n.phoneLabelText),
+                  _buildLabelOnly(l10n.conditionLabel),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'نوع الخدمة:',
+                        '${l10n.serviceTypeLabel}:',
                         style: TextStyle(
                           color: ColorApp.icons,
                           fontWeight: FontWeight.bold,
@@ -99,7 +101,7 @@ class RequestCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Text(
-                          'تفاصيل الطلب',
+                          l10n.requestDetailsLabel,
                           style: TextStyle(
                             color: ColorApp.icons,
                             fontWeight: FontWeight.bold,

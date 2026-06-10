@@ -182,6 +182,92 @@
   "notifOneBedLeftNursery": "One nursery bed left",
   "notifAvailablePlacesButton": "Available Places",
   "notifIcuFullAlert": "Intensive care department is full",
+  "yesterday": "Yesterday",
+  "chooseDate": "Choose a date...",
+  "profileUpdatedSuccess": "Profile updated successfully",
+  "profileUpdateFailed": "Failed to update profile: {error}",
+  "@profileUpdateFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "underDevelopment": "This section is currently under development",
+  "searchHospitalOrArea": "Search for area or hospital",
+  "failedToLoadNurseries": "Failed to load nurseries",
+  "retry": "Retry",
+  "noNurseriesAvailable": "No nurseries available",
+  "addressLabel": "Address: {address}",
+  "@addressLabel": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "noServiceData": "No service data available",
+  "hospitalAddressLabel": "Hospital Address: {address}",
+  "@hospitalAddressLabel": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "hospitalPhoneLabel": "Phone: {phone}",
+  "@hospitalPhoneLabel": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "forCases": "For cases:",
+  "bookAction": "Book",
+  "unavailable": "Unavailable",
+  "availableCount": "{count} Available",
+  "@availableCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "medicalService": "Medical Service",
+  "hospital": "Hospital",
+  "nurseryNicuOption": "Neonatal ICU (NICU)",
+  "childNameHint": "Child Name",
+  "phoneHint": "Phone Number",
+  "medicalConditionHint": "Medical Condition",
+  "pleaseCompleteBookingData": "Please complete the booking data",
+  "failedToLoadIcuServices": "Failed to load ICU services",
+  "noIcuServicesAvailable": "No ICU services available",
+  "addressNotSpecified": "Address not specified",
+  "icuRequestForPatient": "ICU care request for patient: {name}",
+  "@icuRequestForPatient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newNurseryBookingForChild": "New nursery booking for child: {name}",
+  "@newNurseryBookingForChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "now": "Now",
+  "alertNurseryFull": "Alert: All nursery beds are full!",
+  "alertNurseryOneBed": "Alert: Only one nursery bed left!",
+  "alertIcuFull": "Alert: Adult ICU is completely full!",
+  "alertIcuOneBed": "Alert: Only one adult ICU bed left!",
+  "bookingData": "Booking Data",
+  "requestDetailsLabel": "Request Details",
+  "conditionLabel": "Condition",
   "hospitalName": "Benha University Hospital",
   "hospitalLocation": "Qalyubia, Benha, El-Eshara"
 }

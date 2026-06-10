@@ -54,7 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             notifications.add({
               'id': 'icu_$i',
               'time': req.time,
-              'title': 'طلب رعاية عناية مركزة للمريض: ${req.patientName}',
+              'title': l10n.icuRequestForPatient(req.patientName),
               'badge': '1',
               'buttonText': l10n.notifRequestDetails,
               'action': 'icu',
@@ -65,7 +65,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             notifications.add({
               'id': 'nursery_$i',
               'time': req.time,
-              'title': 'حجز حضانة جديد للطفل: ${req.childName}',
+              'title': l10n.newNurseryBookingForChild(req.childName),
               'badge': '1',
               'buttonText': l10n.notifBookingRequestsButton,
               'action': 'requests',
@@ -78,10 +78,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             appStateManager.nurseriesKids >= 0) {
           notifications.add({
             'id': 'alert_nursery',
-            'time': 'الآن',
+            'time': l10n.now,
             'title': appStateManager.nurseriesKids == 0
-                ? 'تنبيه: حضانات الأطفال ممتلئة بالكامل!'
-                : 'تنبيه: متبقي سرير حضانة أطفال واحد فقط!',
+                ? l10n.alertNurseryFull
+                : l10n.alertNurseryOneBed,
             'badge': null,
             'buttonText': l10n.notifAvailablePlacesButton,
             'action': 'home',
@@ -93,10 +93,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         if (appStateManager.icuAdults <= 1 && appStateManager.icuAdults >= 0) {
           notifications.add({
             'id': 'alert_icu',
-            'time': 'الآن',
+            'time': l10n.now,
             'title': appStateManager.icuAdults == 0
-                ? 'تنبيه: العناية المركزة للكبار ممتلئة بالكامل!'
-                : 'تنبيه: متبقي سرير عناية مركزة للكبار واحد فقط!',
+                ? l10n.alertIcuFull
+                : l10n.alertIcuOneBed,
             'badge': null,
             'buttonText': l10n.notifAvailablePlacesButton,
             'action': 'home',
@@ -136,7 +136,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(
-                              isAr ? Icons.arrow_back : Icons.arrow_forward,
+                              isAr ? Icons.arrow_forward : Icons.arrow_back,
                               color: isDark ? Colors.white : Colors.grey,
                               size: 20,
                             ),
@@ -161,7 +161,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           ? SingleChildScrollView(
                               physics: const AlwaysScrollableScrollPhysics(),
                               child: Container(
-                                height: MediaQuery.of(context).size.height * 0.6,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
                                 alignment: Alignment.center,
                                 child: _buildEmptyState(isDark, l10n),
                               ),
@@ -243,6 +244,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
+  String _formatNotificationTime(dynamic timeVal, BuildContext context) {
+    if (timeVal == null) return '';
+    final String val = timeVal.toString();
+    final parsed = DateTime.tryParse(val);
+    if (parsed == null) return val;
+    final localTime = parsed.toLocal();
+    final now = DateTime.now();
+    final diff = now.difference(localTime);
+    if (diff.inMinutes < 60) {
+      if (diff.inMinutes <= 1) {
+        return Localizations.localeOf(context).languageCode == 'ar'
+            ? 'الآن'
+            : 'Now';
+      }
+      return Localizations.localeOf(context).languageCode == 'ar'
+          ? 'منذ ${diff.inMinutes} دقيقة'
+          : '${diff.inMinutes}m ago';
+    } else if (diff.inHours < 24) {
+      return Localizations.localeOf(context).languageCode == 'ar'
+          ? 'منذ ${diff.inHours} ساعة'
+          : '${diff.inHours}h ago';
+    } else {
+      return '${localTime.year}-${localTime.month.toString().padLeft(2, '0')}-${localTime.day.toString().padLeft(2, '0')}';
+    }
+  }
+
   Widget _buildNotificationsList(
     List<Map<String, dynamic>> notifications,
     bool isDark,
@@ -294,7 +321,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   children: [
                     // Time row
                     Text(
-                      notif['time'],
+                      _formatNotificationTime(notif['time'], context),
                       style: const TextStyle(fontSize: 10, color: Colors.grey),
                     ),
                     const SizedBox(height: 8),
@@ -318,7 +345,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         ),
                         if (notif['badge'] != null)
                           Container(
-                            padding: const EdgeInsets.all(6),
+                            width: 22,
+                            height: 22,
+                            alignment: Alignment.center,
                             decoration: const BoxDecoration(
                               color: ColorApp.primary,
                               shape: BoxShape.circle,
@@ -329,11 +358,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
+                                height: 1.0,
                               ),
                             ),
                           ),
                       ],
                     ),
+                    if (notif['message'] != null &&
+                        notif['message'].toString().isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        notif['message'].toString(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? Colors.white : ColorApp.appDark,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 12),
                     // Action button
                     GestureDetector(

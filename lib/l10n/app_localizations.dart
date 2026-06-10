@@ -1070,6 +1070,228 @@ abstract class AppLocalizations {
   /// **'Intensive care department is full'**
   String get notifIcuFullAlert;
 
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @chooseDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a date...'**
+  String get chooseDate;
+
+  /// No description provided for @profileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccess;
+
+  /// No description provided for @profileUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile: {error}'**
+  String profileUpdateFailed(String error);
+
+  /// No description provided for @underDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'This section is currently under development'**
+  String get underDevelopment;
+
+  /// No description provided for @searchHospitalOrArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for area or hospital'**
+  String get searchHospitalOrArea;
+
+  /// No description provided for @failedToLoadNurseries.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load nurseries'**
+  String get failedToLoadNurseries;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noNurseriesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No nurseries available'**
+  String get noNurseriesAvailable;
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Address: {address}'**
+  String addressLabel(String address);
+
+  /// No description provided for @noServiceData.
+  ///
+  /// In en, this message translates to:
+  /// **'No service data available'**
+  String get noServiceData;
+
+  /// No description provided for @hospitalAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital Address: {address}'**
+  String hospitalAddressLabel(String address);
+
+  /// No description provided for @hospitalPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone: {phone}'**
+  String hospitalPhoneLabel(String phone);
+
+  /// No description provided for @forCases.
+  ///
+  /// In en, this message translates to:
+  /// **'For cases:'**
+  String get forCases;
+
+  /// No description provided for @bookAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get bookAction;
+
+  /// No description provided for @unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get unavailable;
+
+  /// No description provided for @availableCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Available'**
+  String availableCount(int count);
+
+  /// No description provided for @medicalService.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Service'**
+  String get medicalService;
+
+  /// No description provided for @hospital.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital'**
+  String get hospital;
+
+  /// No description provided for @nurseryNicuOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Neonatal ICU (NICU)'**
+  String get nurseryNicuOption;
+
+  /// No description provided for @childNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Child Name'**
+  String get childNameHint;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneHint;
+
+  /// No description provided for @medicalConditionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical Condition'**
+  String get medicalConditionHint;
+
+  /// No description provided for @pleaseCompleteBookingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete the booking data'**
+  String get pleaseCompleteBookingData;
+
+  /// No description provided for @failedToLoadIcuServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load ICU services'**
+  String get failedToLoadIcuServices;
+
+  /// No description provided for @noIcuServicesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No ICU services available'**
+  String get noIcuServicesAvailable;
+
+  /// No description provided for @addressNotSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Address not specified'**
+  String get addressNotSpecified;
+
+  /// No description provided for @icuRequestForPatient.
+  ///
+  /// In en, this message translates to:
+  /// **'ICU care request for patient: {name}'**
+  String icuRequestForPatient(String name);
+
+  /// No description provided for @newNurseryBookingForChild.
+  ///
+  /// In en, this message translates to:
+  /// **'New nursery booking for child: {name}'**
+  String newNurseryBookingForChild(String name);
+
+  /// No description provided for @now.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get now;
+
+  /// No description provided for @alertNurseryFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert: All nursery beds are full!'**
+  String get alertNurseryFull;
+
+  /// No description provided for @alertNurseryOneBed.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert: Only one nursery bed left!'**
+  String get alertNurseryOneBed;
+
+  /// No description provided for @alertIcuFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert: Adult ICU is completely full!'**
+  String get alertIcuFull;
+
+  /// No description provided for @alertIcuOneBed.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert: Only one adult ICU bed left!'**
+  String get alertIcuOneBed;
+
+  /// No description provided for @bookingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Data'**
+  String get bookingData;
+
+  /// No description provided for @requestDetailsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Details'**
+  String get requestDetailsLabel;
+
+  /// No description provided for @conditionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Condition'**
+  String get conditionLabel;
+
   /// No description provided for @hospitalName.
   ///
   /// In en, this message translates to:

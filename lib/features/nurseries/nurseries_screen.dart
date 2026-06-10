@@ -49,7 +49,7 @@ class NurseriesScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            "هذا القسم قيد التطوير حالياً",
+                            l10n.underDevelopment,
                             style: TextStyle(
                               fontSize: 16,
                               color: isDark ? Colors.white70 : Colors.black54,
