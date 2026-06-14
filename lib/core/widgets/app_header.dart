@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:flutter/material.dart';
 import '../constants/assets_app.dart';
 import '../manager/app_state_manager.dart';
@@ -152,16 +151,16 @@ class AppHeader extends StatelessWidget {
   }
 
   Widget _buildIOSHeader(BuildContext context, bool isDark) {
-    return ClipRect(
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // User Info
-              ListenableBuilder(
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // ── Profile – Liquid Glass Button ─────────────────────────
+            Expanded(
+              child: ListenableBuilder(
                 listenable: appStateManager,
                 builder: (context, _) {
                   final String patientName = appStateManager.userName.isNotEmpty
@@ -172,137 +171,98 @@ class AppHeader extends StatelessWidget {
                       ? appStateManager.userAddress
                       : 'موقع غير محدد';
 
-                  return CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.08)
-                            : Colors.black.withValues(alpha: 0.04),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.1)
-                              : Colors.black.withValues(alpha: 0.06),
-                          width: 0.5,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: ClipOval(
-                              child: appStateManager.profileImage.isNotEmpty
-                                  ? Image.network(
-                                      appStateManager.profileImage,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                            return Image.asset(
-                                              appStateManager.isFemale
-                                                  ? AssetsApp.userAvatarWomen
-                                                  : AssetsApp.userAvatarMan,
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                    )
-                                  : Image.asset(
+                  return AdaptiveButton.child(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                    ),
+                    style: AdaptiveButtonStyle.gray,
+                    size: AdaptiveButtonSize.large,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Avatar
+                        SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: ClipOval(
+                            child: appStateManager.profileImage.isNotEmpty
+                                ? Image.network(
+                                    appStateManager.profileImage,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Image.asset(
                                       appStateManager.isFemale
                                           ? AssetsApp.userAvatarWomen
                                           : AssetsApp.userAvatarMan,
                                       fit: BoxFit.cover,
                                     ),
-                            ),
+                                  )
+                                : Image.asset(
+                                    appStateManager.isFemale
+                                        ? AssetsApp.userAvatarWomen
+                                        : AssetsApp.userAvatarMan,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                          const SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    patientName,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark
-                                          ? ColorApp.appLight
-                                          : ColorApp.appDark,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Text(
-                                    '👋',
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                patientAddress,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorApp.locationText.withValues(
-                                    alpha: 0.8,
+                        ),
+                        const SizedBox(width: 8),
+                        // Name + Address
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  patientName,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark
+                                        ? ColorApp.appLight
+                                        : ColorApp.appDark,
                                   ),
                                 ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  '👋',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              patientAddress,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: ColorApp.locationText.withValues(
+                                  alpha: 0.8,
+                                ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   );
                 },
               ),
+            ),
 
-              // Logo
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : Colors.black.withValues(alpha: 0.04),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.1)
-                          : Colors.black.withValues(alpha: 0.06),
-                      width: 0.5,
-                    ),
-                  ),
-                  child: Hero(
-                    tag: 'app_logo',
-                    child: Image.asset(AssetsApp.logo, height: 26),
-                  ),
-                ),
+            const SizedBox(width: 8),
+
+            // ── Logo – Liquid Glass Icon Button ───────────────────────
+            AdaptiveButton.child(
+              onPressed: () {},
+              style: AdaptiveButtonStyle.gray,
+              size: AdaptiveButtonSize.large,
+              child: Hero(
+                tag: 'app_logo',
+                child: Image.asset(AssetsApp.logo, height: 26),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
