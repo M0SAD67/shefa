@@ -182,79 +182,94 @@ class AppHeader extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: ColorApp.primary.withValues(alpha: 0.2),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: appStateManager.profileImage.isNotEmpty
-                                ? Image.network(
-                                    appStateManager.profileImage,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.asset(
-                                        appStateManager.isFemale
-                                            ? AssetsApp.userAvatarWomen
-                                            : AssetsApp.userAvatarMan,
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  )
-                                : Image.asset(
-                                    appStateManager.isFemale
-                                        ? AssetsApp.userAvatarWomen
-                                        : AssetsApp.userAvatarMan,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.04),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : Colors.black.withValues(alpha: 0.06),
+                          width: 0.5,
                         ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  patientName,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: isDark
-                                        ? ColorApp.appLight
-                                        : ColorApp.appDark,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  '👋',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
                             ),
-                            Text(
-                              patientAddress,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: ColorApp.locationText.withValues(
-                                  alpha: 0.8,
+                            child: ClipOval(
+                              child: appStateManager.profileImage.isNotEmpty
+                                  ? Image.network(
+                                      appStateManager.profileImage,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Image.asset(
+                                              appStateManager.isFemale
+                                                  ? AssetsApp.userAvatarWomen
+                                                  : AssetsApp.userAvatarMan,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                    )
+                                  : Image.asset(
+                                      appStateManager.isFemale
+                                          ? AssetsApp.userAvatarWomen
+                                          : AssetsApp.userAvatarMan,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    patientName,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark
+                                          ? ColorApp.appLight
+                                          : ColorApp.appDark,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Text(
+                                    '👋',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                patientAddress,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorApp.locationText.withValues(
+                                    alpha: 0.8,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -264,9 +279,26 @@ class AppHeader extends StatelessWidget {
               CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {},
-                child: Hero(
-                  tag: 'app_logo',
-                  child: Image.asset(AssetsApp.logo, height: 40),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.04),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.1)
+                          : Colors.black.withValues(alpha: 0.06),
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Hero(
+                    tag: 'app_logo',
+                    child: Image.asset(AssetsApp.logo, height: 26),
+                  ),
                 ),
               ),
             ],
