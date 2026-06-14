@@ -44,6 +44,7 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: _screens[_selectedIndex],
       bottomNavigationBar: Platform.isIOS ? _buildIOSTabBar() : _buildAndroidNavBar(),
     );
