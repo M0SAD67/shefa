@@ -5,7 +5,7 @@ platform :ios, '14.0'
 # This helper script is required to hook up Flutter plugins
 # and configurations properly.
 # It is located in the Flutter directory.
-require File.expand_path(File.join('..', 'Flutter', 'podhelper.rb'), __FILE__)
+require_relative 'Flutter/podhelper'
 
 # CocoaPods analytics sends minimal, anonymous usage data to iOS Developers
 # to help improve the tool. If you'd like to opt out, uncomment the following line
