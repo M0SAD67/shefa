@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:cupertino_native_better/components/liquid_glass_container.dart';
+import 'package:cupertino_native_better/style/glass_effect.dart';
 import 'package:flutter/material.dart';
 import '../constants/assets_app.dart';
 import '../manager/app_state_manager.dart';
@@ -158,7 +159,7 @@ class AppHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // ── Profile – Liquid Glass Button ─────────────────────────
+            // ── Profile ───────────────────────────────────────────────
             Expanded(
               child: ListenableBuilder(
                 listenable: appStateManager,
@@ -171,79 +172,94 @@ class AppHeader extends StatelessWidget {
                       ? appStateManager.userAddress
                       : 'موقع غير محدد';
 
-                  return AdaptiveButton.child(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  return LiquidGlassContainer(
+                    config: const LiquidGlassConfig(
+                      effect: CNGlassEffect.regular,
+                      shape: CNGlassEffectShape.rect,
+                      cornerRadius: 22,
+                      interactive: true,
                     ),
-                    style: AdaptiveButtonStyle.gray,
-                    size: AdaptiveButtonSize.large,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Avatar
-                        SizedBox(
-                          width: 32,
-                          height: 32,
-                          child: ClipOval(
-                            child: appStateManager.profileImage.isNotEmpty
-                                ? Image.network(
-                                    appStateManager.profileImage,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Image.asset(
-                                      appStateManager.isFemale
-                                          ? AssetsApp.userAvatarWomen
-                                          : AssetsApp.userAvatarMan,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Image.asset(
-                                    appStateManager.isFemale
-                                        ? AssetsApp.userAvatarWomen
-                                        : AssetsApp.userAvatarMan,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ProfileScreen(),
                         ),
-                        const SizedBox(width: 8),
-                        // Name + Address
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 7,
+                        ),
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Row(
+                            // Avatar
+                            SizedBox(
+                              width: 32,
+                              height: 32,
+                              child: ClipOval(
+                                child: appStateManager.profileImage.isNotEmpty
+                                    ? Image.network(
+                                        appStateManager.profileImage,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (_, __, ___) =>
+                                            Image.asset(
+                                              appStateManager.isFemale
+                                                  ? AssetsApp.userAvatarWomen
+                                                  : AssetsApp.userAvatarMan,
+                                              fit: BoxFit.cover,
+                                            ),
+                                      )
+                                    : Image.asset(
+                                        appStateManager.isFemale
+                                            ? AssetsApp.userAvatarWomen
+                                            : AssetsApp.userAvatarMan,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // Name + Address
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  patientName,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: isDark
-                                        ? ColorApp.appLight
-                                        : ColorApp.appDark,
-                                  ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      patientName,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: isDark
+                                            ? ColorApp.appLight
+                                            : ColorApp.appDark,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const Text(
+                                      '👋',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 4),
-                                const Text(
-                                  '👋',
-                                  style: TextStyle(fontSize: 12),
+                                Text(
+                                  patientAddress,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorApp.locationText.withValues(
+                                      alpha: 0.8,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            Text(
-                              patientAddress,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: ColorApp.locationText.withValues(
-                                  alpha: 0.8,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 },
@@ -252,14 +268,23 @@ class AppHeader extends StatelessWidget {
 
             const SizedBox(width: 8),
 
-            // ── Logo – Liquid Glass Icon Button ───────────────────────
-            AdaptiveButton.child(
-              onPressed: () {},
-              style: AdaptiveButtonStyle.gray,
-              size: AdaptiveButtonSize.large,
-              child: Hero(
-                tag: 'app_logo',
-                child: Image.asset(AssetsApp.logo, height: 26),
+            // ── Logo ──────────────────────────────────────────────────
+            LiquidGlassContainer(
+              config: const LiquidGlassConfig(
+                effect: CNGlassEffect.regular,
+                shape: CNGlassEffectShape.rect,
+                cornerRadius: 22,
+                interactive: true,
+              ),
+              child: GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Hero(
+                    tag: 'app_logo',
+                    child: Image.asset(AssetsApp.logo, height: 26),
+                  ),
+                ),
               ),
             ),
           ],

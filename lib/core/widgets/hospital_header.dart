@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cupertino_native_better/components/liquid_glass_container.dart';
+import 'package:cupertino_native_better/style/glass_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cupertino_native/cupertino_native.dart';
@@ -250,145 +252,157 @@ class _HospitalHeaderState extends State<HospitalHeader> {
     String hospitalAddress,
     int unreadCount,
   ) {
-    return ClipRect(
-      child: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Right part (In RTL, children are laid out right-to-left)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.showNotificationIcon) ...[
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        CNButton.icon(
-                          icon: const CNSymbol('bell.fill'),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const NotificationsScreen(),
-                              ),
-                            );
-                          },
+    return SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ① الإشعارات — CNButton.icon
+                if (widget.showNotificationIcon) ...[
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CNButton.icon(
+                        icon: const CNSymbol('bell.fill'),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const NotificationsScreen(),
+                          ),
                         ),
-                        if (unreadCount > 0)
-                          PositionedDirectional(
-                            end: 2,
-                            top: 2,
-                            child: IgnorePointer(
-                              child: Container(
-                                padding: unreadCount > 9
-                                    ? const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                        vertical: 1,
-                                      )
-                                    : const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  shape: unreadCount > 9
-                                      ? BoxShape.rectangle
-                                      : BoxShape.circle,
-                                  borderRadius: unreadCount > 9
-                                      ? BorderRadius.circular(10)
-                                      : null,
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 16,
-                                  minHeight: 16,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    unreadCount > 9
-                                        ? '9+'
-                                        : unreadCount.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.0,
-                                    ),
+                      ),
+                      if (unreadCount > 0)
+                        PositionedDirectional(
+                          end: 2,
+                          top: 2,
+                          child: IgnorePointer(
+                            child: Container(
+                              padding: unreadCount > 9
+                                  ? const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 1,
+                                    )
+                                  : const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: unreadCount > 9
+                                    ? BoxShape.rectangle
+                                    : BoxShape.circle,
+                                borderRadius: unreadCount > 9
+                                    ? BorderRadius.circular(10)
+                                    : null,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  unreadCount > 9
+                                      ? '9+'
+                                      : unreadCount.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.0,
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  // Hospital Info Button
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: ColorApp.primary.withValues(alpha: 0.2),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: ClipOval(
-                            child: Image.asset(
-                              AssetsApp.hospitalLogo,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
                         ),
-                        const SizedBox(width: 8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              hospitalName,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color: isDark
-                                    ? ColorApp.textDark
-                                    : ColorApp.textLight,
+                    ],
+                  ),
+                  const SizedBox(width: 8),
+                ],
+
+                // ② بيانات المستشفى — LiquidGlassContainer
+                LiquidGlassContainer(
+                  config: const LiquidGlassConfig(
+                    effect: CNGlassEffect.regular,
+                    shape: CNGlassEffectShape.rect,
+                    cornerRadius: 22,
+                    interactive: true,
+                  ),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 7,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 38,
+                            height: 38,
+                            child: ClipOval(
+                              child: Image.asset(
+                                AssetsApp.hospitalLogo,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            Text(
-                              hospitalAddress,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: ColorApp.locationText,
+                          ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                hospitalName,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  color: isDark
+                                      ? ColorApp.textDark
+                                      : ColorApp.textLight,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              Text(
+                                hospitalAddress,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: ColorApp.locationText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
-              // Left part: Logo Button
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                child: Hero(
-                  tag: 'shifa_logo',
-                  child: Image.asset(AssetsApp.logo, height: 45),
+            // ③ لوجو التطبيق — LiquidGlassContainer
+            LiquidGlassContainer(
+              config: const LiquidGlassConfig(
+                effect: CNGlassEffect.regular,
+                shape: CNGlassEffectShape.rect,
+                cornerRadius: 22,
+                interactive: true,
+              ),
+              child: GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Hero(
+                    tag: 'shifa_logo',
+                    child: Image.asset(AssetsApp.logo, height: 45),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
