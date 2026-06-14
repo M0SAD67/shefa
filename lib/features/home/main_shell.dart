@@ -46,7 +46,9 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       extendBody: true,
       body: _screens[_selectedIndex],
-      bottomNavigationBar: Platform.isIOS ? _buildIOSTabBar() : _buildAndroidNavBar(),
+      bottomNavigationBar: Platform.isIOS
+          ? _buildIOSTabBar()
+          : _buildAndroidNavBar(),
     );
   }
 
@@ -55,7 +57,7 @@ class _MainShellState extends State<MainShell> {
     return CNTabBar(
       items: const [
         CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
-        CNTabBarItem(label: 'Bookings', icon: CNSymbol('calendar.badge.clock')),
+        CNTabBarItem(label: 'Requests', icon: CNSymbol('calendar.badge.clock')),
         CNTabBarItem(label: 'Profile', icon: CNSymbol('person.crop.circle')),
       ],
       currentIndex: _selectedIndex,

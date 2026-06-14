@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cupertino_native/cupertino_native.dart';
 import '../constants/assets_app.dart';
 import '../manager/app_state_manager.dart';
 import '../theme/color_app.dart';
@@ -34,10 +34,12 @@ class AppHeader extends StatelessWidget {
                 ListenableBuilder(
                   listenable: appStateManager,
                   builder: (context, _) {
-                    final String patientName = appStateManager.userName.isNotEmpty
+                    final String patientName =
+                        appStateManager.userName.isNotEmpty
                         ? appStateManager.userName
                         : 'مريض';
-                    final String patientAddress = appStateManager.userAddress.isNotEmpty
+                    final String patientAddress =
+                        appStateManager.userAddress.isNotEmpty
                         ? appStateManager.userAddress
                         : 'موقع غير محدد';
 
@@ -100,7 +102,10 @@ class AppHeader extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                const Text('👋', style: TextStyle(fontSize: 14)),
+                                const Text(
+                                  '👋',
+                                  style: TextStyle(fontSize: 14),
+                                ),
                               ],
                             ),
                             Text(
@@ -150,53 +155,122 @@ class AppHeader extends StatelessWidget {
     return ClipRect(
       child: SafeArea(
         bottom: false,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // User Info
-            ListenableBuilder(
-              listenable: appStateManager,
-              builder: (context, _) {
-                final String patientName = appStateManager.userName.isNotEmpty
-                    ? appStateManager.userName
-                    : 'مريض';
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // User Info
+              ListenableBuilder(
+                listenable: appStateManager,
+                builder: (context, _) {
+                  final String patientName = appStateManager.userName.isNotEmpty
+                      ? appStateManager.userName
+                      : 'مريض';
+                  final String patientAddress =
+                      appStateManager.userAddress.isNotEmpty
+                      ? appStateManager.userAddress
+                      : 'موقع غير محدد';
 
-                return Row(
-                  children: [
-                    CNButton.icon(
-                      icon: const CNSymbol('person.crop.circle.fill'),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
+                  return CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: ColorApp.primary.withValues(alpha: 0.2),
+                              width: 1.5,
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    CNButton(
-                      label: '$patientName 👋',
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
+                          child: ClipOval(
+                            child: appStateManager.profileImage.isNotEmpty
+                                ? Image.network(
+                                    appStateManager.profileImage,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        appStateManager.isFemale
+                                            ? AssetsApp.userAvatarWomen
+                                            : AssetsApp.userAvatarMan,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    appStateManager.isFemale
+                                        ? AssetsApp.userAvatarWomen
+                                        : AssetsApp.userAvatarMan,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                        );
-                      },
+                        ),
+                        const SizedBox(width: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  patientName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: isDark
+                                        ? ColorApp.appLight
+                                        : ColorApp.appDark,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  '👋',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              patientAddress,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: ColorApp.locationText.withValues(
+                                  alpha: 0.8,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
-            ),
+                  );
+                },
+              ),
 
-            // Logo
-            Hero(
-              tag: 'app_logo',
-              child: Image.asset(AssetsApp.logo, height: 40),
-            ),
-          ],
+              // Logo
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                child: Hero(
+                  tag: 'app_logo',
+                  child: Image.asset(AssetsApp.logo, height: 40),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
