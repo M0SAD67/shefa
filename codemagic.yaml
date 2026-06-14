@@ -1,71 +1,38 @@
-# Codemagic configuration for Flutter iOS build
 workflows:
-  ios-development:
-    name: iOS Development Build
-    max_build_duration: 120
+  ios-workflow:
+    name: iOS IPA Build
     instance_type: mac_mini_m1
+    max_build_duration: 120
     environment:
-      groups:
-        # You can define a group in the Codemagic UI for environment variables (like Apple credentials)
-        - certificates
-      vars:
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
       flutter: stable
       xcode: latest
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: '*'
-          include: true
-          source: true
     scripts:
-      - name: Initialize Keychain (required for signing)
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Build Unsigned iOS IPA
         script: |
-          keychain initialize
-      - name: Set up code signing (if certificates are uploaded to Codemagic)
-        script: |
-          # If you upload your development certificate and provisioning profile in the Codemagic UI,
-          # they can be decrypted and installed automatically.
-          if [ -n "$CM_CERTIFICATE" ]; then
-            echo "Signing certificate found. Importing..."
-            echo $CM_CERTIFICATE | base64 --decode > /tmp/certificate.p12
-            keychain add-certificates --decrypted --path /tmp/certificate.p12 --password "$CM_CERTIFICATE_PASSWORD"
-          else
-            echo "CM_CERTIFICATE not found. The app will build as unsigned."
+          set -e
+          # Build without requiring an Apple Developer Account
+          flutter build ios --release --no-codesign
+          
+          # Create IPA directory structure
+          mkdir -p build/ios/ipa/Payload
+          
+          # Find the compiled Runner.app
+          APP_PATH=$(find build -name "Runner.app" -type d | head -n 1)
+          echo "Found app at: $APP_PATH"
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Runner.app not found!"
+            exit 1
           fi
           
-          if [ -n "$CM_PROVISIONING_PROFILE" ]; then
-            echo "Provisioning profile found. Importing..."
-            mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-            echo $CM_PROVISIONING_PROFILE | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
-          fi
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      - name: Build Flutter iOS
-        script: |
-          # If certificate environment variables are present, build a signed .ipa.
-          # Otherwise, build an unsigned .app for local testing/sideloading.
-          if [ -n "$CM_CERTIFICATE" ] && [ -n "$CM_PROVISIONING_PROFILE" ]; then
-            echo "Building signed IPA..."
-            flutter build ipa --release --export-options-plist=$HOME/export_options.plist
-          else
-            echo "Building unsigned debug iOS application..."
-            flutter build ios --debug --no-codesign
-            
-            # Zip the output .app directory so it can be easily downloaded and sideloaded
-            cd build/ios/iphonesimulator
-            if [ -d "Runner.app" ]; then
-              zip -r Runner.app.zip Runner.app
-            else
-              echo "Runner.app not found in iphonesimulator, checking iphoneos..."
-              cd ../iphoneos 2>/dev/null && zip -r Runner.app.zip Runner.app || echo "Warning: Runner.app not found in expected output directories"
-            fi
-          fi
+          # Copy it completely
+          cp -R "$APP_PATH" build/ios/ipa/Payload/
+          
+          # Zip it up into an IPA format
+          cd build/ios/ipa
+          zip -r Shefa_Unsigned.ipa Payload
     artifacts:
       - build/ios/ipa/*.ipa
-      - build/ios/iphoneos/*.zip
-      - build/ios/iphonesimulator/*.zip
-      - build/ios/**/*.app
+      - /tmp/xcodebuild_logs/*.log
