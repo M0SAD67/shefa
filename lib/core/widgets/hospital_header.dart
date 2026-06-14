@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import '../../features/hospital/notifications_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../constants/assets_app.dart';
@@ -66,6 +69,16 @@ class _HospitalHeaderState extends State<HospitalHeader> {
         : l10n.hospitalLocation;
     final int unreadCount = appStateManager.unreadNotificationsCount;
 
+    if (Platform.isIOS) {
+      return _buildIOSHeader(
+        context,
+        isDark,
+        hospitalName,
+        hospitalAddress,
+        unreadCount,
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.fromLTRB(15, 10, 15, 12),
       decoration: BoxDecoration(
@@ -92,7 +105,8 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const NotificationsScreen(),
+                                  builder: (context) =>
+                                      const NotificationsScreen(),
                                 ),
                               );
                             },
@@ -100,13 +114,17 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                               clipBehavior: Clip.none,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 2, right: 2),
+                                  padding: const EdgeInsets.only(
+                                    top: 2,
+                                    right: 2,
+                                  ),
                                   child: Image.asset(
                                     AssetsApp.alarmLogo,
                                     height: 23,
                                   ),
                                 ),
-                                if (unreadCount > 0 && widget.showNotificationIcon)
+                                if (unreadCount > 0 &&
+                                    widget.showNotificationIcon)
                                   PositionedDirectional(
                                     end: -4,
                                     top: -4,
@@ -218,6 +236,107 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIOSHeader(
+    BuildContext context,
+    bool isDark,
+    String hospitalName,
+    String hospitalAddress,
+    int unreadCount,
+  ) {
+    return ClipRect(
+      child: SafeArea(
+        bottom: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Right part (In RTL, children are laid out right-to-left)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.showNotificationIcon) ...[
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CNButton.icon(
+                        icon: const CNSymbol('bell.fill'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      if (unreadCount > 0)
+                        PositionedDirectional(
+                          end: 2,
+                          top: 2,
+                          child: IgnorePointer(
+                            child: Container(
+                              padding: unreadCount > 9
+                                  ? const EdgeInsets.symmetric(
+                                      horizontal: 4,
+                                      vertical: 1,
+                                    )
+                                  : const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: unreadCount > 9
+                                    ? BoxShape.rectangle
+                                    : BoxShape.circle,
+                                borderRadius: unreadCount > 9
+                                    ? BorderRadius.circular(10)
+                                    : null,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 16,
+                                minHeight: 16,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  unreadCount > 9
+                                      ? '9+'
+                                      : unreadCount.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                // Hospital Info
+                CNButton.icon(
+                  icon: const CNSymbol('building.2.fill'),
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 8),
+                CNButton(
+                  label: hospitalName,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+
+            // Left part: Logo
+            Hero(
+              tag: 'shifa_logo',
+              child: Image.asset(AssetsApp.logo, height: 45),
             ),
           ],
         ),

@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import '../constants/assets_app.dart';
 import '../manager/app_state_manager.dart';
 import '../theme/color_app.dart';
+import '../../features/profile/profile_screen.dart';
 
 class AppHeader extends StatelessWidget {
   const AppHeader({super.key});
@@ -9,6 +13,10 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    if (Platform.isIOS) {
+      return _buildIOSHeader(context, isDark);
+    }
 
     return Container(
       padding: const EdgeInsetsDirectional.fromSTEB(20, 10, 20, 15),
@@ -131,6 +139,62 @@ class AppHeader extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIOSHeader(BuildContext context, bool isDark) {
+    return ClipRect(
+      child: SafeArea(
+        bottom: false,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // User Info
+            ListenableBuilder(
+              listenable: appStateManager,
+              builder: (context, _) {
+                final String patientName = appStateManager.userName.isNotEmpty
+                    ? appStateManager.userName
+                    : 'مريض';
+
+                return Row(
+                  children: [
+                    CNButton.icon(
+                      icon: const CNSymbol('person.crop.circle.fill'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    CNButton(
+                      label: '$patientName 👋',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+
+            // Logo
+            Hero(
+              tag: 'app_logo',
+              child: Image.asset(AssetsApp.logo, height: 40),
             ),
           ],
         ),
