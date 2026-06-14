@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/theme/color_app.dart';
@@ -35,32 +37,51 @@ class _HospitalMainShellState extends State<HospitalMainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _selectedIndex,
-        onTap: _onItemTapped,
-        backgroundColor: Colors.transparent,
-        color: ColorApp.appDark,
-        buttonBackgroundColor: ColorApp.appDark,
-        height: 60,
-        items: [
-          Icon(
-            Iconsax.safe_home4,
-            color: _selectedIndex == 0 ? ColorApp.secondary : Colors.white,
-          ),
-          Icon(
-            Iconsax.document_text,
-            color: _selectedIndex == 1 ? ColorApp.secondary : Colors.white,
-          ),
-          Icon(
-            Iconsax.hospital,
-            color: _selectedIndex == 2 ? ColorApp.secondary : Colors.white,
-          ),
-          Icon(
-            Iconsax.personalcard,
-            color: _selectedIndex == 3 ? ColorApp.secondary : Colors.white,
-          ),
-        ],
-      ),
+      bottomNavigationBar: Platform.isIOS ? _buildIOSTabBar() : _buildAndroidNavBar(),
+    );
+  }
+
+  /// iOS: Liquid Glass Tab Bar using cupertino_native
+  Widget _buildIOSTabBar() {
+    return CNTabBar(
+      items: const [
+        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
+        CNTabBarItem(label: 'Requests', icon: CNSymbol('doc.text.fill')),
+        CNTabBarItem(label: 'Bookings', icon: CNSymbol('cross.case.fill')),
+        CNTabBarItem(label: 'Profile', icon: CNSymbol('person.crop.circle')),
+      ],
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  /// Android: Curved Navigation Bar (original design)
+  Widget _buildAndroidNavBar() {
+    return CurvedNavigationBar(
+      index: _selectedIndex,
+      onTap: _onItemTapped,
+      backgroundColor: Colors.transparent,
+      color: ColorApp.appDark,
+      buttonBackgroundColor: ColorApp.appDark,
+      height: 60,
+      items: [
+        Icon(
+          Iconsax.safe_home4,
+          color: _selectedIndex == 0 ? ColorApp.secondary : Colors.white,
+        ),
+        Icon(
+          Iconsax.document_text,
+          color: _selectedIndex == 1 ? ColorApp.secondary : Colors.white,
+        ),
+        Icon(
+          Iconsax.hospital,
+          color: _selectedIndex == 2 ? ColorApp.secondary : Colors.white,
+        ),
+        Icon(
+          Iconsax.personalcard,
+          color: _selectedIndex == 3 ? ColorApp.secondary : Colors.white,
+        ),
+      ],
     );
   }
 }
