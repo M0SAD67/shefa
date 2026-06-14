@@ -1,0 +1,23 @@
+# Set platform to 13.0 or higher
+platform :ios, '13.0'
+
+# CocoaPods analytics sends minimal, anonymous usage data to iOS Developers
+# to help improve the tool. If you'd like to opt out, uncomment the following line
+# cocoapods_analytics = false
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.expand_path(__FILE__))
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
