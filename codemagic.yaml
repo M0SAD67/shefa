@@ -13,7 +13,6 @@ workflows:
         XCODE_SCHEME: "Runner"
       flutter: stable
       xcode: latest
-      cocoapods: default
     triggering:
       events:
         - push
@@ -45,9 +44,6 @@ workflows:
       - name: Get Flutter packages
         script: |
           flutter packages pub get
-      - name: Install CocoaPods dependencies
-        script: |
-          find ios -name "Podfile" -execdir pod install \;
       - name: Build Flutter iOS
         script: |
           # If certificate environment variables are present, build a signed .ipa.
@@ -60,10 +56,16 @@ workflows:
             flutter build ios --debug --no-codesign
             
             # Zip the output .app directory so it can be easily downloaded and sideloaded
-            cd build/ios/iphoneos
-            zip -r Runner.app.zip Runner.app
+            cd build/ios/iphonesimulator
+            if [ -d "Runner.app" ]; then
+              zip -r Runner.app.zip Runner.app
+            else
+              echo "Runner.app not found in iphonesimulator, checking iphoneos..."
+              cd ../iphoneos 2>/dev/null && zip -r Runner.app.zip Runner.app || echo "Warning: Runner.app not found in expected output directories"
+            fi
           fi
     artifacts:
       - build/ios/ipa/*.ipa
       - build/ios/iphoneos/*.zip
-      - build/ios/iphoneos/*.app
+      - build/ios/iphonesimulator/*.zip
+      - build/ios/**/*.app
