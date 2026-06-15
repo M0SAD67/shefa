@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:cupertino_native/cupertino_native.dart';
+import 'package:cupertino_native_better/cupertino_native_better.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/theme/color_app.dart';

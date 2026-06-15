@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:cupertino_native_better/components/liquid_glass_container.dart';
-import 'package:cupertino_native_better/style/glass_effect.dart';
+
+import 'package:cupertino_native_better/cupertino_native_better.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:cupertino_native/cupertino_native.dart';
 import '../../features/hospital/notifications_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../constants/assets_app.dart';
