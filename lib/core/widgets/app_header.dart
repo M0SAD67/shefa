@@ -1,6 +1,5 @@
 import 'dart:io';
-import 'package:cupertino_native_better/components/liquid_glass_container.dart';
-import 'package:cupertino_native_better/style/glass_effect.dart';
+import 'package:cupertino_native_better/cupertino_native_better.dart';
 import 'package:flutter/material.dart';
 import '../constants/assets_app.dart';
 import '../manager/app_state_manager.dart';
@@ -160,132 +159,45 @@ class AppHeader extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // ── Profile ───────────────────────────────────────────────
-            Expanded(
-              child: ListenableBuilder(
-                listenable: appStateManager,
-                builder: (context, _) {
-                  final String patientName = appStateManager.userName.isNotEmpty
-                      ? appStateManager.userName
-                      : 'مريض';
-                  final String patientAddress =
-                      appStateManager.userAddress.isNotEmpty
-                      ? appStateManager.userAddress
-                      : 'موقع غير محدد';
+            ListenableBuilder(
+              listenable: appStateManager,
+              builder: (context, _) {
+                final String patientName = appStateManager.userName.isNotEmpty
+                    ? appStateManager.userName
+                    : 'مريض';
 
-                  return LiquidGlassContainer(
-                    config: const LiquidGlassConfig(
-                      effect: CNGlassEffect.regular,
-                      shape: CNGlassEffectShape.rect,
-                      cornerRadius: 22,
-                      interactive: true,
+                final String avatarAsset = appStateManager.isFemale
+                    ? AssetsApp.userAvatarWomen
+                    : AssetsApp.userAvatarMan;
+
+                return CNButton(
+                  label: '$patientName 👋',
+                  imageAsset: CNImageAsset(
+                    avatarAsset,
+                    size: 28,
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ProfileScreen(),
                     ),
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ProfileScreen(),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 7,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // Avatar
-                            SizedBox(
-                              width: 32,
-                              height: 32,
-                              child: ClipOval(
-                                child: appStateManager.profileImage.isNotEmpty
-                                    ? Image.network(
-                                        appStateManager.profileImage,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) =>
-                                            Image.asset(
-                                              appStateManager.isFemale
-                                                  ? AssetsApp.userAvatarWomen
-                                                  : AssetsApp.userAvatarMan,
-                                              fit: BoxFit.cover,
-                                            ),
-                                      )
-                                    : Image.asset(
-                                        appStateManager.isFemale
-                                            ? AssetsApp.userAvatarWomen
-                                            : AssetsApp.userAvatarMan,
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            // Name + Address
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      patientName,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark
-                                            ? ColorApp.appLight
-                                            : ColorApp.appDark,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    const Text(
-                                      '👋',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  patientAddress,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorApp.locationText.withValues(
-                                      alpha: 0.8,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                  ),
+                  config: const CNButtonConfig(
+                    style: CNButtonStyle.glass,
+                    imagePlacement: CNImagePlacement.leading,
+                    imagePadding: 6,
+                  ),
+                );
+              },
             ),
 
-            const SizedBox(width: 8),
-
             // ── Logo ──────────────────────────────────────────────────
-            LiquidGlassContainer(
-              config: const LiquidGlassConfig(
-                effect: CNGlassEffect.regular,
-                shape: CNGlassEffectShape.rect,
-                cornerRadius: 22,
-                interactive: true,
+            CNButton.icon(
+              imageAsset: const CNImageAsset(
+                AssetsApp.logo,
+                size: 32,
               ),
-              child: GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Hero(
-                    tag: 'app_logo',
-                    child: Image.asset(AssetsApp.logo, height: 26),
-                  ),
-                ),
-              ),
+              onPressed: () {},
             ),
           ],
         ),

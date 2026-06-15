@@ -320,85 +320,30 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                   const SizedBox(width: 8),
                 ],
 
-                // ② بيانات المستشفى — LiquidGlassContainer
-                LiquidGlassContainer(
-                  config: const LiquidGlassConfig(
-                    effect: CNGlassEffect.regular,
-                    shape: CNGlassEffectShape.rect,
-                    cornerRadius: 22,
-                    interactive: true,
+                // ② بيانات المستشفى — CNButton (نفس شكل الإشعارات)
+                CNButton(
+                  label: hospitalName,
+                  imageAsset: const CNImageAsset(
+                    AssetsApp.hospitalLogo,
+                    size: 28,
                   ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 7,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 38,
-                            height: 38,
-                            child: ClipOval(
-                              child: Image.asset(
-                                AssetsApp.hospitalLogo,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                hospitalName,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  color: isDark
-                                      ? ColorApp.textDark
-                                      : ColorApp.textLight,
-                                ),
-                              ),
-                              Text(
-                                hospitalAddress,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: ColorApp.locationText,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  onPressed: () {},
+                  config: const CNButtonConfig(
+                    style: CNButtonStyle.glass,
+                    imagePlacement: CNImagePlacement.leading,
+                    imagePadding: 6,
                   ),
                 ),
               ],
             ),
 
-            // ③ لوجو التطبيق — LiquidGlassContainer
-            LiquidGlassContainer(
-              config: const LiquidGlassConfig(
-                effect: CNGlassEffect.regular,
-                shape: CNGlassEffectShape.rect,
-                cornerRadius: 22,
-                interactive: true,
+            // ③ لوجو التطبيق — CNButton.icon
+            CNButton.icon(
+              imageAsset: const CNImageAsset(
+                AssetsApp.logo,
+                size: 32,
               ),
-              child: GestureDetector(
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Hero(
-                    tag: 'shifa_logo',
-                    child: Image.asset(AssetsApp.logo, height: 45),
-                  ),
-                ),
-              ),
+              onPressed: () {},
             ),
           ],
         ),
