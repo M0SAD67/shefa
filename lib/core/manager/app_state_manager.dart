@@ -232,6 +232,8 @@ class AppStateManager extends ChangeNotifier {
         time: request.time,
       ),
     );
+    // Sync status to patient bookings list
+    _updatePatientBookingStatus(request.id, request.childName, 'confirmed');
     notifyListeners();
 
     final token = CacheHelper.getData(key: 'token') as String?;
@@ -257,6 +259,10 @@ class AppStateManager extends ChangeNotifier {
     nurseryRequests.removeWhere(
       (r) => r.childName == request.childName && r.time == request.time,
     );
+    // Also remove from accepted if it was previously accepted
+    acceptedBookings.removeWhere(
+      (r) => r is NurseryRequest && r.childName == request.childName,
+    );
     // Add to rejected bookings
     rejectedBookings.add(
       NurseryRequest(
@@ -268,6 +274,8 @@ class AppStateManager extends ChangeNotifier {
         time: request.time,
       ),
     );
+    // Sync status to patient bookings list
+    _updatePatientBookingStatus(request.id, request.childName, 'rejected');
     notifyListeners();
 
     final token = CacheHelper.getData(key: 'token') as String?;
@@ -313,6 +321,8 @@ class AppStateManager extends ChangeNotifier {
         time: request.time,
       ),
     );
+    // Sync status to patient bookings list
+    _updatePatientBookingStatus(request.id, request.patientName, 'confirmed');
     notifyListeners();
 
     final token = CacheHelper.getData(key: 'token') as String?;
@@ -338,6 +348,10 @@ class AppStateManager extends ChangeNotifier {
     icuRequests.removeWhere(
       (r) => r.patientName == request.patientName && r.time == request.time,
     );
+    // Also remove from accepted if it was previously accepted
+    acceptedBookings.removeWhere(
+      (r) => r is IcuRequest && r.patientName == request.patientName,
+    );
     // Add to rejected bookings
     rejectedBookings.add(
       IcuRequest(
@@ -349,6 +363,8 @@ class AppStateManager extends ChangeNotifier {
         time: request.time,
       ),
     );
+    // Sync status to patient bookings list
+    _updatePatientBookingStatus(request.id, request.patientName, 'rejected');
     notifyListeners();
 
     final token = CacheHelper.getData(key: 'token') as String?;
@@ -365,6 +381,32 @@ class AppStateManager extends ChangeNotifier {
           );
         } catch (e) {
           debugPrint('Error refusing ICU: $e');
+        }
+      }
+    }
+  }
+
+  /// Updates [patientBookings] list entry status so the patient sees the
+  /// hospital's accept/reject decision immediately (works in both mock and API mode).
+  void _updatePatientBookingStatus(String? id, String name, String newStatus) {
+    for (final booking in patientBookings) {
+      if (booking is! Map) continue;
+      // Match by id if available
+      final String bookingId = booking['_id']?.toString() ?? booking['id']?.toString() ?? '';
+      if (id != null && id.isNotEmpty && bookingId == id) {
+        booking['status'] = newStatus;
+        return;
+      }
+      // Fallback: match by name inside reservationDetails
+      final details = booking['reservationDetails'];
+      if (details is Map) {
+        final String detailName =
+            details['childName']?.toString() ??
+            details['patientName']?.toString() ??
+            '';
+        if (detailName.isNotEmpty && detailName == name) {
+          booking['status'] = newStatus;
+          return;
         }
       }
     }
@@ -745,9 +787,12 @@ class AppStateManager extends ChangeNotifier {
           details?['phone']?.toString() ?? res['phone']?.toString() ?? '';
       final String patientName =
           details?['patientName']?.toString() ??
-          res['patientName']?.toString() ??
+          details?['childName']?.toString() ??
           res['childName']?.toString() ??
+          res['patientName']?.toString() ??
           (isChildcare ? 'طفل' : 'مريض');
+      final String condition =
+          details?['condition']?.toString() ?? res['condition']?.toString() ?? '';
 
       final serviceObj = res['service'] ?? res['serviceId'];
       final String serviceName = serviceObj is Map
@@ -764,6 +809,7 @@ class AppStateManager extends ChangeNotifier {
             status: status,
             serviceType: serviceName,
             time: dateStr,
+            condition: condition,
           ),
         );
       } else {
@@ -775,6 +821,7 @@ class AppStateManager extends ChangeNotifier {
             status: status,
             serviceType: serviceName,
             time: dateStr,
+            condition: condition,
           ),
         );
       }

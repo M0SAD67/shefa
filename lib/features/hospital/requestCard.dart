@@ -13,15 +13,22 @@ class RequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.4),
+        color: isDark
+            ? ColorApp.icons.withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: ColorApp.primary.withOpacity(0.2)),
+        border: Border.all(
+          color: isDark
+              ? ColorApp.primary.withValues(alpha: 0.3)
+              : ColorApp.primary.withValues(alpha: 0.2),
+        ),
         boxShadow: [
           BoxShadow(
-            color: ColorApp.icons.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -49,21 +56,31 @@ class RequestCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: ColorApp.locationText,
+                        color: isDark ? Colors.white : ColorApp.locationText,
                       ),
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _buildLabelOnly(l10n.childNameLabel),
-                  _buildLabelOnly(l10n.phoneLabelText),
-                  _buildLabelOnly(l10n.conditionLabel),
+                  _buildValueRow(
+                    l10n.childNameLabel,
+                    request.childName,
+                    isDark,
+                  ),
+                  _buildValueRow(l10n.phoneLabelText, request.phone, isDark),
+                  if (request.condition.isNotEmpty)
+                    _buildValueRow(
+                      l10n.conditionLabel,
+                      request.condition,
+                      isDark,
+                    ),
+                  const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         '${l10n.serviceTypeLabel}:',
                         style: TextStyle(
-                          color: ColorApp.icons,
+                          color: isDark ? Colors.white70 : ColorApp.icons,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -71,7 +88,7 @@ class RequestCard extends StatelessWidget {
                       Text(
                         ' ${request.serviceType}',
                         style: TextStyle(
-                          color: ColorApp.icons,
+                          color: ColorApp.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -120,19 +137,32 @@ class RequestCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLabelOnly(String title) {
+  Widget _buildValueRow(String label, String value, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 15,
-            color: ColorApp.icons,
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+              color: isDark ? Colors.white70 : ColorApp.icons,
+            ),
           ),
-        ),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                color: ColorApp.primary,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -5,10 +5,24 @@ import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
 import 'icu_request_model.dart';
 
-class IcuRequestDetailsScreen extends StatelessWidget {
+class IcuRequestDetailsScreen extends StatefulWidget {
   final IcuRequest request;
 
   const IcuRequestDetailsScreen({super.key, required this.request});
+
+  @override
+  State<IcuRequestDetailsScreen> createState() => _IcuRequestDetailsScreenState();
+}
+
+class _IcuRequestDetailsScreenState extends State<IcuRequestDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Sync with backend API to refresh reservations state on screen load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appStateManager.fetchReservations();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +112,7 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        request.serviceType,
+                        widget.request.serviceType,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -160,7 +174,7 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    request.time,
+                                    widget.request.time,
                                     style: TextStyle(
                                       color: isDark ? Colors.grey[400] : ColorApp.locationText,
                                       fontSize: 11,
@@ -185,25 +199,33 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.patientNameLabel,
-                                  request.patientName,
+                                  widget.request.patientName,
                                   isDark,
                                 ),
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.phoneLabelText,
-                                  request.phone,
+                                  widget.request.phone,
                                   isDark,
                                 ),
+                                if (widget.request.condition.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  _buildDetailRow(
+                                    l10n.conditionLabel,
+                                    widget.request.condition,
+                                    isDark,
+                                  ),
+                                ],
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.statusLabel,
-                                  request.status,
+                                  widget.request.status,
                                   isDark,
                                 ),
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.serviceTypeLabel,
-                                  request.serviceType,
+                                  widget.request.serviceType,
                                   isDark,
                                 ),
                                 const SizedBox(height: 25),
@@ -212,7 +234,7 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          appStateManager.acceptIcu(request);
+                                          appStateManager.acceptIcu(widget.request);
                                           Navigator.pop(context);
                                         },
                                         child: Container(
@@ -240,7 +262,7 @@ class IcuRequestDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          appStateManager.rejectIcu(request);
+                                          appStateManager.rejectIcu(widget.request);
                                           Navigator.pop(context);
                                         },
                                         child: Container(

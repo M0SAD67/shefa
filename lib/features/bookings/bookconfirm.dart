@@ -2,145 +2,156 @@ import 'package:flutter/material.dart';
 import '../../core/constants/assets_app.dart';
 import '../../core/theme/color_app.dart';
 import '../../core/widgets/app_header.dart';
+import '../../l10n/app_localizations.dart';
 
 class BookingConfirmationScreen extends StatelessWidget {
   static const String routeName = 'BookingConfirmationScreen';
-  BookingConfirmationScreen({Key? key}) : super(key: key);
+  const BookingConfirmationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
-        body: Column(
-          children: [
-            const AppHeader(),
+    final l10n = AppLocalizations.of(context)!;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-            const SizedBox(height: 15),
+    final hospitalName = args?['hospitalName'] ?? l10n.hospitalName;
+    final childName = args?['childName'] ?? '';
+    final phone = args?['phone'] ?? '';
+    final condition = args?['condition'] ?? '';
+    final serviceType = args?['serviceType'] ?? l10n.nurseries;
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    borderRadius: BorderRadius.circular(6),
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: ColorApp.buttonDetails,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: ColorApp.primary,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  Container(
-                    width: 45,
-                    height: 45,
+    return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      body: Column(
+        children: [
+          const AppHeader(),
+          const SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  borderRadius: BorderRadius.circular(6),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: ColorApp.secondary, width: 1.5),
-                      color: isDark ? ColorApp.appAmoled : Colors.white,
+                      color: ColorApp.buttonDetails,
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        AssetsApp.icOnboard1,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  const Text(
-                    'حضانات أطفال',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                    child: Icon(
+                      isAr ? Icons.arrow_forward : Icons.arrow_back,
                       color: ColorApp.primary,
+                      size: 24,
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 12),
+                Container(
+                  width: 45,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: ColorApp.secondary, width: 1.5),
+                    color: isDark ? ColorApp.appAmoled : Colors.white,
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(AssetsApp.icOnboard1, fit: BoxFit.cover),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  l10n.nurseries,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: ColorApp.primary,
+                  ),
+                ),
+              ],
             ),
-
-            const SizedBox(height: 15),
-
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Opacity(
-                        opacity: 0.15,
-                        child: Image.asset(
-                          AssetsApp.bgOnboardOpacity,
-                          fit: BoxFit.contain,
-                        ),
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Opacity(
+                      opacity: 0.15,
+                      child: Image.asset(
+                        AssetsApp.bgOnboardOpacity,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
-
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        _buildRequestDataCard(context),
-
-                        const SizedBox(height: 40),
-
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            color: ColorApp.secondary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.check,
-                            color: ColorApp.icons,
-                            size: 40,
-                          ),
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        const Text(
-                          'تم إرسال طلب الحجز',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: ColorApp.secondary,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+                ),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10,
                   ),
-                ],
-              ),
+                  child: Column(
+                    children: [
+                      _buildRequestDataCard(
+                        context,
+                        isDark,
+                        l10n,
+                        hospitalName,
+                        childName,
+                        phone,
+                        condition,
+                        serviceType,
+                      ),
+                      const SizedBox(height: 40),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: const BoxDecoration(
+                          color: ColorApp.secondary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.check,
+                          color: ColorApp.icons,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.bookingRequestSent,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: ColorApp.secondary,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildRequestDataCard(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _buildRequestDataCard(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+    String hospitalName,
+    String childName,
+    String phone,
+    String condition,
+    String serviceType,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -162,18 +173,17 @@ class BookingConfirmationScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text(
-            'بيانات الطلب',
-            style: TextStyle(
+          Text(
+            l10n.bookingRequestData,
+            style: const TextStyle(
               color: ColorApp.locationText,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
-
           Text(
-            'مستشفي بنها الجامعي',
+            hospitalName,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
@@ -182,43 +192,39 @@ class BookingConfirmationScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-
-          const Text(
-            'اسم الطفل',
+          Text(
+            '${l10n.childNameLabel}: $childName',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.secondary,
+              color: isDark ? Colors.white : ColorApp.icons,
             ),
           ),
-          const SizedBox(height: 6),
-
-          const Text(
-            'رقم تليفون',
+          const SizedBox(height: 8),
+          Text(
+            '${l10n.phoneLabelText}: $phone',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.secondary,
+              color: isDark ? Colors.white : ColorApp.icons,
             ),
           ),
-          const SizedBox(height: 6),
-
-          const Text(
-            'الحاله',
+          const SizedBox(height: 8),
+          Text(
+            '${l10n.conditionLabel}: $condition',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.secondary,
+              color: isDark ? Colors.white : ColorApp.icons,
             ),
           ),
-          const SizedBox(height: 6),
-
-          const Text(
-            'نوع الخدمة : حضانات اطفال',
+          const SizedBox(height: 8),
+          Text(
+            '${l10n.serviceTypeLabel}: $serviceType',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: ColorApp.secondary,
+              color: isDark ? Colors.white : ColorApp.icons,
             ),
           ),
         ],

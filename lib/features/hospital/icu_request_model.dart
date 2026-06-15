@@ -5,6 +5,7 @@ class IcuRequest {
   final String status;
   final String serviceType;
   final String time;
+  final String condition;
 
   const IcuRequest({
     this.id,
@@ -13,5 +14,6 @@ class IcuRequest {
     required this.status,
     required this.serviceType,
     required this.time,
+    this.condition = '',
   });
 }

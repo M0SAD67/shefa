@@ -6,6 +6,8 @@ import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
 import '../auth/auth_repository.dart';
 import '../../core/cache/cache_helper.dart';
+import '../bookings/hospital_booking/request_model.dart';
+import '../bookings/hospital_booking/request_model2.dart';
 
 class HospitalHomeScreen extends StatefulWidget {
   static const String routeName = 'HospitalHomeScreen';
@@ -357,8 +359,40 @@ class _HospitalHomeScreenState extends State<HospitalHomeScreen> {
                     .where((r) => _isSameDay(r.time, _selectedDate!))
                     .toList();
 
-          final int activeNurseryCount = 25 - (3 - filteredNursery.length);
-          final int activeIcuCount = 10 - (3 - filteredIcu.length);
+          final filteredNurseryAccepted = _selectedDate == null
+              ? state.acceptedBookings.whereType<NurseryRequest>().toList()
+              : state.acceptedBookings
+                    .whereType<NurseryRequest>()
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+          final filteredNurseryRejected = _selectedDate == null
+              ? state.rejectedBookings.whereType<NurseryRequest>().toList()
+              : state.rejectedBookings
+                    .whereType<NurseryRequest>()
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+
+          final filteredIcuAccepted = _selectedDate == null
+              ? state.acceptedBookings.whereType<IcuRequest>().toList()
+              : state.acceptedBookings
+                    .whereType<IcuRequest>()
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+          final filteredIcuRejected = _selectedDate == null
+              ? state.rejectedBookings.whereType<IcuRequest>().toList()
+              : state.rejectedBookings
+                    .whereType<IcuRequest>()
+                    .where((r) => _isSameDay(r.time, _selectedDate!))
+                    .toList();
+
+          final int activeNurseryCount =
+              filteredNursery.length +
+              filteredNurseryAccepted.length +
+              filteredNurseryRejected.length;
+          final int activeIcuCount =
+              filteredIcu.length +
+              filteredIcuAccepted.length +
+              filteredIcuRejected.length;
           final int activeTotalCount = activeNurseryCount + activeIcuCount;
 
           return Column(

@@ -34,97 +34,95 @@ class _IcuScreenState extends State<IcuScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
-        body: Stack(
-          children: [
-            const Positioned.fill(child: MedicalIconsBackground()),
-            SafeArea(
-              child: Column(
-                children: [
-                  const AppHeader(),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                    child: Row(
-                      children: [
-                        InkWell(
-                          onTap: () => Navigator.pop(context),
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: ColorApp.buttonDetails,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: ColorApp.primary,
-                              size: 20,
-                            ),
+    return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      body: Stack(
+        children: [
+          const Positioned.fill(child: MedicalIconsBackground()),
+          SafeArea(
+            child: Column(
+              children: [
+                const AppHeader(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: ColorApp.buttonDetails,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Icon(
+                            isAr ? Icons.arrow_forward : Icons.arrow_back,
+                            color: ColorApp.primary,
+                            size: 20,
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          l10n.icu,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        l10n.icu,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorApp.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: FutureBuilder<List<PatientService>>(
+                    future: _servicesFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(
                             color: ColorApp.primary,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: FutureBuilder<List<PatientService>>(
-                      future: _servicesFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: ColorApp.primary,
-                            ),
-                          );
-                        }
-
-                        if (snapshot.hasError) {
-                          return _buildStateMessage(
-                            title: 'تعذر تحميل خدمات العناية',
-                            actionText: 'إعادة المحاولة',
-                            onAction: _refresh,
-                          );
-                        }
-
-                        final services = snapshot.data ?? [];
-                        if (services.isEmpty) {
-                          return _buildStateMessage(
-                            title: 'لا توجد خدمات عناية متاحة',
-                          );
-                        }
-
-                        return RefreshIndicator(
-                          color: ColorApp.primary,
-                          onRefresh: () async => _refresh(),
-                          child: ListView.separated(
-                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
-                            itemBuilder: (context, index) =>
-                                _buildCareCard(services[index]),
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(height: 14),
-                            itemCount: services.length,
-                          ),
                         );
-                      },
-                    ),
+                      }
+
+                      if (snapshot.hasError) {
+                        return _buildStateMessage(
+                          title: l10n.failedToLoadIcuServices,
+                          actionText: l10n.retry,
+                          onAction: _refresh,
+                        );
+                      }
+
+                      final services = snapshot.data ?? [];
+                      if (services.isEmpty) {
+                        return _buildStateMessage(
+                          title: l10n.noIcuServicesAvailable,
+                        );
+                      }
+
+                      return RefreshIndicator(
+                        color: ColorApp.primary,
+                        onRefresh: () async => _refresh(),
+                        child: ListView.separated(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+                          itemBuilder: (context, index) =>
+                              _buildCareCard(services[index], l10n),
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: 14),
+                          itemCount: services.length,
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -154,7 +152,7 @@ class _IcuScreenState extends State<IcuScreen> {
     );
   }
 
-  Widget _buildCareCard(PatientService service) {
+  Widget _buildCareCard(PatientService service, AppLocalizations l10n) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(16),
@@ -212,7 +210,7 @@ class _IcuScreenState extends State<IcuScreen> {
           const SizedBox(height: 8),
           Text(
             service.hospitalAddress.isEmpty
-                ? 'العنوان غير محدد'
+                ? l10n.addressNotSpecified
                 : service.hospitalAddress,
             style: TextStyle(
               fontSize: 13,

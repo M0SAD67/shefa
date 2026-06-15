@@ -38,47 +38,45 @@ class _BookingScreenState extends State<BookingScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
-        body: Column(
-          children: [
-            const AppHeader(),
-            const SizedBox(height: 15),
-            _buildHeader(context, l10n, isDark),
-            const SizedBox(height: 15),
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Opacity(opacity: 0.15, child: Image.asset(AssetsApp.bgOnboardOpacity, fit: BoxFit.contain)),
-                    ),
+    return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      body: Column(
+        children: [
+          const AppHeader(),
+          const SizedBox(height: 15),
+          _buildHeader(context, l10n, isDark),
+          const SizedBox(height: 15),
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Opacity(opacity: 0.15, child: Image.asset(AssetsApp.bgOnboardOpacity, fit: BoxFit.contain)),
                   ),
-                  if (service == null)
-                    Center(child: Text(l10n.noServiceData, style: const TextStyle(color: ColorApp.primary)))
-                  else
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                      child: Column(children: [
-                        _buildBookingFormCard(service, l10n),
-                        const SizedBox(height: 30),
-                        _buildConfirmButton(service, l10n),
-                        const SizedBox(height: 20),
-                      ]),
-                    ),
-                ],
-              ),
+                ),
+                if (service == null)
+                  Center(child: Text(l10n.noServiceData, style: const TextStyle(color: ColorApp.primary)))
+                else
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    child: Column(children: [
+                      _buildBookingFormCard(service, l10n),
+                      const SizedBox(height: 30),
+                      _buildConfirmButton(service, l10n),
+                      const SizedBox(height: 20),
+                    ]),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildHeader(BuildContext context, AppLocalizations l10n, bool isDark) {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Row(children: [
@@ -88,7 +86,11 @@ class _BookingScreenState extends State<BookingScreen> {
           child: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(color: ColorApp.buttonDetails, borderRadius: BorderRadius.circular(6)),
-            child: const Icon(Icons.arrow_back, color: ColorApp.primary, size: 24),
+            child: Icon(
+              isAr ? Icons.arrow_forward : Icons.arrow_back,
+              color: ColorApp.primary,
+              size: 24,
+            ),
           ),
         ),
         const SizedBox(width: 12),
@@ -200,7 +202,17 @@ class _BookingScreenState extends State<BookingScreen> {
         childName: childName, phone: phone, condition: condition,
       );
       if (!mounted) return;
-      Navigator.pushNamed(context, 'BookingConfirmationScreen');
+      Navigator.pushNamed(
+        context,
+        'BookingConfirmationScreen',
+        arguments: {
+          'hospitalName': service.hospitalName,
+          'childName': childName,
+          'phone': phone,
+          'condition': condition,
+          'serviceType': service.name,
+        },
+      );
     } catch (e) {
       if (!mounted) return;
       showCustomSnackBar(context, message: e.toString(), icon: Icons.error_outline);

@@ -5,10 +5,24 @@ import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
 import 'nursery_request_model.dart';
 
-class RequestDetailsScreen extends StatelessWidget {
+class RequestDetailsScreen extends StatefulWidget {
   final NurseryRequest request;
 
   const RequestDetailsScreen({super.key, required this.request});
+
+  @override
+  State<RequestDetailsScreen> createState() => _RequestDetailsScreenState();
+}
+
+class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Sync with backend API to refresh reservations state on screen load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      appStateManager.fetchReservations();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +112,7 @@ class RequestDetailsScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        request.serviceType,
+                        widget.request.serviceType,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -160,7 +174,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    request.time,
+                                    widget.request.time,
                                     style: TextStyle(
                                       color: isDark ? Colors.grey[400] : ColorApp.locationText,
                                       fontSize: 11,
@@ -185,25 +199,33 @@ class RequestDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.childNameLabel,
-                                  request.childName,
+                                  widget.request.childName,
                                   isDark,
                                 ),
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.phoneLabelText,
-                                  request.phone,
+                                  widget.request.phone,
                                   isDark,
                                 ),
+                                if (widget.request.condition.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  _buildDetailRow(
+                                    l10n.conditionLabel,
+                                    widget.request.condition,
+                                    isDark,
+                                  ),
+                                ],
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.statusLabel,
-                                  request.status,
+                                  widget.request.status,
                                   isDark,
                                 ),
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
                                   l10n.serviceTypeLabel,
-                                  request.serviceType,
+                                  widget.request.serviceType,
                                   isDark,
                                 ),
                                 const SizedBox(height: 25),
@@ -211,9 +233,10 @@ class RequestDetailsScreen extends StatelessWidget {
                                   children: [
                                     Expanded(
                                       child: GestureDetector(
-                                        onTap: () {
-                                          appStateManager.acceptNursery(request);
-                                          Navigator.pop(context);
+                                        onTap: () async {
+                                          await appStateManager.acceptNursery(widget.request);
+                                          if (!mounted) return;
+                                          _showAcceptanceDialog(context, isDark, l10n);
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
@@ -240,7 +263,7 @@ class RequestDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          appStateManager.rejectNursery(request);
+                                          appStateManager.rejectNursery(widget.request);
                                           Navigator.pop(context);
                                         },
                                         child: Container(
@@ -314,6 +337,124 @@ class RequestDetailsScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showAcceptanceDialog(
+    BuildContext context,
+    bool isDark,
+    AppLocalizations l10n,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          backgroundColor: isDark ? const Color(0xFF1E2A3A) : Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.green,
+                    size: 56,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  l10n.requestAcceptedTitle,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : ColorApp.primary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  l10n.requestAcceptedMessage,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDark ? Colors.white70 : Colors.black54,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    // Exit button
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                            color: isDark ? Colors.white30 : ColorApp.primary.withValues(alpha: 0.4),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(dialogContext);
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          l10n.exitButton,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white70 : ColorApp.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Reject button
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ColorApp.error,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(dialogContext);
+                          await appStateManager.rejectNursery(widget.request);
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          l10n.rejectRequestButton,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

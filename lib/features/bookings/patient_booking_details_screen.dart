@@ -69,6 +69,28 @@ class _PatientBookingDetailsScreenState
     final String status = widget.booking['status']?.toString() ?? 'pending';
     final String dateStr = widget.booking['createdAt']?.toString() ?? '';
 
+    // Extract patient-specific details from reservationDetails
+    final details = widget.booking['reservationDetails'];
+    final String patientName =
+        details?['patientName']?.toString() ??
+        details?['childName']?.toString() ??
+        widget.booking['childName']?.toString() ??
+        widget.booking['patientName']?.toString() ??
+        '';
+    final String patientPhone =
+        details?['phone']?.toString() ??
+        widget.booking['phone']?.toString() ??
+        '';
+    final String patientCondition =
+        details?['condition']?.toString() ??
+        details?['medicalCondition']?.toString() ??
+        widget.booking['condition']?.toString() ??
+        '';
+    final String patientAddress =
+        details?['address']?.toString() ??
+        widget.booking['address']?.toString() ??
+        '';
+
     // Status display
     String statusText = l10n.pendingStatus;
     Color statusColor = Colors.orange;
@@ -272,6 +294,46 @@ class _PatientBookingDetailsScreenState
                                   isDark,
                                   Icons.medical_services_rounded,
                                 ),
+
+                                if (patientName.isNotEmpty) ...[
+                                  const SizedBox(height: 16),
+                                  _buildDetailRow(
+                                    l10n.childNameLabel,
+                                    patientName,
+                                    isDark,
+                                    Icons.person_outline_rounded,
+                                  ),
+                                ],
+
+                                if (patientPhone.isNotEmpty) ...[
+                                  const SizedBox(height: 16),
+                                  _buildDetailRow(
+                                    l10n.phoneLabelText,
+                                    patientPhone,
+                                    isDark,
+                                    Icons.phone_outlined,
+                                  ),
+                                ],
+
+                                if (patientCondition.isNotEmpty) ...[
+                                  const SizedBox(height: 16),
+                                  _buildDetailRow(
+                                    l10n.conditionLabel,
+                                    patientCondition,
+                                    isDark,
+                                    Icons.description_outlined,
+                                  ),
+                                ],
+
+                                if (patientAddress.isNotEmpty) ...[
+                                  const SizedBox(height: 16),
+                                  _buildDetailRow(
+                                    l10n.address,
+                                    patientAddress,
+                                    isDark,
+                                    Icons.location_on_outlined,
+                                  ),
+                                ],
 
                                 const SizedBox(height: 16),
 

@@ -5,6 +5,7 @@ class NurseryRequest {
   final String status;
   final String serviceType;
   final String time;
+  final String condition;
 
   NurseryRequest({
     this.id,
@@ -13,5 +14,6 @@ class NurseryRequest {
     required this.status,
     required this.serviceType,
     required this.time,
+    this.condition = '',
   });
 }

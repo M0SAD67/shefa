@@ -36,173 +36,171 @@ class _IncubatorsScreenState extends State<IncubatorsScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
-        body: Column(
-          children: [
-            const AppHeader(),
-            const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: ColorApp.buttonDetails,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: ColorApp.primary,
-                        size: 20,
-                      ),
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    return Scaffold(
+      backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      body: Column(
+        children: [
+          const AppHeader(),
+          const SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: ColorApp.buttonDetails,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Icon(
+                      isAr ? Icons.arrow_forward : Icons.arrow_back,
+                      color: ColorApp.primary,
+                      size: 20,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: ColorApp.secondary, width: 1.5),
-                      color: isDark ? ColorApp.appAmoled : Colors.white,
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  width: 45,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: ColorApp.secondary, width: 1.5),
+                    color: isDark ? ColorApp.appAmoled : Colors.white,
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      AssetsApp.icOnboard1,
+                      fit: BoxFit.contain,
                     ),
-                    child: ClipOval(
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.nurseries,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: ColorApp.primary,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isDark ? ColorApp.appAmoled : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: ColorApp.secondary, width: 1),
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            onChanged: (value) => setState(() {
+                              _query = value.trim();
+                            }),
+                            style: TextStyle(
+                              color: isDark ? Colors.white : Colors.black,
+                              fontSize: 11,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: l10n.searchHospitalOrArea,
+                              hintStyle: TextStyle(
+                                color: ColorApp.locationText.withOpacity(0.7),
+                                fontSize: 11,
+                              ),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.only(
+                                bottom: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.search,
+                          color: ColorApp.locationText,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Opacity(
+                      opacity: 0.15,
                       child: Image.asset(
-                        AssetsApp.icOnboard1,
+                        AssetsApp.bgOnboardOpacity,
                         fit: BoxFit.contain,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.nurseries,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: ColorApp.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isDark ? ColorApp.appAmoled : Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: ColorApp.secondary, width: 1),
-                      ),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextField(
-                              onChanged: (value) => setState(() {
-                                _query = value.trim();
-                              }),
-                              style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black,
-                                fontSize: 11,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: l10n.searchHospitalOrArea,
-                                hintStyle: TextStyle(
-                                  color: ColorApp.locationText.withOpacity(0.7),
-                                  fontSize: 11,
-                                ),
-                                border: InputBorder.none,
-                                contentPadding: const EdgeInsets.only(
-                                  bottom: 12,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const Icon(
-                            Icons.search,
-                            color: ColorApp.locationText,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15),
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Opacity(
-                        opacity: 0.15,
-                        child: Image.asset(
-                          AssetsApp.bgOnboardOpacity,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ),
-                  FutureBuilder<List<PatientService>>(
-                    future: _servicesFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: ColorApp.primary,
-                          ),
-                        );
-                      }
-
-                      if (snapshot.hasError) {
-                        return _buildStateMessage(
-                          title: l10n.failedToLoadNurseries,
-                          actionText: l10n.retry,
-                          onAction: _refresh,
-                        );
-                      }
-
-                      final services = _filterServices(snapshot.data ?? []);
-                      if (services.isEmpty) {
-                        return _buildStateMessage(
-                          title: l10n.noNurseriesAvailable,
-                        );
-                      }
-
-                      return RefreshIndicator(
-                        color: ColorApp.primary,
-                        onRefresh: () async => _refresh(),
-                        child: ListView.separated(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 10,
-                          ),
-                          itemBuilder: (context, index) {
-                            return _buildHospitalCard(
-                              context: context,
-                              service: services[index],
-                            );
-                          },
-                          separatorBuilder: (_, _) =>
-                              const SizedBox(height: 16),
-                          itemCount: services.length,
+                ),
+                FutureBuilder<List<PatientService>>(
+                  future: _servicesFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: ColorApp.primary,
                         ),
                       );
-                    },
-                  ),
-                ],
-              ),
+                    }
+
+                    if (snapshot.hasError) {
+                      return _buildStateMessage(
+                        title: l10n.failedToLoadNurseries,
+                        actionText: l10n.retry,
+                        onAction: _refresh,
+                      );
+                    }
+
+                    final services = _filterServices(snapshot.data ?? []);
+                    if (services.isEmpty) {
+                      return _buildStateMessage(
+                        title: l10n.noNurseriesAvailable,
+                      );
+                    }
+
+                    return RefreshIndicator(
+                      color: ColorApp.primary,
+                      onRefresh: () async => _refresh(),
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0,
+                          vertical: 10,
+                        ),
+                        itemBuilder: (context, index) {
+                          return _buildHospitalCard(
+                            context: context,
+                            service: services[index],
+                          );
+                        },
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(height: 16),
+                        itemCount: services.length,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -269,7 +267,7 @@ class _IncubatorsScreenState extends State<IncubatorsScreen> {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 90),
+            padding: const EdgeInsetsDirectional.only(end: 90),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -321,9 +319,9 @@ class _IncubatorsScreenState extends State<IncubatorsScreen> {
               ],
             ),
           ),
-          Positioned(
+          PositionedDirectional(
             bottom: 0,
-            left: 0,
+            end: 0,
             child: InkWell(
               onTap: () {
                 Navigator.pushNamed(
