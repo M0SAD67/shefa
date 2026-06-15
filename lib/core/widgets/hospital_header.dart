@@ -266,7 +266,7 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                     clipBehavior: Clip.none,
                     children: [
                       CNButton.icon(
-                        icon: const CNSymbol('bell.fill'),
+                        icon: const CNSymbol('bell.fill', size: 20),
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -339,11 +339,11 @@ class _HospitalHeaderState extends State<HospitalHeader> {
 
             // ③ لوجو التطبيق — CNButton.icon
             CNButton.icon(
-              imageAsset: const CNImageAsset(AssetsApp.logo, size: 28),
+              imageAsset: const CNImageAsset(AssetsApp.logo),
               onPressed: () {},
               config: const CNButtonConfig(
                 style: CNButtonStyle.glass,
-                imagePadding: 6,
+                padding: EdgeInsets.all(6),
               ),
             ),
           ],

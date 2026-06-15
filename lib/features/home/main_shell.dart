@@ -56,9 +56,15 @@ class _MainShellState extends State<MainShell> {
   Widget _buildIOSTabBar() {
     return CNTabBar(
       items: const [
-        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
-        CNTabBarItem(label: 'Requests', icon: CNSymbol('calendar.badge.clock')),
-        CNTabBarItem(label: 'Profile', icon: CNSymbol('person.crop.circle')),
+        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill', size: 20)),
+        CNTabBarItem(
+          label: 'Requests',
+          icon: CNSymbol('calendar.badge.clock', size: 20),
+        ),
+        CNTabBarItem(
+          label: 'Profile',
+          icon: CNSymbol('person.crop.circle', size: 20),
+        ),
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,

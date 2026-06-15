@@ -188,15 +188,11 @@ class AppHeader extends StatelessWidget {
 
             // ── Logo ──────────────────────────────────────────────────
             CNButton.icon(
-              imageAsset: const CNImageAsset(
-                AssetsApp.logo,
-                size: 28,
-                color: ColorApp.appDark,
-              ),
+              imageAsset: const CNImageAsset(AssetsApp.logo),
               onPressed: () {},
               config: const CNButtonConfig(
                 style: CNButtonStyle.glass,
-                imagePadding: 6,
+                padding: EdgeInsets.all(6),
               ),
             ),
           ],

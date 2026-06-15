@@ -38,7 +38,9 @@ class _HospitalMainShellState extends State<HospitalMainShell> {
     return Scaffold(
       extendBody: true,
       body: _screens[_selectedIndex],
-      bottomNavigationBar: Platform.isIOS ? _buildIOSTabBar() : _buildAndroidNavBar(),
+      bottomNavigationBar: Platform.isIOS
+          ? _buildIOSTabBar()
+          : _buildAndroidNavBar(),
     );
   }
 
@@ -46,10 +48,19 @@ class _HospitalMainShellState extends State<HospitalMainShell> {
   Widget _buildIOSTabBar() {
     return CNTabBar(
       items: const [
-        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill')),
-        CNTabBarItem(label: 'Requests', icon: CNSymbol('doc.text.fill')),
-        CNTabBarItem(label: 'Bookings', icon: CNSymbol('cross.case.fill')),
-        CNTabBarItem(label: 'Profile', icon: CNSymbol('person.crop.circle')),
+        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill', size: 20)),
+        CNTabBarItem(
+          label: 'Requests',
+          icon: CNSymbol('doc.text.fill', size: 20),
+        ),
+        CNTabBarItem(
+          label: 'Bookings',
+          icon: CNSymbol('cross.case.fill', size: 20),
+        ),
+        CNTabBarItem(
+          label: 'Profile',
+          icon: CNSymbol('person.crop.circle', size: 20),
+        ),
       ],
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
