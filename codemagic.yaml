@@ -12,18 +12,7 @@ workflows:
       - name: Build Unsigned iOS IPA
         script: |
           set -e
-          
-          # 1. تنظيف كاش الـ Pods والـ Sandbox لتجنب خطأ عدم التزامن
-          echo "Cleaning old iOS Pods and locks..."
-          flutter clean
-          flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod repo update
-          pod install --repo-update
-          cd ..
-
-          # 2. Build without requiring an Apple Developer Account
+          # Build without requiring an Apple Developer Account
           flutter build ios --release --no-codesign
           
           # Create IPA directory structure

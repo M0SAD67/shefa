@@ -330,7 +330,7 @@ class _HospitalHeaderState extends State<HospitalHeader> {
                   onPressed: () {},
                   config: const CNButtonConfig(
                     style: CNButtonStyle.glass,
-                    imagePlacement: CNImagePlacement.leading,
+                    imagePlacement: CNImagePlacement.trailing,
                     imagePadding: 6,
                   ),
                 ),
@@ -341,6 +341,10 @@ class _HospitalHeaderState extends State<HospitalHeader> {
             CNButton.icon(
               imageAsset: const CNImageAsset(AssetsApp.logo, size: 28),
               onPressed: () {},
+              config: const CNButtonConfig(
+                style: CNButtonStyle.glass,
+                imagePadding: 6,
+              ),
             ),
           ],
         ),
