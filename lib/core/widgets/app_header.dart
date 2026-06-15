@@ -179,7 +179,7 @@ class AppHeader extends StatelessWidget {
                   ),
                   config: const CNButtonConfig(
                     style: CNButtonStyle.glass,
-                    imagePlacement: CNImagePlacement.leading,
+                    imagePlacement: CNImagePlacement.trailing,
                     imagePadding: 6,
                   ),
                 );
@@ -194,6 +194,10 @@ class AppHeader extends StatelessWidget {
                 color: ColorApp.appDark,
               ),
               onPressed: () {},
+              config: const CNButtonConfig(
+                style: CNButtonStyle.glass,
+                imagePadding: 6,
+              ),
             ),
           ],
         ),
