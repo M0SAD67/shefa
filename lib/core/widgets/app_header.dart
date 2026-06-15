@@ -171,16 +171,11 @@ class AppHeader extends StatelessWidget {
                     : AssetsApp.userAvatarMan;
 
                 return CNButton(
+                  imageAsset: CNImageAsset(avatarAsset, size: 28),
                   label: '$patientName 👋',
-                  imageAsset: CNImageAsset(
-                    avatarAsset,
-                    size: 28,
-                  ),
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProfileScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
                   ),
                   config: const CNButtonConfig(
                     style: CNButtonStyle.glass,
@@ -195,7 +190,8 @@ class AppHeader extends StatelessWidget {
             CNButton.icon(
               imageAsset: const CNImageAsset(
                 AssetsApp.logo,
-                size: 32,
+                size: 28,
+                color: ColorApp.appDark,
               ),
               onPressed: () {},
             ),

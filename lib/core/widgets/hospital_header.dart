@@ -322,11 +322,11 @@ class _HospitalHeaderState extends State<HospitalHeader> {
 
                 // ② بيانات المستشفى — CNButton (نفس شكل الإشعارات)
                 CNButton(
-                  label: hospitalName,
                   imageAsset: const CNImageAsset(
                     AssetsApp.hospitalLogo,
                     size: 28,
                   ),
+                  label: hospitalName,
                   onPressed: () {},
                   config: const CNButtonConfig(
                     style: CNButtonStyle.glass,
@@ -339,10 +339,7 @@ class _HospitalHeaderState extends State<HospitalHeader> {
 
             // ③ لوجو التطبيق — CNButton.icon
             CNButton.icon(
-              imageAsset: const CNImageAsset(
-                AssetsApp.logo,
-                size: 32,
-              ),
+              imageAsset: const CNImageAsset(AssetsApp.logo, size: 28),
               onPressed: () {},
             ),
           ],
