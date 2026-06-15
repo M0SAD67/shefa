@@ -337,6 +337,7 @@ class _HospitalHomeScreenState extends State<HospitalHomeScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      extendBody: true,
       body: ListenableBuilder(
         listenable: appStateManager,
         builder: (context, _) {

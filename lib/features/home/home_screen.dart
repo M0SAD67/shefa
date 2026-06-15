@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
+      extendBody: true,
       body: Stack(
         children: [
           // Pattern Background

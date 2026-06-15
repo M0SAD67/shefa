@@ -4,6 +4,7 @@ import 'package:cupertino_native_better/cupertino_native_better.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../core/theme/color_app.dart';
+import '../../l10n/app_localizations.dart';
 import '../bookings/hospital_booking/hospital_booking.dart';
 import '../profile/profile_screen.dart';
 import 'hospital_booking_requests_screen.dart';
@@ -46,24 +47,38 @@ class _HospitalMainShellState extends State<HospitalMainShell> {
 
   /// iOS: Liquid Glass Tab Bar using cupertino_native
   Widget _buildIOSTabBar() {
+    final l10n = AppLocalizations.of(context)!;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
+    final items = [
+      CNTabBarItem(
+        label: l10n.navHome,
+        icon: const CNSymbol('house.fill', size: 20),
+      ),
+      CNTabBarItem(
+        label: l10n.bookingRequests,
+        icon: const CNSymbol('doc.text.fill', size: 20),
+      ),
+      CNTabBarItem(
+        label: l10n.navBookings,
+        icon: const CNSymbol('cross.case.fill', size: 20),
+      ),
+      CNTabBarItem(
+        label: l10n.navAccount,
+        icon: const CNSymbol('person.crop.circle', size: 20),
+      ),
+    ];
+
+    final displayedItems = isRtl ? items.reversed.toList() : items;
+    final displayedIndex = isRtl ? (items.length - 1 - _selectedIndex) : _selectedIndex;
+
     return CNTabBar(
-      items: const [
-        CNTabBarItem(label: 'Home', icon: CNSymbol('house.fill', size: 20)),
-        CNTabBarItem(
-          label: 'Requests',
-          icon: CNSymbol('doc.text.fill', size: 20),
-        ),
-        CNTabBarItem(
-          label: 'Bookings',
-          icon: CNSymbol('cross.case.fill', size: 20),
-        ),
-        CNTabBarItem(
-          label: 'Profile',
-          icon: CNSymbol('person.crop.circle', size: 20),
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+      items: displayedItems,
+      currentIndex: displayedIndex,
+      onTap: (index) {
+        final originalIndex = isRtl ? (items.length - 1 - index) : index;
+        _onItemTapped(originalIndex);
+      },
     );
   }
 
