@@ -637,4 +637,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hospitalLocation => 'القليوبية، بنها، الإشارة';
+
+  @override
+  String get hospitalNameField => 'اسم المستشفى';
+
+  @override
+  String get serviceTypeField => 'نوع الخدمة';
+
+  @override
+  String get bookingStatusField => 'حالة الحجز';
+
+  @override
+  String get bookingDateField => 'تاريخ الحجز';
+
+  @override
+  String get pendingStatus => 'قيد الانتظار';
+
+  @override
+  String get confirmedStatus => 'تم التأكيد';
+
+  @override
+  String get viewBookingDetails => 'عرض تفاصيل الحجز';
+
+  @override
+  String get noBookingRequests => 'لا يوجد طلبات حجز حالياً';
+
+  @override
+  String get bookingRequestData => 'بيانات الطلب';
 }

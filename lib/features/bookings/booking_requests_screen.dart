@@ -5,6 +5,7 @@ import '../../core/widgets/app_header.dart';
 import '../../core/widgets/medical_background_icons.dart';
 import '../../core/manager/app_state_manager.dart';
 import '../../l10n/app_localizations.dart';
+import 'patient_booking_details_screen.dart';
 
 class BookingRequestsScreen extends StatefulWidget {
   const BookingRequestsScreen({Key? key}) : super(key: key);
@@ -83,7 +84,7 @@ class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
                           if (bookings.isEmpty) {
                             return Center(
                               child: Text(
-                                l10n.noNotifications,
+                                l10n.noBookingRequests,
                                 style: TextStyle(
                                   color: isDark
                                       ? Colors.white70
@@ -118,14 +119,28 @@ class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
 
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
-                                child: _buildBookingCard(
-                                  isDark: isDark,
-                                  title: hospitalName.isNotEmpty
-                                      ? hospitalName
-                                      : 'طلب حجز خدمة',
-                                  serviceType: serviceName,
-                                  status: status,
-                                  date: dateStr,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PatientBookingDetailsScreen(
+                                              booking: booking,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildBookingCard(
+                                    isDark: isDark,
+                                    l10n: l10n,
+                                    title: hospitalName.isNotEmpty
+                                        ? hospitalName
+                                        : l10n.bookingRequests,
+                                    serviceType: serviceName,
+                                    status: status,
+                                    date: dateStr,
+                                  ),
                                 ),
                               );
                             },
@@ -145,18 +160,19 @@ class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
 
   Widget _buildBookingCard({
     required bool isDark,
+    required AppLocalizations l10n,
     required String title,
     required String serviceType,
     required String status,
     required String date,
   }) {
-    String statusText = 'قيد الانتظار';
+    String statusText = l10n.pendingStatus;
     Color statusColor = Colors.orange;
     if (status == 'confirmed' || status == 'approved') {
-      statusText = 'تم التأكيد';
+      statusText = l10n.confirmedStatus;
       statusColor = Colors.green;
     } else if (status == 'rejected') {
-      statusText = 'تم الرفض';
+      statusText = l10n.rejectedStatus;
       statusColor = Colors.red;
     }
 
@@ -199,7 +215,7 @@ class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'بيانات الطلب',
+                l10n.bookingRequestData,
                 style: TextStyle(
                   color: isDark ? Colors.white70 : ColorApp.locationText,
                   fontSize: 12,
@@ -241,7 +257,7 @@ class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                'نوع الخدمة: $serviceType',
+                '${l10n.serviceTypeField}: $serviceType',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

@@ -269,5 +269,14 @@
   "requestDetailsLabel": "تفاصيل الطلب",
   "conditionLabel": "الحاله",
   "hospitalName": "مستشفى بنها الجامعي",
-  "hospitalLocation": "القليوبية، بنها، الإشارة"
+  "hospitalLocation": "القليوبية، بنها، الإشارة",
+  "hospitalNameField": "اسم المستشفى",
+  "serviceTypeField": "نوع الخدمة",
+  "bookingStatusField": "حالة الحجز",
+  "bookingDateField": "تاريخ الحجز",
+  "pendingStatus": "قيد الانتظار",
+  "confirmedStatus": "تم التأكيد",
+  "viewBookingDetails": "عرض تفاصيل الحجز",
+  "noBookingRequests": "لا يوجد طلبات حجز حالياً",
+  "bookingRequestData": "بيانات الطلب"
 }

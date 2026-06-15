@@ -642,4 +642,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hospitalLocation => 'Qalyubia, Benha, El-Eshara';
+
+  @override
+  String get hospitalNameField => 'Hospital Name';
+
+  @override
+  String get serviceTypeField => 'Service Type';
+
+  @override
+  String get bookingStatusField => 'Booking Status';
+
+  @override
+  String get bookingDateField => 'Booking Date';
+
+  @override
+  String get pendingStatus => 'Pending';
+
+  @override
+  String get confirmedStatus => 'Confirmed';
+
+  @override
+  String get viewBookingDetails => 'View Booking Details';
+
+  @override
+  String get noBookingRequests => 'No booking requests at the moment';
+
+  @override
+  String get bookingRequestData => 'Request Data';
 }

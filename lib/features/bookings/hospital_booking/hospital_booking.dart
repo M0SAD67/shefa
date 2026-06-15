@@ -41,9 +41,7 @@ class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
             ? appStateManager.acceptedBookings
             : appStateManager.rejectedBookings;
 
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Scaffold(
+        return Scaffold(
             backgroundColor: isDark ? ColorApp.appDark : ColorApp.appLight,
             body: Column(
               children: [
@@ -216,7 +214,6 @@ class _HospitalBookingsScreenState extends State<HospitalBookingsScreen> {
                 ),
               ],
             ),
-          ),
         );
       },
     );

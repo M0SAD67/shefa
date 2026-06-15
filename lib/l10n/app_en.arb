@@ -269,5 +269,14 @@
   "requestDetailsLabel": "Request Details",
   "conditionLabel": "Condition",
   "hospitalName": "Benha University Hospital",
-  "hospitalLocation": "Qalyubia, Benha, El-Eshara"
+  "hospitalLocation": "Qalyubia, Benha, El-Eshara",
+  "hospitalNameField": "Hospital Name",
+  "serviceTypeField": "Service Type",
+  "bookingStatusField": "Booking Status",
+  "bookingDateField": "Booking Date",
+  "pendingStatus": "Pending",
+  "confirmedStatus": "Confirmed",
+  "viewBookingDetails": "View Booking Details",
+  "noBookingRequests": "No booking requests at the moment",
+  "bookingRequestData": "Request Data"
 }

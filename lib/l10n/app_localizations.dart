@@ -1303,6 +1303,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Qalyubia, Benha, El-Eshara'**
   String get hospitalLocation;
+
+  /// No description provided for @hospitalNameField.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital Name'**
+  String get hospitalNameField;
+
+  /// No description provided for @serviceTypeField.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Type'**
+  String get serviceTypeField;
+
+  /// No description provided for @bookingStatusField.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Status'**
+  String get bookingStatusField;
+
+  /// No description provided for @bookingDateField.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Date'**
+  String get bookingDateField;
+
+  /// No description provided for @pendingStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pendingStatus;
+
+  /// No description provided for @confirmedStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get confirmedStatus;
+
+  /// No description provided for @viewBookingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Booking Details'**
+  String get viewBookingDetails;
+
+  /// No description provided for @noBookingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No booking requests at the moment'**
+  String get noBookingRequests;
+
+  /// No description provided for @bookingRequestData.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Data'**
+  String get bookingRequestData;
 }
 
 class _AppLocalizationsDelegate
