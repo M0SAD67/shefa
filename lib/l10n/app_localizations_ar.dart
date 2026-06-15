@@ -664,4 +664,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bookingRequestData => 'بيانات الطلب';
+
+  @override
+  String get requestAcceptedTitle => 'تم قبول الطلب';
+
+  @override
+  String get requestAcceptedMessage => 'تم قبول طلب الحجز بنجاح';
+
+  @override
+  String get exitButton => 'خروج';
 }

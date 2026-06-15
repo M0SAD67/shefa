@@ -669,4 +669,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookingRequestData => 'Request Data';
+
+  @override
+  String get requestAcceptedTitle => 'Request Accepted';
+
+  @override
+  String get requestAcceptedMessage =>
+      'Your booking request has been accepted successfully';
+
+  @override
+  String get exitButton => 'Exit';
 }

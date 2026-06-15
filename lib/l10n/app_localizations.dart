@@ -1357,6 +1357,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Request Data'**
   String get bookingRequestData;
+
+  /// No description provided for @requestAcceptedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Accepted'**
+  String get requestAcceptedTitle;
+
+  /// No description provided for @requestAcceptedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking request has been accepted successfully'**
+  String get requestAcceptedMessage;
+
+  /// No description provided for @exitButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exitButton;
 }
 
 class _AppLocalizationsDelegate

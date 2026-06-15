@@ -176,7 +176,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                   child: Text(
                                     widget.request.time,
                                     style: TextStyle(
-                                      color: isDark ? Colors.grey[400] : ColorApp.locationText,
+                                      color: isDark
+                                          ? Colors.grey[400]
+                                          : ColorApp.locationText,
                                       fontSize: 11,
                                     ),
                                   ),
@@ -188,13 +190,17 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: isDark ? Colors.white : ColorApp.locationText,
+                                      color: isDark
+                                          ? Colors.white
+                                          : ColorApp.locationText,
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
                                 Divider(
-                                  color: isDark ? Colors.grey[800] : Colors.grey[200],
+                                  color: isDark
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
                                 ),
                                 const SizedBox(height: 12),
                                 _buildDetailRow(
@@ -234,9 +240,15 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () async {
-                                          await appStateManager.acceptNursery(widget.request);
+                                          await appStateManager.acceptNursery(
+                                            widget.request,
+                                          );
                                           if (!mounted) return;
-                                          _showAcceptanceDialog(context, isDark, l10n);
+                                          _showAcceptanceDialog(
+                                            context,
+                                            isDark,
+                                            l10n,
+                                          );
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
@@ -244,7 +256,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: ColorApp.secondary,
-                                            borderRadius: BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
                                           ),
                                           child: Center(
                                             child: Text(
@@ -263,7 +277,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                     Expanded(
                                       child: GestureDetector(
                                         onTap: () {
-                                          appStateManager.rejectNursery(widget.request);
+                                          appStateManager.rejectNursery(
+                                            widget.request,
+                                          );
                                           Navigator.pop(context);
                                         },
                                         child: Container(
@@ -272,15 +288,22 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                                           ),
                                           decoration: BoxDecoration(
                                             color: isDark
-                                                ? Colors.white.withValues(alpha: 0.1)
-                                                : ColorApp.locationText.withValues(alpha: 0.3),
-                                            borderRadius: BorderRadius.circular(15),
+                                                ? Colors.white.withValues(
+                                                    alpha: 0.1,
+                                                  )
+                                                : ColorApp.locationText
+                                                      .withValues(alpha: 0.3),
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
                                           ),
                                           child: Center(
                                             child: Text(
                                               l10n.rejectRequestButton,
                                               style: TextStyle(
-                                                color: isDark ? Colors.white : ColorApp.icons,
+                                                color: isDark
+                                                    ? Colors.white
+                                                    : ColorApp.icons,
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 15,
                                               ),
@@ -316,7 +339,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.grey[400] : ColorApp.primary.withValues(alpha: 0.8),
+            color: isDark
+                ? Colors.grey[400]
+                : ColorApp.primary.withValues(alpha: 0.8),
           ),
         ),
         const SizedBox(height: 4),
@@ -324,7 +349,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
-            color: isDark ? ColorApp.primary.withValues(alpha: 0.2) : const Color(0xFFF0F4F8),
+            color: isDark
+                ? ColorApp.primary.withValues(alpha: 0.2)
+                : const Color(0xFFF0F4F8),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -399,7 +426,9 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
-                            color: isDark ? Colors.white30 : ColorApp.primary.withValues(alpha: 0.4),
+                            color: isDark
+                                ? Colors.white30
+                                : ColorApp.primary.withValues(alpha: 0.4),
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),

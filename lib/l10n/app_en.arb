@@ -87,7 +87,7 @@
   "medicalStaffBooking": "Medical Staff Booking",
   "notSpecified": "Not specified",
   "bookingRequestSent": "Booking Request Sent",
-  "bookingRequests":"Booking Requests",
+  "bookingRequests": "Booking Requests",
   "backToHome": "Back to Home",
   "condition": "Condition",
   "serviceType": "Service Type",
@@ -278,5 +278,8 @@
   "confirmedStatus": "Confirmed",
   "viewBookingDetails": "View Booking Details",
   "noBookingRequests": "No booking requests at the moment",
-  "bookingRequestData": "Request Data"
+  "bookingRequestData": "Request Data",
+  "requestAcceptedTitle": "Request Accepted",
+  "requestAcceptedMessage": "Your booking request has been accepted successfully",
+  "exitButton": "Exit"
 }

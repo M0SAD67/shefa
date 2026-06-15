@@ -278,5 +278,8 @@
   "confirmedStatus": "تم التأكيد",
   "viewBookingDetails": "عرض تفاصيل الحجز",
   "noBookingRequests": "لا يوجد طلبات حجز حالياً",
-  "bookingRequestData": "بيانات الطلب"
+  "bookingRequestData": "بيانات الطلب",
+  "requestAcceptedTitle": "تم قبول الطلب",
+  "requestAcceptedMessage": "تم قبول طلب الحجز بنجاح",
+  "exitButton": "خروج"
 }
