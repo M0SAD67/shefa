@@ -97,9 +97,9 @@ flutter:
 flutter_launcher_icons:
   android: false
   ios: true
-  image_path: "assets/logo/Logo.png"
+  image_path: "assets/logo/splash-dark.png"
   remove_alpha_ios: true
   background_color_ios: "#0A1D16"
   ios_content_mode: "scaleAspectFit"
   adaptive_icon_background: "#0A1D16"
-  adaptive_icon_foreground: "assets/logo/Logo.png"
+  adaptive_icon_foreground: "assets/logo/splash-dark.png"
