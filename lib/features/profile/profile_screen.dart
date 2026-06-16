@@ -34,12 +34,28 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: appStateManager.userName);
-    _addressController = TextEditingController(
-      text: appStateManager.userAddress,
+
+    // التأكد من وجود بيانات أو وضع القيم الافتراضية لأميره محسن
+    String name = appStateManager.userName;
+    String address = appStateManager.userAddress;
+    String phone = appStateManager.userPhone;
+    String email = appStateManager.userEmail;
+
+    _nameController = TextEditingController(
+      text: (name.trim().isEmpty) ? "أميره محسن" : name,
     );
-    _phoneController = TextEditingController(text: appStateManager.userPhone);
-    _emailController = TextEditingController(text: appStateManager.userEmail);
+    _addressController = TextEditingController(
+      text: (address.trim().isEmpty) ? "Giza - Dokki, Street 5" : address,
+    );
+    _phoneController = TextEditingController(
+      text: (phone.trim().isEmpty) ? "01085927291" : phone,
+    );
+    _emailController = TextEditingController(
+      text: (email.trim().isEmpty)
+          ? "amira.mohsen@example.com"
+          : email, // يمكنك تعديل الإيميل الافتراضي أو تركه فارغاً
+    );
+
     appStateManager.addListener(_onAppStateChanged);
 
     _animController = AnimationController(
@@ -55,10 +71,20 @@ class _ProfileScreenState extends State<ProfileScreen>
   void _onAppStateChanged() {
     if (mounted) {
       setState(() {
-        _nameController.text = appStateManager.userName;
-        _addressController.text = appStateManager.userAddress;
-        _phoneController.text = appStateManager.userPhone;
-        _emailController.text = appStateManager.userEmail;
+        String name = appStateManager.userName;
+        String address = appStateManager.userAddress;
+        String phone = appStateManager.userPhone;
+        String email = appStateManager.userEmail;
+
+        // تحديث النصوص في الـ Controllers لو البيانات اتغيرت أو بقت فاضية
+        _nameController.text = (name.trim().isEmpty) ? "أميره محسن" : name;
+        _addressController.text = (address.trim().isEmpty)
+            ? "Giza - Dokki, Street 5"
+            : address;
+        _phoneController.text = (phone.trim().isEmpty) ? "01085927291" : phone;
+        _emailController.text = (email.trim().isEmpty)
+            ? "amira.mohsen@example.com"
+            : email;
       });
     }
   }
@@ -205,7 +231,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         Navigator.pop(context); // Pop loading
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(l10n.profileUpdateFailed(e.toString())),
+                            content: Text(
+                              l10n.profileUpdateFailed(e.toString()),
+                            ),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -604,7 +632,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: CircleAvatar(
                                               radius: lerpDouble(18, 50, t)!,
                                               backgroundImage: AssetImage(
-                                                appStateManager.isFemale
+                                                (appStateManager.isFemale ||
+                                                        _nameController.text ==
+                                                            "أميره محسن")
                                                     ? AssetsApp.userAvatarWomen
                                                     : AssetsApp.userAvatarMan,
                                               ),

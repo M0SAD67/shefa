@@ -27,6 +27,7 @@ class AuthRepository {
     required String address,
     required String phone,
     required int role,
+    required int gender, // 👈 تم إضافة الـ gender هنا كـ required parameter
   }) async {
     try {
       final response = await apiService.post(
@@ -39,6 +40,8 @@ class AuthRepository {
           'address': address,
           'phone': phone,
           'role': role,
+          'gender':
+              gender, // 👈 تم تمريره هنا جوه الـ request data ليحل المشكلة
         },
       );
       return response.data;
@@ -100,6 +103,19 @@ class AuthRepository {
         path: '/profile',
         token: token,
         data: {'firstName': firstName, 'lastName': lastName, 'phone': phone},
+      );
+      return response.data;
+    } on DioException catch (e) {
+      throw AppHttpException.fromDio(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> resendOtp({required String email}) async {
+    try {
+      // تأكد من مسار الـ API الصحيح لإعادة الإرسال من الـ Backend عندك (مثلاً /auth/resend-otp)
+      final response = await apiService.post(
+        path: '/auth/resend-otp',
+        data: {'email': email},
       );
       return response.data;
     } on DioException catch (e) {

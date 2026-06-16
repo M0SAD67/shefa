@@ -29,18 +29,22 @@ class AppHeader extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // User Info
+                // User Info (Android / Generic)
                 ListenableBuilder(
                   listenable: appStateManager,
                   builder: (context, _) {
                     final String patientName =
-                        appStateManager.userName.isNotEmpty
+                        appStateManager.userName.trim().isNotEmpty
                         ? appStateManager.userName
-                        : 'مريض';
+                        : 'أميره محسن';
                     final String patientAddress =
-                        appStateManager.userAddress.isNotEmpty
+                        appStateManager.userAddress.trim().isNotEmpty
                         ? appStateManager.userAddress
-                        : 'موقع غير محدد';
+                        : 'Giza - Dokki, Street 5';
+
+                    // تحديد هل المستخدم أنثى (سواء من الـ state أو كقيمة افتراضية لـ أميرة)
+                    final bool isFemaleUser =
+                        appStateManager.isFemale || patientName == "أميره محسن";
 
                     return Row(
                       children: [
@@ -68,7 +72,7 @@ class AppHeader extends StatelessWidget {
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Image.asset(
-                                        appStateManager.isFemale
+                                        isFemaleUser
                                             ? AssetsApp.userAvatarWomen
                                             : AssetsApp.userAvatarMan,
                                         fit: BoxFit.cover,
@@ -76,7 +80,7 @@ class AppHeader extends StatelessWidget {
                                     },
                                   )
                                 : Image.asset(
-                                    appStateManager.isFemale
+                                    isFemaleUser
                                         ? AssetsApp.userAvatarWomen
                                         : AssetsApp.userAvatarMan,
                                     fit: BoxFit.cover,
@@ -158,15 +162,20 @@ class AppHeader extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // ── Profile ───────────────────────────────────────────────
+            // ── Profile (iOS) ───────────────────────────────────────────
             ListenableBuilder(
               listenable: appStateManager,
               builder: (context, _) {
-                final String patientName = appStateManager.userName.isNotEmpty
+                final String patientName =
+                    appStateManager.userName.trim().isNotEmpty
                     ? appStateManager.userName
-                    : 'مريض';
+                    : 'أميره محسن'; // تغيير القيمة الافتراضية من 'مريض' إلى الاسم المطلوب
 
-                final String avatarAsset = appStateManager.isFemale
+                // تشييك الأيقونة لتكون أنثى بناءً على الـ state أو الاسم الافتراضي
+                final bool isFemaleUser =
+                    appStateManager.isFemale || patientName == "أميره محسن";
+
+                final String avatarAsset = isFemaleUser
                     ? AssetsApp.userAvatarWomen
                     : AssetsApp.userAvatarMan;
 

@@ -114,6 +114,12 @@ class _LoginScreenState extends State<LoginScreen>
                   ),
                   child: Column(
                     children: [
+                      // ── Role Selector (Signup only) ──
+                      if (isSignupMode) ...[
+                        _buildRoleSelector(),
+                        const SizedBox(height: 15),
+                      ],
+
                       // Fields
                       if (isSignupMode) ...[
                         const SizedBox(height: 10),
@@ -212,6 +218,9 @@ class _LoginScreenState extends State<LoginScreen>
                                         address: _addressController.text,
                                         phone: _completePhoneNumber,
                                         role: isMedicalStaffSelected ? 1 : 2,
+                                        gender: _selectedGender == 'male'
+                                            ? 1
+                                            : 2,
                                       );
                                       if (!context.mounted) return;
                                       final l10nSignup = AppLocalizations.of(
@@ -227,105 +236,122 @@ class _LoginScreenState extends State<LoginScreen>
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => OtpScreen(
-                                            email: _emailController.text,
+                                            email: _emailController.text.trim(),
                                           ),
                                         ),
                                       );
                                     } else {
-                                      // Login logic
-                                      final result = await authRepository.login(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      );
-                                      final token = result['data'] != null
-                                          ? result['data']['access_token']
-                                          : result['access_token'];
+                                      // ── جزيئة الـ Login ومسح الأخطاء للتوجه لصفحة التفعيل ──
+                                      try {
+                                        final result = await authRepository
+                                            .login(
+                                              email: _emailController.text,
+                                              password:
+                                                  _passwordController.text,
+                                            );
+                                        final token = result['data'] != null
+                                            ? result['data']['access_token']
+                                            : result['access_token'];
 
-                                      if (token != null) {
-                                        await appStateManager.clearUserData();
-                                        await CacheHelper.saveData(
-                                          key: 'token',
-                                          value: token,
-                                        );
-                                        await CacheHelper.saveData(
-                                          key: 'email',
-                                          value: _emailController.text,
-                                        );
+                                        if (token != null) {
+                                          await appStateManager.clearUserData();
+                                          await CacheHelper.saveData(
+                                            key: 'token',
+                                            value: token,
+                                          );
+                                          await CacheHelper.saveData(
+                                            key: 'email',
+                                            value: _emailController.text,
+                                          );
 
-                                        int detectedRole =
-                                            0; // default: patient
-                                        final payload = _decodeJwt(token);
-                                        if (payload != null) {
-                                          final aud = payload['aud'];
-                                          if (aud is List) {
-                                            if (aud.contains(2) ||
-                                                aud.contains('2')) {
-                                              detectedRole = 1; // Hospital
-                                            }
-                                          } else if (aud != null) {
-                                            final audStr = aud.toString();
-                                            if (audStr == '2' ||
-                                                audStr.contains('2')) {
-                                              detectedRole = 1;
+                                          int detectedRole =
+                                              0; // default: patient
+                                          final payload = _decodeJwt(token);
+                                          if (payload != null) {
+                                            final aud = payload['aud'];
+                                            if (aud is List) {
+                                              if (aud.contains(2) ||
+                                                  aud.contains('2')) {
+                                                detectedRole = 1; // Hospital
+                                              }
+                                            } else if (aud != null) {
+                                              final audStr = aud.toString();
+                                              if (audStr == '2' ||
+                                                  audStr.contains('2')) {
+                                                detectedRole = 1;
+                                              }
                                             }
                                           }
-                                        }
 
-                                        appStateManager.setUserRole(
-                                          detectedRole,
-                                        );
-                                        appStateManager.setUserProfile(
-                                          email: _emailController.text,
-                                        );
+                                          appStateManager.setUserRole(
+                                            detectedRole,
+                                          );
+                                          appStateManager.setUserProfile(
+                                            email: _emailController.text,
+                                          );
 
-                                        try {
-                                          final profileResult =
-                                              await authRepository
-                                                  .getUserProfile(token);
-                                          final userData =
-                                              profileResult['data'] != null
-                                              ? profileResult['data']['account']
-                                              : profileResult['account'];
-                                          if (userData != null) {
-                                            final rawRole = userData['role'];
-                                            final int role = rawRole is int
-                                                ? rawRole
-                                                : int.tryParse(
-                                                        rawRole?.toString() ??
-                                                            '',
-                                                      ) ??
-                                                      0;
-                                            final mappedRole = role == 1
-                                                ? 1
-                                                : 0;
-                                            appStateManager.setUserRole(
-                                              mappedRole,
+                                          try {
+                                            final profileResult =
+                                                await authRepository
+                                                    .getUserProfile(token);
+                                            final userData =
+                                                profileResult['data'] != null
+                                                ? profileResult['data']['account']
+                                                : profileResult['account'];
+                                            if (userData != null) {
+                                              final rawRole = userData['role'];
+                                              final int role = rawRole is int
+                                                  ? rawRole
+                                                  : int.tryParse(
+                                                          rawRole?.toString() ??
+                                                              '',
+                                                        ) ??
+                                                        0;
+                                              final mappedRole = role == 1
+                                                  ? 1
+                                                  : 0;
+                                              appStateManager.setUserRole(
+                                                mappedRole,
+                                              );
+
+                                              final String name =
+                                                  userData['username'] ??
+                                                  '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'
+                                                      .trim();
+                                              appStateManager.setUserProfile(
+                                                name: name.isNotEmpty
+                                                    ? name
+                                                    : null,
+                                                email: userData['email'],
+                                                phone: userData['phone'],
+                                                address: userData['address'],
+                                                profileImage:
+                                                    userData['profilePicture'] ??
+                                                    userData['avatar'] ??
+                                                    userData['image'] ??
+                                                    userData['photo'],
+                                              );
+
+                                              if (mappedRole == 1) {
+                                                await appStateManager
+                                                    .fetchHospitalData(
+                                                      token,
+                                                      name,
+                                                    );
+                                                await appStateManager
+                                                    .fetchBookings();
+                                              } else {
+                                                await appStateManager
+                                                    .fetchPatientBookings();
+                                              }
+                                            }
+                                          } catch (profileError) {
+                                            debugPrint(
+                                              'Error fetching user profile: $profileError',
                                             );
-
-                                            final String name =
-                                                userData['username'] ??
-                                                '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'
-                                                    .trim();
-                                            appStateManager.setUserProfile(
-                                              name: name.isNotEmpty
-                                                  ? name
-                                                  : null,
-                                              email: userData['email'],
-                                              phone: userData['phone'],
-                                              address: userData['address'],
-                                              profileImage:
-                                                  userData['profilePicture'] ??
-                                                  userData['avatar'] ??
-                                                  userData['image'] ??
-                                                  userData['photo'],
-                                            );
-
-                                            if (mappedRole == 1) {
+                                            if (detectedRole == 1) {
                                               await appStateManager
-                                                  .fetchHospitalData(
-                                                    token,
-                                                    name,
-                                                  );
+                                                  .fetchHospitalData(token, "");
                                               await appStateManager
                                                   .fetchBookings();
                                             } else {
@@ -333,27 +359,47 @@ class _LoginScreenState extends State<LoginScreen>
                                                   .fetchPatientBookings();
                                             }
                                           }
-                                        } catch (profileError) {
-                                          debugPrint(
-                                            'Error fetching user profile: $profileError',
+
+                                          if (!context.mounted) return;
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            loginSuccessToMainShellRoute(),
+                                            (route) => false,
                                           );
-                                          if (detectedRole == 1) {
-                                            await appStateManager
-                                                .fetchHospitalData(token, "");
-                                            await appStateManager
-                                                .fetchBookings();
-                                          } else {
-                                            await appStateManager
-                                                .fetchPatientBookings();
-                                          }
+                                        }
+                                      } catch (loginError) {
+                                        if (!context.mounted) return;
+                                        final errorStr = loginError
+                                            .toString()
+                                            .toLowerCase();
+
+                                        // إذا كان الحساب غير مفعل ويرجع الـ Backend خطأ 404 أو كلمة الـ Validation المحددة
+                                        if (errorStr.contains(
+                                              'invalid email or password',
+                                            ) ||
+                                            errorStr.contains('404')) {
+                                          showCustomSnackBar(
+                                            context,
+                                            message:
+                                                "الحساب قد يكون غير مفعّل، جاري الانتقال لصفحة التأكيد...",
+                                            backgroundColor: Colors.orange,
+                                            top: true,
+                                          );
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => OtpScreen(
+                                                email: _emailController.text
+                                                    .trim(),
+                                              ),
+                                            ),
+                                          );
+                                          return; // إيقاف التنفيذ هنا حتى لا يظهر الـ error snackbar الرئيسي
                                         }
 
-                                        if (!context.mounted) return;
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          loginSuccessToMainShellRoute(),
-                                          (route) => false,
-                                        );
+                                        // إعادة رمي الخطأ ليتم معالجته في الـ catch الخارجي في حال لم يكن 404
+                                        rethrow;
                                       }
                                     }
                                   } catch (e) {
@@ -572,6 +618,99 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(backgroundColor: ColorApp.buttonDetails, body: shellBody);
   }
 
+  // ══════════════════════════════════════════════
+  //  Role Segmented Control
+  // ══════════════════════════════════════════════
+
+  Widget _buildRoleSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: ColorApp.textFieldHighlight.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: ColorApp.textFieldHighlight.withOpacity(0.25),
+        ),
+      ),
+      child: Row(
+        children: [
+          _buildRoleOption(
+            label: l10n.patient,
+            icon: Icons.person_rounded,
+            isSelected: !isMedicalStaffSelected,
+            onTap: () => setState(() {
+              isMedicalStaffSelected = false;
+              _verificationDocument = null;
+            }),
+          ),
+          _buildRoleOption(
+            label: l10n.medicalStaff,
+            icon: Icons.medical_services_rounded,
+            isSelected: isMedicalStaffSelected,
+            onTap: () => setState(() => isMedicalStaffSelected = true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoleOption({
+    required String label,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? ColorApp.textFieldHighlight
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(11),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: ColorApp.textFieldHighlight.withOpacity(0.35),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: isSelected ? Colors.white : ColorApp.locationText,
+                size: 18,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : ColorApp.locationText,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════════════
+  //  Shared Widgets
+  // ══════════════════════════════════════════════
+
   Widget _buildFloatingButton({
     required VoidCallback onTap,
     required Widget child,
@@ -599,61 +738,16 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
-    if (!isSignupMode) {
-      return Text(
-        l10n.login,
-        key: const ValueKey('login_title'),
-        style: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: appStateManager.isDarkMode
-              ? ColorApp.appLight
-              : ColorApp.primary,
-        ),
-      );
-    }
-
-    return Wrap(
-      key: const ValueKey('signup_title'),
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        Text(
-          l10n.createAccountFor,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: appStateManager.isDarkMode
-                ? ColorApp.appLight
-                : ColorApp.appDark,
-          ),
-        ),
-        GestureDetector(
-          onTap: () =>
-              setState(() => isMedicalStaffSelected = !isMedicalStaffSelected),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: ScaleTransition(scale: animation, child: child),
-              );
-            },
-            child: Text(
-              isMedicalStaffSelected ? l10n.medicalStaff : l10n.patient,
-              key: ValueKey<bool>(isMedicalStaffSelected),
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w900,
-                color: ColorApp.textFieldHighlight,
-                decoration: TextDecoration.underline,
-                decorationStyle: TextDecorationStyle.dashed,
-                decorationThickness: 1.5,
-              ),
-            ),
-          ),
-        ),
-      ],
+    return Text(
+      isSignupMode ? l10n.createAccount : l10n.login,
+      key: ValueKey<bool>(isSignupMode),
+      style: TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: appStateManager.isDarkMode
+            ? ColorApp.appLight
+            : ColorApp.primary,
+      ),
     );
   }
 
@@ -724,7 +818,6 @@ class _LoginScreenState extends State<LoginScreen>
                 : ColorApp.appLight,
           ),
         ),
-        // Custom counter positioned on the top border (End side to avoid label overlap)
         Positioned.directional(
           textDirection: Directionality.of(context),
           end: 12,
@@ -849,7 +942,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  // حقل إدخال عام
   Widget _buildTextField({
     required String hint,
     TextEditingController? controller,
@@ -963,7 +1055,6 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           ),
           const Spacer(),
-          // Male option
           _buildGenderOption(
             label: l10n.male,
             isSelected: _selectedGender == 'male',
@@ -974,7 +1065,6 @@ class _LoginScreenState extends State<LoginScreen>
             textColor: textColor,
           ),
           const SizedBox(width: 20),
-          // Female option
           _buildGenderOption(
             label: l10n.female,
             isSelected: _selectedGender == 'female',
@@ -1103,7 +1193,6 @@ class _LoginScreenState extends State<LoginScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Upload Icon with Animation
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 400),
                     padding: const EdgeInsets.all(12),
@@ -1124,7 +1213,6 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   ),
                   const SizedBox(height: 12),
-                  // Text info
                   Text(
                     hasDoc ? l10n.documentUploaded : l10n.uploadVerificationDoc,
                     textAlign: TextAlign.center,
@@ -1222,6 +1310,10 @@ class _LoginScreenState extends State<LoginScreen>
   }
 }
 
+// ══════════════════════════════════════════════
+//  Helper Classes
+// ══════════════════════════════════════════════
+
 class _DashedPainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
@@ -1232,9 +1324,7 @@ class _DashedPainter extends CustomPainter {
   _DashedPainter({
     required this.color,
     this.strokeWidth = 1.5,
-    // ignore: unused_element_parameter
     this.dashWidth = 5,
-    // ignore: unused_element_parameter
     this.dashSpace = 3,
     this.borderRadius = 20,
   });

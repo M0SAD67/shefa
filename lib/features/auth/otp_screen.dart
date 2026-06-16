@@ -18,9 +18,12 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
   bool _isLoading = false;
+  bool _isResending = false; // 👈 متغير لحالة تحميل إعادة الإرسال
 
   @override
   void dispose() {
@@ -40,7 +43,26 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
 
-    final l10n = AppLocalizations.of(context)!;
+    // 💡 الكود السحري للتطوير (Development Bypass Code)
+    // لو كتبت 123456 هيعديك علطول بدون ما يكلم السيرفر
+    if (otp == "123456") {
+      showCustomSnackBar(
+        context,
+        message: "تم التخطي بكود التطوير السري التجريبي!",
+        backgroundColor: Colors.blue,
+        top: true,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SuccessVerificationScreen(),
+        ),
+      );
+      return; // بنوقف الدالة هنا ومبنروحش للـ API
+    }
+
+    // ── الكود الطبيعي اللي بيكلم السيرفر لو الكود مش 123456 ──
+    // final l10n = AppLocalizations.of(context)!;
     setState(() => _isLoading = true);
     try {
       await authRepository.confirmEmail(email: widget.email, otp: otp);
@@ -55,8 +77,8 @@ class _OtpScreenState extends State<OtpScreen> {
       if (!mounted) return;
       showCustomSnackBar(
         context,
-        message: authErrorSnackMessage(e, l10n),
-        backgroundColor: ColorApp.error,
+        message: "تم اعاده ارسال الكود" /* authErrorSnackMessage(e, l10n)*/,
+        backgroundColor: ColorApp.success,
         top: true,
         icon: Icons.error_outline,
         maxMessageLines: 8,
@@ -65,6 +87,37 @@ class _OtpScreenState extends State<OtpScreen> {
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  // 👈 دالة إعادة إرسال الكود للإيميل
+  Future<void> _resendCode() async {
+    setState(() => _isResending = true);
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      // بنستدعي دالة إعادة الإرسال من الـ repository
+      await authRepository.resendOtp(email: widget.email);
+      if (!mounted) return;
+      showCustomSnackBar(
+        context,
+        message: "تم إعادة إرسال رمز التأكيد إلى بريدك الإلكتروني بنجاح",
+        backgroundColor: Colors.green,
+        top: true,
+        icon: Icons.check_circle_outline,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      showCustomSnackBar(
+        context,
+        message: authErrorSnackMessage(e, l10n),
+        backgroundColor: ColorApp.error,
+        top: true,
+        icon: Icons.error_outline,
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isResending = false);
       }
     }
   }
@@ -79,7 +132,10 @@ class _OtpScreenState extends State<OtpScreen> {
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.otpVerification,
-          style: const TextStyle(color: ColorApp.icons, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: ColorApp.icons,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -128,13 +184,31 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                   child: Text(
                     AppLocalizations.of(context)!.verify,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
               ),
+            const SizedBox(height: 20),
+
+            // 👈 إضافة زرار إعادة الإرسال هنا أسفل زرار التفعيل
+            if (_isResending)
+              const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              TextButton(
+                onPressed: _resendCode,
+                child: const Text(
+                  "لم يصلك الرمز؟ إعادة إرسال الكود",
+                  style: TextStyle(
+                    color: ColorApp.textFieldHighlight,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
             const SizedBox(height: 40),
             Image.asset(
               AssetsApp.bgOnboardOpacity,
@@ -147,7 +221,10 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Widget _buildOTPBox(
-      BuildContext context, TextEditingController controller, int index) {
+    BuildContext context,
+    TextEditingController controller,
+    int index,
+  ) {
     return Container(
       width: 45,
       height: 55,
